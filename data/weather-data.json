@@ -1,0 +1,841 @@
+{
+  "source": "AGI TR Weather Data (averaged)",
+  "generated_at": "2026-01-07T21:44:56.758488Z",
+  "location": {
+    "name": "Mina Zayed Port / AGI Site",
+    "latitude": 24.12,
+    "longitude": 52.53
+  },
+  "weather_records": [
+    {
+      "date": "2026-01-08",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-09",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-10",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-11",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-12",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-13",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-14",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-15",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-16",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-17",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-18",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-19",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-20",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-21",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-22",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-23",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-24",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-25",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-26",
+      "wind_max_kn": 14.0,
+      "gust_max_kn": 18.0,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 0.5,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-27",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-28",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-29",
+      "wind_max_kn": 14.0,
+      "gust_max_kn": 18.0,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 0.5,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-30",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-01-31",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-01",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-02",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-03",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-04",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-05",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-06",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-07",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-08",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-09",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-10",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-11",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-12",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-13",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-14",
+      "wind_max_kn": 22.0,
+      "gust_max_kn": 28.6,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 1.2,
+      "visibility_km": 5.0,
+      "risk_level": "HIGH",
+      "is_shamal": true
+    },
+    {
+      "date": "2026-02-15",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-16",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-17",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-18",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-19",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-20",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-21",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-22",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-23",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-24",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-25",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-26",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-27",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-02-28",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-01",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-02",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-03",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-04",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-05",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-06",
+      "wind_max_kn": 14.0,
+      "gust_max_kn": 18.0,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 0.5,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-07",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-08",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-09",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-10",
+      "wind_max_kn": 14.0,
+      "gust_max_kn": 18.0,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 0.5,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-11",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-12",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-13",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-14",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-15",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-16",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-17",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-18",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-19",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-20",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-21",
+      "wind_max_kn": 14.0,
+      "gust_max_kn": 18.0,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 0.5,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-22",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-23",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-24",
+      "wind_max_kn": 12.0,
+      "gust_max_kn": 16.0,
+      "wind_dir_deg": 290.0,
+      "wave_max_m": 0.4,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-25",
+      "wind_max_kn": 14.0,
+      "gust_max_kn": 18.0,
+      "wind_dir_deg": 300.0,
+      "wave_max_m": 0.5,
+      "visibility_km": 10.0,
+      "risk_level": "LOW",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-26",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-27",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-28",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-29",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-30",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    },
+    {
+      "date": "2026-03-31",
+      "wind_max_kn": 16.0,
+      "gust_max_kn": 20.8,
+      "wind_dir_deg": 315.0,
+      "wave_max_m": 0.6,
+      "visibility_km": 9.0,
+      "risk_level": "MEDIUM",
+      "is_shamal": false
+    }
+  ]
+}
