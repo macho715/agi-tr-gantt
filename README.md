@@ -20,6 +20,8 @@ AGI TR Gantt Generator is a modern web application for generating professional m
 - 📋 **Document Management**: Voyage document checklist with hybrid layout (Card/Table views)
 - 🔄 **Workflow State Machine**: Status transitions (`not_started → submitted → approved`) with Submit/Approve actions
 - 📅 **Deadline Tracking**: Automatic due date calculation with D-countdown display
+- 📊 **Docs Progress Overlay**: Document progress visualization on Gantt Trip rows with click-through navigation
+- ⌨️ **Keyboard Accessibility**: Full keyboard navigation support with focus ring styling
 - 🎨 **Modern UI**: Built with Next.js, React, and Tailwind CSS
 - 🌙 **Dark Mode Support**: Automatic theme switching
 - ⚡ **Real-time Preview**: Visual Gantt chart preview with 5 tab views before download

@@ -249,6 +249,10 @@ interface ConfigurationPanelProps {
 - 고정 데이터 / 업로드 데이터 전환
 - 날씨/조수 데이터 통합 표시
 - Deadline 오버레이 시각화 (Deadlines 버튼으로 토글)
+- **Docs Progress Overlay**: Trip row 위에 문서 진행률 표시 (Approved/Total 비율)
+  - 클릭 시 Docs 탭으로 이동 + 해당 Voyage 자동 선택
+  - 키보드 접근성 지원 (Tab, Enter/Space)
+  - 포커스 링 스타일 (focus-visible)
 - Voyage 문서 체크리스트 및 워크플로우 상태 관리
 - Trip 그룹별 색상 코딩:
   - AGI TR Units 1-2: Sky
@@ -619,25 +623,32 @@ interface WeatherRecord {
 - **상태 머신**: `not_started → submitted → approved` 전이
   - Submit 버튼: `not_started` → `submitted`
   - Approve 버튼: `submitted` → `approved`
+  - 가드 로직: `canTransition()` 함수로 전이 허용 여부 확인
 - **마감일 계산**: Anchor Milestone + Offset Days
   - Anchor: `mzp_arrival`, `loadout_start`, `mzp_departure` 등
   - Offset: 음수(이전) / 양수(이후) 일수
   - 타입: `calendar_days` (주말 포함) / `business_days` (주말 제외)
-- **D-카운트다운**: 마감일까지 남은 일수 표시 (D-N, Due today, Overdue Nd)
+  - 자동 재계산: 일정 변경 시 마감일 자동 재계산
+- **D-카운트다운**: 마감일까지 남은 일수 표시
+  - 카드 뷰: Badge로 표시 (D-N, Due today, Overdue Nd)
+  - 테이블 뷰: Badge로 표시 + Due State Badge
+  - Overdue 시 빨간색 강조
 - **Due State**: `on_track` / `at_risk` / `overdue` (색상 Badge)
 - **진행률 표시**: 카테고리별 완료율 (Progress bar)
-- **History 자동 추가**: 상태 변경 시 자동 기록
+- **History 자동 추가**: 상태 변경 시 자동 기록 (`STATE_${STATUS}` 형식)
 
 **카드 뷰 특징**:
 - 카테고리별 Card 그룹 (Accordion 스타일)
 - 체크박스로 `approved` 상태 토글
-- D-카운트다운 Badge 표시
+- D-카운트다운 Badge 표시 (Overdue 시 빨간색 강조)
 - Due State Badge (On Track/At Risk/Overdue)
+- Priority Badge (critical/important/standard/recommended)
 
 **테이블 뷰 특징**:
-- 좌측: 카테고리 탭 (Tabs, 진행률 표시)
+- 좌측: 카테고리 탭 (Tabs, 진행률 표시: approved/total)
 - 우측: 문서 테이블 (Document, Due, Status, Action 컬럼)
-- Submit/Approve 버튼으로 상태 전이
+- Submit/Approve 버튼으로 상태 전이 (상태 머신 가드 적용)
+- D-카운트다운 + Due State Badge
 - 카테고리별 필터링
 
 **데이터 소스**:
@@ -647,6 +658,34 @@ interface WeatherRecord {
 - `contexts/voyage-context.tsx`: 문서 상태 관리 (localStorage)
 
 자세한 내용은 [`docs/DOCUMENT_WORKFLOW_GUIDE.md`](./docs/DOCUMENT_WORKFLOW_GUIDE.md) 참조
+
+### 6. Docs Progress Overlay (Gantt Chart 통합)
+
+**위치**: `components/overlays/docs-progress-overlay.tsx`
+
+**기능**:
+- Trip group header row 위에 문서 진행률 표시
+- Approved/Total 비율 시각화 (Progress bar + Badge)
+- 클릭 인터랙션: Docs 탭으로 이동 + 해당 Voyage 자동 선택
+- 키보드 접근성: Tab, Enter/Space 지원
+- 포커스 링 스타일 (focus-visible)
+
+**통합 위치**:
+- Gantt Chart 탭의 Trip group header row
+- Voyage 매칭: `tripGroupKey === activityId2`
+- 좌표 계산: 기존 Gantt bar와 동일한 로직
+
+**시각적 요소**:
+- Progress bar: 초록색 (emerald-500/80)
+- Badge: `Docs X/Y` 형식
+- 포커스 링: 3px ring, ring-offset-2 (shadcn/ui 일관성)
+
+**접근성**:
+- `role="button"` 설정
+- `tabIndex={0}` 설정
+- `aria-label` 제공
+- 키보드 이벤트 핸들러 (`onKeyDown`)
+- 포커스 링 스타일 (WCAG 준수)
 
 ---
 

@@ -262,7 +262,17 @@ graph LR
   - Risk 레벨별 색상 구분 (ON_TRACK/AT_RISK/OVERDUE)
   - 줌 레벨 변경 시 위치 자동 조정
 
-#### 8. **GenerationStatus**
+#### 8. **DocsProgressOverlay**
+
+- **위치**: `components/overlays/docs-progress-overlay.tsx`
+- **책임**: Gantt Trip row 위에 문서 진행률 표시
+- **기능**:
+  - Approved/Total 비율 시각화 (Progress bar + Badge)
+  - 클릭 인터랙션: Docs 탭으로 이동 + 해당 Voyage 자동 선택
+  - 키보드 접근성 지원 (Tab, Enter/Space)
+  - 포커스 링 스타일 (focus-visible)
+
+#### 9. **GenerationStatus**
 
 - **위치**: `components/generation-status.tsx`
 - **책임**: 생성 제어 및 상태

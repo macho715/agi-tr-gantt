@@ -836,6 +836,18 @@ interface GenerationStatusProps {
 - 카테고리별 필터링
 - 마감일 중심 관리
 
+**History 이벤트 일관성**:
+- 모든 상태 변경 이벤트는 `STATE_${STATUS}` 형식으로 통일
+- 예: `STATE_SUBMITTED`, `STATE_APPROVED`
+- `updateDoc`에서 자동 추가 (상태 변경 감지)
+
+**카드 뷰 D-카운트다운 개선**:
+- Badge로 표시 (기존 텍스트에서 개선)
+- Overdue: `variant="destructive"` + 빨간색 강조
+- Due today: `variant="default"` + 노란색
+- Normal: `variant="secondary"` 또는 `variant="outline"`
+- Overdue 시 AlertTriangle 아이콘 표시
+
 **마감일 계산 로직**:
 
 #### Anchor Milestone

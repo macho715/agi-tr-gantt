@@ -30,6 +30,7 @@ Documents 탭은 Voyage별 문서 체크리스트를 관리하는 시스템입�
 - ✅ **D-카운트다운**: 마감일까지 남은 일수 표시
 - ✅ **Due State**: `on_track` / `at_risk` / `overdue` 자동 판단
 - ✅ **History 자동 추가**: 상태 변경 시 자동 기록
+- ✅ **Docs Progress Overlay**: Gantt Chart에서 문서 진행률 즉시 확인
 
 ---
 
@@ -445,7 +446,7 @@ DocumentChecklist는 두 가지 레이아웃을 제공합니다:
 - `D-3`: 3일 남음
 - `Due today`: 오늘
 - `Overdue 2d`: 2일 지남
-- Badge로 표시 (Overdue 시 빨간색)
+- Badge로 표시 (Overdue 시 빨간색 강조 + AlertTriangle 아이콘)
 
 **3. Due State Badge**
 - `On Track`: 초록색
@@ -582,6 +583,128 @@ not_started ──[Submit]──> submitted ──[Approve]──> approved
   - 모바일: 카드 뷰 권장
   - 태블릿: 두 뷰 모두 사용 가능
   - 데스크톱: 테이블 뷰 권장 (더 많은 정보 표시)
+
+---
+
+## Docs Progress Overlay
+
+### 개요
+
+Gantt Chart의 Trip row 위에 문서 진행률을 시각화하는 오버레이입니다. 클릭하면 해당 Voyage의 문서 목록으로 바로 이동할 수 있습니다.
+
+### 위치
+
+- **통합 위치**: Trip group header row (Gantt Chart 탭)
+- **표시 조건**: 해당 Trip에 매칭되는 Voyage가 있고, 문서가 1개 이상인 경우
+
+### 시각적 요소
+
+- **Progress bar**: 
+  - 배경: `bg-muted/40`
+  - 진행률: `bg-emerald-500/80` (초록색)
+  - 높이: `h-2` (2px)
+- **Badge**: 
+  - 텍스트: `Docs X/Y` (Approved/Total)
+  - 스타일: `variant="outline"`, `text-[9px]`
+  - 배경: `bg-background/90 backdrop-blur-sm`
+
+### 인터랙션
+
+#### 마우스 클릭
+1. Overlay 클릭
+2. 해당 Voyage 자동 선택 (`setSelectedVoyageId`)
+3. Docs 탭으로 자동 전환 (`setActiveTab("docs")`)
+4. 해당 Voyage의 문서 목록 표시
+
+#### 키보드 네비게이션
+1. Tab 키로 overlay에 포커스 이동
+2. 포커스 링 표시 (3px ring, ring-offset-2)
+3. Enter 또는 Space로 활성화
+4. 해당 Voyage 선택 + Docs 탭 전환
+
+### 접근성
+
+- `role="button"` 설정
+- `tabIndex={0}` 설정
+- `aria-label`: `View documents for {voyageId} ({approved}/{total} approved)`
+- 키보드 이벤트 핸들러 (`onKeyDown`)
+- 포커스 링 스타일 (WCAG 준수)
+
+### Voyage 매칭
+
+- `tripGroupKey === group.activityId2`로 매칭
+- 매칭 실패 시 overlay 표시 안 함
+
+---
+
+## 사용 시나리오
+
+### 시나리오 1: 빠른 체크 (카드 뷰)
+
+1. Documents 탭 열기
+2. 카드 뷰에서 카테고리별 문서 확인
+3. 체크박스로 승인/미승인 토글
+4. D-카운트다운으로 마감일 확인
+
+### 시나리오 2: 상세 관리 (테이블 뷰)
+
+1. Documents 탭 열기
+2. "Table View" 버튼 클릭
+3. 좌측에서 카테고리 선택
+4. 우측 테이블에서 문서 확인
+5. "Submit" 버튼으로 제출
+6. "Approve" 버튼으로 승인
+
+### 시나리오 3: Gantt에서 문서 확인
+
+1. Gantt Chart 탭에서 Trip row 확인
+2. Docs progress overlay 확인 (Approved/Total 비율)
+3. Overlay 클릭 (또는 Tab + Enter)
+4. Docs 탭으로 자동 전환
+5. 해당 Voyage의 문서 목록 표시
+
+### 시나리오 4: 마감일 중심 관리
+
+1. 테이블 뷰로 전환
+2. "Due" 컬럼으로 정렬 (수동 또는 자동)
+3. D-카운트다운으로 우선순위 확인
+4. Overdue 문서부터 처리
+
+---
+
+## FAQ
+
+### Q1: 마감일이 자동으로 계산되나요?
+
+A: 네. Gantt 일정의 마일스톤을 기준으로 자동 계산됩니다. 일정이 변경되면 마감일도 자동으로 재계산됩니다.
+
+### Q2: Business Days와 Calendar Days의 차이는?
+
+A: Business Days는 주말(토/일)을 제외하고 계산하며, Calendar Days는 주말을 포함합니다.
+
+### Q3: 상태를 되돌릴 수 있나요?
+
+A: 현재 MVP에서는 되돌리기 기능이 없습니다. `approved` 상태는 종료 상태로 취급됩니다.
+
+### Q4: 카드 뷰와 테이블 뷰 중 어떤 것을 사용해야 하나요?
+
+A: 빠른 체크는 카드 뷰, 상세 관리 및 상태 전이는 테이블 뷰를 권장합니다.
+
+### Q5: D-카운트다운은 어떻게 표시되나요?
+
+A: `D-N` (N일 남음), `Due today` (오늘), `Overdue Nd` (N일 지남) 형식으로 Badge에 표시됩니다.
+
+### Q6: Docs Progress Overlay는 어떻게 사용하나요?
+
+A: Gantt Chart의 Trip row 위에 표시되는 progress bar를 클릭하면 해당 Voyage의 문서 목록으로 이동합니다. 키보드로도 접근 가능합니다 (Tab + Enter/Space).
+
+---
+
+## 관련 문서
+
+- [시스템 레이아웃](../SYSTEM_LAYOUT.md) - 전체 시스템 구조
+- [컴포넌트 상세 레이아웃](../COMPONENTS_LAYOUT_DETAIL.md) - 컴포넌트별 상세 정보
+- [시스템 아키텍처](../SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처
 
 ---
 

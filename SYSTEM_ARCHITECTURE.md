@@ -225,6 +225,10 @@ graph LR
   - Task hierarchy visualization
   - Color-coded by WBS level
   - Deadline overlay visualization
+  - **Docs Progress Overlay**: Document progress visualization on Trip rows
+    - Click interaction: Navigate to Docs tab + auto-select Voyage
+    - Keyboard accessibility support (Tab, Enter/Space)
+    - Focus ring styling (focus-visible)
   - Responsive design
 
 #### 5. **DocumentChecklist**
@@ -236,11 +240,20 @@ graph LR
   - Workflow state machine (`not_started → submitted → approved`)
   - Submit/Approve buttons for status transitions (state machine guard)
   - Due date calculation and Due state display (on_track/at_risk/overdue)
-  - D-countdown display (days until due)
+  - D-countdown display (days until due, Card/Table views)
   - Progress tracking (Progress bar, per category)
-  - Automatic history addition (state change logging)
+  - Automatic history logging (on state changes)
 
-#### 6. **GenerationStatus**
+#### 6. **DocsProgressOverlay**
+- **Location**: `components/overlays/docs-progress-overlay.tsx`
+- **Responsibility**: Document progress visualization on Gantt Trip rows
+- **Features**:
+  - Approved/Total ratio visualization (Progress bar + Badge)
+  - Click interaction: Navigate to Docs tab + auto-select Voyage
+  - Keyboard accessibility support (Tab, Enter/Space)
+  - Focus ring styling (focus-visible)
+
+#### 7. **GenerationStatus**
 - **Location**: `components/generation-status.tsx`
 - **Responsibility**: Generation control and status
 - **Features**:

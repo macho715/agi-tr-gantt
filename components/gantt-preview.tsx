@@ -29,6 +29,7 @@ import { VoyageMiniGrid } from "@/components/documents/voyage-mini-grid"
 import docTemplatesData from "@/data/doc-templates.json"
 import { DeadlineLadderOverlay, type DeadlineMarker } from "@/components/overlays/deadline-ladder-overlay"
 import { computeDeadlineMarkers } from "@/lib/documents/to-deadline-markers"
+import { DocsProgressOverlay } from "@/components/overlays/docs-progress-overlay"
 
 import tideData from "@/data/tide-data.json"
 import weatherData from "@/data/weather-data.json"
@@ -155,6 +156,7 @@ export function GanttPreview({
   const [useFixedData, setUseFixedData] = useState(true)
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
   const [showDeadlines, setShowDeadlines] = useState<boolean>(defaultShowDeadlines)
+  const [activeTab, setActiveTab] = useState<string>("gantt")
 
   const leftPanelRef = useRef<HTMLDivElement>(null)
   const rightPanelRef = useRef<HTMLDivElement>(null)
@@ -442,7 +444,7 @@ export function GanttPreview({
         </div>
       </CardHeader>
       <CardContent className="p-0 flex-1 min-h-0 flex flex-col">
-        <Tabs defaultValue="gantt" className="w-full flex-1 flex flex-col min-h-0">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex-1 flex flex-col min-h-0">
           <div className="px-4 pt-3 border-b border-border bg-muted/30 flex-shrink-0">
             <TabsList className="h-8 p-0.5 bg-muted">
               <TabsTrigger value="gantt" className="text-xs h-7 px-3 data-[state=active]:bg-background">
@@ -637,6 +639,22 @@ export function GanttPreview({
                                   </span>
                                 </div>
                               )}
+                              {group.startDate && group.endDate && (() => {
+                                const voyage = voyages.find((v) => v.tripGroupKey === group.activityId2)
+                                if (!voyage) return null
+
+                                return (
+                                  <DocsProgressOverlay
+                                    voyageId={voyage.id}
+                                    startDate={group.startDate}
+                                    endDate={group.endDate}
+                                    timelineStart={chartData.minDate}
+                                    cellWidth={cellWidth}
+                                    excludeGlobal={true}
+                                    onNavigateToDocs={() => setActiveTab("docs")}
+                                  />
+                                )
+                              })()}
                             </div>
                             {!isCollapsed && (
                               <>
