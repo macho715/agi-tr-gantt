@@ -3,3 +3,4 @@ load:
   - path: "SYSTEM_ARCHITECTURE_KO.md"
   - path: "DEPLOYMENT_KO.md"
   - path: "plan.md"
+  - path: "docs/design/통합.md"
