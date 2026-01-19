@@ -60,7 +60,17 @@ export function VoyageProvider({
   )
 
   useEffect(() => {
-    if (!selectedVoyageId && voyages.length > 0) {
+    if (voyages.length === 0) {
+      // Reset selection when voyages become empty
+      setSelectedVoyageId(null)
+    } else if (selectedVoyageId) {
+      // Validate that selected voyage still exists
+      const voyageExists = voyages.some((v) => v.id === selectedVoyageId)
+      if (!voyageExists) {
+        setSelectedVoyageId(voyages[0].id)
+      }
+    } else {
+      // Auto-select first voyage if none selected
       setSelectedVoyageId(voyages[0].id)
     }
   }, [selectedVoyageId, voyages])
@@ -72,17 +82,41 @@ export function VoyageProvider({
       const updated = { ...prev }
 
       if (existingIndex >= 0) {
-        updated[voyageId] = voyageDocs.map((d, i) => (i === existingIndex ? { ...d, ...patch } : d))
+        const existing = voyageDocs[existingIndex]
+        const hasStateChange = patch.workflowState && patch.workflowState !== existing.workflowState
+
+        updated[voyageId] = voyageDocs.map((d, i) =>
+          i === existingIndex
+            ? {
+                ...d,
+                ...patch,
+                history: hasStateChange
+                  ? [
+                      ...d.history,
+                      {
+                        at: new Date().toISOString(),
+                        event: `STATE_${patch.workflowState?.toUpperCase()}`,
+                      },
+                    ]
+                  : patch.history || d.history,
+              }
+            : d,
+        )
       } else {
         updated[voyageId] = [
           ...voyageDocs,
           {
             templateId,
             voyageId,
-            workflowState: "not_started",
-            dueAt: "",
-            attachments: [],
-            history: [],
+            workflowState: patch.workflowState || "not_started",
+            dueAt: patch.dueAt || "",
+            attachments: patch.attachments || [],
+            history: patch.history || [
+              {
+                at: new Date().toISOString(),
+                event: "CREATED",
+              },
+            ],
             ...patch,
           } as DocInstance,
         ]

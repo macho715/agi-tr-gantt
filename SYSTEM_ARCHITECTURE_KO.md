@@ -64,10 +64,13 @@ graph TB
     Config --> |HTTP POST| API
     API --> Parser
     Parser --> Scheduler
+    Scheduler --> VoyageDeriver
+    VoyageDeriver --> DeadlineEngine
+    Scheduler --> |일정 데이터 + Voyage| Preview
+    DeadlineEngine --> |마감일 정보| Preview
     Scheduler --> |선택적| Python
     Python --> Storage
     Storage --> |다운로드 URL| UI
-    Scheduler --> |일정 데이터| Preview
 ```
 
 ### 컴포넌트 아키텍처
@@ -225,12 +228,41 @@ graph LR
 - **위치**: `components/gantt-preview.tsx`
 - **책임**: 시각적 Gantt 차트 미리보기
 - **기능**:
-  - 대화형 타임라인 뷰
+  - 대화형 타임라인 뷰 (5가지 탭: Gantt Chart, Table View, Voyage Summary, Documents, Summary)
   - 작업 계층 구조 시각화
   - WBS 레벨별 색상 코딩
+  - Deadline 오버레이 시각화
   - 반응형 디자인
 
-#### 5. **GenerationStatus**
+#### 5. **DocumentChecklist**
+
+- **위치**: `components/documents/document-checklist.tsx`
+- **책임**: Voyage 문서 체크리스트 관리
+- **기능**:
+  - 카테고리별 문서 그룹화
+  - Workflow 상태 관리 (not_started → approved)
+  - 마감일 계산 및 Due state 표시
+  - 진행률 표시
+
+#### 6. **VoyageMiniGrid**
+
+- **위치**: `components/documents/voyage-mini-grid.tsx`
+- **책임**: Voyage 선택 UI
+- **기능**:
+  - Voyage 카드 그리드 표시
+  - 선택된 Voyage 강조
+  - Overdue 문서 개수 표시
+
+#### 7. **DeadlineLadderOverlay**
+
+- **위치**: `components/overlays/deadline-ladder-overlay.tsx`
+- **책임**: Gantt 차트에 문서 마감일 시각화
+- **기능**:
+  - 타임라인 헤더/바 영역에 세로선 표시
+  - Risk 레벨별 색상 구분 (ON_TRACK/AT_RISK/OVERDUE)
+  - 줌 레벨 변경 시 위치 자동 조정
+
+#### 8. **GenerationStatus**
 
 - **위치**: `components/generation-status.tsx`
 - **책임**: 생성 제어 및 상태

@@ -236,17 +236,20 @@ interface ConfigurationPanelProps {
 **Location**: `components/gantt-preview.tsx`
 
 **Features**:
-- 4 tab views:
-  1. **Gantt Chart**: Timeline-based Gantt chart
+- 5 tab views:
+  1. **Gantt Chart**: Timeline-based Gantt chart with Deadline overlay
   2. **Table View**: Table format schedule
   3. **Voyage Summary**: Voyage milestones and weather/tide information
-  4. **Summary**: Project summary statistics
+  4. **Documents**: Voyage documents management with checklist and deadline tracking
+  5. **Summary**: Project summary statistics
 
 **Key Features**:
 - Zoom in/out (4 levels: 24px, 32px, 48px, 64px)
 - Group collapse/expand
 - Fixed data / Uploaded data toggle
 - Weather/tide data integration display
+- Deadline overlay visualization (toggle with "Deadlines" button)
+- Voyage documents checklist with workflow states
 - Trip group color coding:
   - AGI TR Units 1-2: Sky
   - AGI TR Units 3-4: Emerald

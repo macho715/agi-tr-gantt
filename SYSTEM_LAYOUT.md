@@ -236,17 +236,20 @@ interface ConfigurationPanelProps {
 **위치**: `components/gantt-preview.tsx`
 
 **기능**:
-- 4가지 탭 뷰 제공:
-  1. **Gantt Chart**: 타임라인 기반 Gantt 차트
+- 5가지 탭 뷰 제공:
+  1. **Gantt Chart**: 타임라인 기반 Gantt 차트 (Deadline 오버레이 포함)
   2. **Table View**: 테이블 형식 일정
   3. **Voyage Summary**: 항해 마일스톤 및 날씨/조수 정보
-  4. **Summary**: 프로젝트 요약 통계
+  4. **Documents**: Voyage 문서 체크리스트 관리 (하이브리드 레이아웃: 카드/테이블 뷰)
+  5. **Summary**: 프로젝트 요약 통계
 
 **주요 기능**:
 - 줌 인/아웃 (4단계: 24px, 32px, 48px, 64px)
 - 그룹 접기/펼치기
 - 고정 데이터 / 업로드 데이터 전환
 - 날씨/조수 데이터 통합 표시
+- Deadline 오버레이 시각화 (Deadlines 버튼으로 토글)
+- Voyage 문서 체크리스트 및 워크플로우 상태 관리
 - Trip 그룹별 색상 코딩:
   - AGI TR Units 1-2: Sky
   - AGI TR Units 3-4: Emerald
@@ -599,6 +602,51 @@ interface WeatherRecord {
 - **Fixed Data**: `data/activity-data.json` 사용
 - **Uploaded Data**: 사용자 업로드 파일 사용
 - 실시간 전환 가능
+
+### 5. Documents 탭 (Voyage 문서 체크리스트)
+
+**위치**: `components/documents/document-checklist.tsx`
+
+**하이브리드 레이아웃**:
+- **카드 뷰** (기본): 카테고리별 Card 그룹, 빠른 체크 및 승인 토글
+- **테이블 뷰**: 좌측 카테고리 탭 + 우측 문서 테이블, 상세 관리 및 상태 전이
+
+**레이아웃 전환**:
+- 상단 우측에 "Card View" / "Table View" 버튼으로 전환
+- 기본값: 카드 뷰
+
+**주요 기능**:
+- **상태 머신**: `not_started → submitted → approved` 전이
+  - Submit 버튼: `not_started` → `submitted`
+  - Approve 버튼: `submitted` → `approved`
+- **마감일 계산**: Anchor Milestone + Offset Days
+  - Anchor: `mzp_arrival`, `loadout_start`, `mzp_departure` 등
+  - Offset: 음수(이전) / 양수(이후) 일수
+  - 타입: `calendar_days` (주말 포함) / `business_days` (주말 제외)
+- **D-카운트다운**: 마감일까지 남은 일수 표시 (D-N, Due today, Overdue Nd)
+- **Due State**: `on_track` / `at_risk` / `overdue` (색상 Badge)
+- **진행률 표시**: 카테고리별 완료율 (Progress bar)
+- **History 자동 추가**: 상태 변경 시 자동 기록
+
+**카드 뷰 특징**:
+- 카테고리별 Card 그룹 (Accordion 스타일)
+- 체크박스로 `approved` 상태 토글
+- D-카운트다운 Badge 표시
+- Due State Badge (On Track/At Risk/Overdue)
+
+**테이블 뷰 특징**:
+- 좌측: 카테고리 탭 (Tabs, 진행률 표시)
+- 우측: 문서 테이블 (Document, Due, Status, Action 컬럼)
+- Submit/Approve 버튼으로 상태 전이
+- 카테고리별 필터링
+
+**데이터 소스**:
+- `data/doc-templates.json`: 문서 템플릿 정의
+- `lib/documents/deadline-engine.ts`: 마감일 계산 엔진
+- `lib/documents/workflow.ts`: 상태 전이 로직
+- `contexts/voyage-context.tsx`: 문서 상태 관리 (localStorage)
+
+자세한 내용은 [`docs/DOCUMENT_WORKFLOW_GUIDE.md`](./docs/DOCUMENT_WORKFLOW_GUIDE.md) 참조
 
 ---
 

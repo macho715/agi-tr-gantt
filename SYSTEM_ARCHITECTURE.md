@@ -221,12 +221,26 @@ graph LR
 - **Location**: `components/gantt-preview.tsx`
 - **Responsibility**: Visual Gantt chart preview
 - **Features**:
-  - Interactive timeline view
+  - Interactive timeline view (5 tab views: Gantt Chart, Table View, Voyage Summary, Documents, Summary)
   - Task hierarchy visualization
   - Color-coded by WBS level
+  - Deadline overlay visualization
   - Responsive design
 
-#### 5. **GenerationStatus**
+#### 5. **DocumentChecklist**
+- **Location**: `components/documents/document-checklist.tsx`
+- **Responsibility**: Voyage document checklist management
+- **Features**:
+  - Hybrid layout: Card view ↔ Table view toggle
+  - Category-based document grouping (Accordion or Tabs)
+  - Workflow state machine (`not_started → submitted → approved`)
+  - Submit/Approve buttons for status transitions (state machine guard)
+  - Due date calculation and Due state display (on_track/at_risk/overdue)
+  - D-countdown display (days until due)
+  - Progress tracking (Progress bar, per category)
+  - Automatic history addition (state change logging)
+
+#### 6. **GenerationStatus**
 - **Location**: `components/generation-status.tsx`
 - **Responsibility**: Generation control and status
 - **Features**:

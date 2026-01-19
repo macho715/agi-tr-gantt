@@ -1,13 +1,18 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useMemo, useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { AlertTriangle, CheckCircle2, Clock, FileText } from "lucide-react"
-import type { DocTemplate, DocInstance, Voyage, DocDueState } from "@/lib/types"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { AlertTriangle, CheckCircle2, Clock, FileText, LayoutGrid, Table2 } from "lucide-react"
+import { differenceInCalendarDays, format } from "date-fns"
+import type { DocTemplate, DocInstance, Voyage, DocDueState, DocWorkflowState } from "@/lib/types"
 import { calculateDueDate, calculateDueState } from "@/lib/documents/deadline-engine"
+import { canTransition, transitionStatus, statusLabel } from "@/lib/documents/workflow"
 import { useVoyageContext } from "@/contexts/voyage-context"
 import docTemplatesData from "@/data/doc-templates.json"
 
@@ -17,11 +22,25 @@ interface DocumentChecklistProps {
   docs: DocInstance[]
 }
 
+type LayoutMode = "card" | "table"
+
 export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklistProps) {
   const { updateDoc } = useVoyageContext()
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>("card")
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("")
+
+  const categories = useMemo(() => {
+    return (docTemplatesData.categories || []).slice().sort((a, b) => (a.sort || 0) - (b.sort || 0))
+  }, [])
+
+  useEffect(() => {
+    if (layoutMode === "table" && !selectedCategoryId && categories.length > 0) {
+      setSelectedCategoryId(categories[0].id)
+    }
+  }, [layoutMode, selectedCategoryId, categories])
 
   const categorizedDocs = useMemo(() => {
-    const categories = new Map<string, Array<{ template: DocTemplate; doc?: DocInstance; dueState: DocDueState }>>()
+    const grouped = new Map<string, Array<{ template: DocTemplate; doc?: DocInstance; dueState: DocDueState }>>()
 
     templates.forEach((template) => {
       if (template.appliesTo.scope === "project" || template.appliesTo.scope === "voyage") {
@@ -40,15 +59,46 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
         )
 
         const category = template.categoryId
-        if (!categories.has(category)) {
-          categories.set(category, [])
+        if (!grouped.has(category)) {
+          grouped.set(category, [])
         }
-        categories.get(category)!.push({ template, doc, dueState })
+        grouped.get(category)!.push({ template, doc, dueState })
       }
     })
 
-    return categories
+    return grouped
   }, [templates, docs, voyage])
+
+  const templatesInCategory = useMemo(() => {
+    if (!selectedCategoryId) return []
+    return templates.filter((t) => t.categoryId === selectedCategoryId)
+  }, [templates, selectedCategoryId])
+
+  const categoryProgress = useMemo(() => {
+    const result: Record<string, { total: number; approved: number; submitted: number }> = {}
+    categories.forEach((cat) => {
+      const catTemplates = templates.filter((t) => t.categoryId === cat.id)
+      const catDocs = catTemplates.map((t) => docs.find((d) => d.templateId === t.id))
+      result[cat.id] = {
+        total: catTemplates.length,
+        approved: catDocs.filter((d) => d?.workflowState === "approved").length,
+        submitted: catDocs.filter((d) => d?.workflowState === "submitted").length,
+      }
+    })
+    return result
+  }, [categories, templates, docs])
+
+  const handleAction = (templateId: string, action: "submit" | "approve") => {
+    const doc = docs.find((d) => d.templateId === templateId)
+    const currentStatus = (doc?.workflowState || "not_started") as DocWorkflowState
+
+    if (!canTransition(currentStatus, action)) return
+
+    const newStatus = transitionStatus(currentStatus, action)
+    updateDoc(voyage.id, templateId, {
+      workflowState: newStatus,
+    })
+  }
 
   const getDueStateBadge = (state: DocDueState) => {
     switch (state) {
@@ -91,89 +141,319 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
     )
   }
 
-  const categories = useMemo(() => {
-    return (docTemplatesData.categories || []).reduce(
-      (acc, cat) => {
-        acc[cat.id] = cat.label
-        return acc
-      },
-      {} as Record<string, string>,
+  const getStatusBadge = (status: DocWorkflowState) => {
+    if (status === "approved") {
+      return (
+        <Badge className="text-xs">
+          <CheckCircle2 className="w-3 h-3 mr-1" />
+          Approved
+        </Badge>
+      )
+    }
+    if (status === "submitted") {
+      return (
+        <Badge variant="secondary" className="text-xs">
+          Submitted
+        </Badge>
+      )
+    }
+    return (
+      <Badge variant="outline" className="text-xs">
+        Not started
+      </Badge>
     )
+  }
+
+  const categoryLabels = useMemo(() => {
+    return (docTemplatesData.categories || []).reduce((acc, cat) => {
+      acc[cat.id] = cat.label
+      return acc
+    }, {} as Record<string, string>)
   }, [])
 
-  return (
-    <div className="space-y-6">
-      {Array.from(categorizedDocs.entries()).map(([categoryId, items]) => {
-        const categoryLabel = categories[categoryId] || categoryId
-        const completed = items.filter((i) => i.doc?.workflowState === "approved").length
-        const total = items.length
-        const progress = total > 0 ? (completed / total) * 100 : 0
+  const renderCardView = () => {
+    return (
+      <div className="space-y-6">
+        {Array.from(categorizedDocs.entries()).map(([categoryId, items]) => {
+          const categoryLabel = categoryLabels[categoryId] || categoryId
+          const completed = items.filter((i) => i.doc?.workflowState === "approved").length
+          const total = items.length
+          const progress = total > 0 ? (completed / total) * 100 : 0
 
-        return (
-          <Card key={categoryId}>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-semibold">{categoryLabel}</CardTitle>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">
-                    {completed}/{total}
-                  </span>
-                  <Progress value={progress} className="w-24 h-2" />
+          return (
+            <Card key={categoryId}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-semibold">{categoryLabel}</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {completed}/{total}
+                    </span>
+                    <Progress value={progress} className="w-24 h-2" />
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {items.map(({ template, doc, dueState }) => {
-                const isApproved = doc?.workflowState === "approved"
-                const { dueAt } = calculateDueDate(template, voyage)
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {items.map(({ template, doc, dueState }) => {
+                  const isApproved = doc?.workflowState === "approved"
+                  const { dueAt } = calculateDueDate(template, voyage)
 
-                return (
-                  <div
-                    key={template.id}
-                    className={`flex items-start gap-3 p-3 rounded-lg border ${
-                      dueState === "overdue" ? "border-red-500/50 bg-red-50/50 dark:bg-red-950/20" : ""
-                    }`}
-                  >
-                    <Checkbox
-                      checked={isApproved}
-                      onCheckedChange={(checked) => {
-                        updateDoc(voyage.id, template.id, {
-                          workflowState: checked ? "approved" : "in_progress",
-                        })
-                      }}
-                      className="mt-0.5"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <FileText className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm font-medium">{template.title}</span>
-                            {getPriorityBadge(template.priority)}
-                          </div>
-                          {template.description && (
-                            <p className="text-xs text-muted-foreground mb-2">{template.description}</p>
-                          )}
-                          <div className="flex items-center gap-2 flex-wrap">
-                            {dueAt && <span className="text-xs text-muted-foreground">Due: {dueAt.toLocaleDateString()}</span>}
-                            {getDueStateBadge(dueState)}
-                            {isApproved && (
-                              <Badge variant="outline" className="text-xs border-green-500 text-green-700">
-                                <CheckCircle2 className="w-3 h-3 mr-1" />
-                                Approved
-                              </Badge>
+                  const today = new Date()
+                  const dueDiff = dueAt ? differenceInCalendarDays(dueAt, today) : null
+                  const dueBadge =
+                    dueDiff === null
+                      ? ""
+                      : dueDiff > 0
+                        ? `D-${dueDiff}`
+                        : dueDiff === 0
+                          ? "Due today"
+                          : `Overdue ${Math.abs(dueDiff)}d`
+
+                  return (
+                    <div
+                      key={template.id}
+                      className={`flex items-start gap-3 p-3 rounded-lg border ${
+                        dueState === "overdue" ? "border-red-500/50 bg-red-50/50 dark:bg-red-950/20" : ""
+                      }`}
+                    >
+                      <Checkbox
+                        checked={isApproved}
+                        onCheckedChange={(checked) => {
+                          updateDoc(voyage.id, template.id, {
+                            workflowState: checked ? "approved" : "in_progress",
+                          })
+                        }}
+                        className="mt-0.5"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <FileText className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm font-medium">{template.title}</span>
+                              {getPriorityBadge(template.priority)}
+                            </div>
+                            {template.description && (
+                              <p className="text-xs text-muted-foreground mb-2">{template.description}</p>
                             )}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {dueAt && (
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-xs text-muted-foreground">
+                                    Due: {dueAt.toLocaleDateString()}
+                                  </span>
+                                  {dueBadge && (
+                                    <Badge
+                                      variant={
+                                        dueDiff !== null && dueDiff < 0
+                                          ? "destructive"
+                                          : dueDiff === 0
+                                            ? "default"
+                                            : dueDiff !== null && dueDiff <= 2
+                                              ? "outline"
+                                              : "secondary"
+                                      }
+                                      className={`text-[10px] font-medium ${
+                                        dueDiff !== null && dueDiff < 0
+                                          ? "animate-pulse"
+                                          : dueDiff === 0
+                                            ? "ring-2 ring-amber-500"
+                                            : ""
+                                      }`}
+                                    >
+                                      {dueDiff !== null && dueDiff < 0 && <AlertTriangle className="w-2.5 h-2.5 mr-1" />}
+                                      {dueBadge}
+                                    </Badge>
+                                  )}
+                                </div>
+                              )}
+                              {getDueStateBadge(dueState)}
+                              {isApproved && (
+                                <Badge variant="outline" className="text-xs border-green-500 text-green-700">
+                                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                                  Approved
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )
+                })}
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+    )
+  }
+
+  const renderTableView = () => {
+    return (
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+        <Card className="p-2 md:col-span-4">
+          <div className="px-2 py-2 text-sm font-semibold">Categories</div>
+          <Tabs value={selectedCategoryId} onValueChange={setSelectedCategoryId} className="flex-1">
+            <TabsList className="flex-col items-stretch h-auto w-full">
+              {categories.map((cat) => {
+                const progress = categoryProgress[cat.id] || { total: 0, approved: 0, submitted: 0 }
+                const active = cat.id === selectedCategoryId
+
+                return (
+                  <TabsTrigger key={cat.id} value={cat.id} className={`justify-between w-full ${active ? "bg-accent" : ""}`}>
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="truncate text-sm font-medium">{cat.label}</div>
+                    </div>
+                    <div className="shrink-0 text-xs text-muted-foreground ml-2">
+                      {progress.approved}/{progress.total}
+                    </div>
+                  </TabsTrigger>
                 )
               })}
-            </CardContent>
-          </Card>
-        )
-      })}
+            </TabsList>
+          </Tabs>
+        </Card>
+
+        <Card className="p-4 md:col-span-8">
+          <div className="mb-3">
+            <div className="text-sm text-muted-foreground">Documents</div>
+            <div className="text-base font-semibold">
+              {categories.find((c) => c.id === selectedCategoryId)?.label || "—"}
+            </div>
+          </div>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Document</TableHead>
+                <TableHead className="w-[160px]">Due</TableHead>
+                <TableHead className="w-[140px]">Status</TableHead>
+                <TableHead className="w-[160px]">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {templatesInCategory.map((template) => {
+                const doc = docs.find((d) => d.templateId === template.id)
+                const status = (doc?.workflowState || "not_started") as DocWorkflowState
+                const { dueAt } = calculateDueDate(template, voyage)
+                const dueState = calculateDueState(
+                  doc || {
+                    templateId: template.id,
+                    voyageId: voyage.id,
+                    workflowState: "not_started",
+                    dueAt: dueAt?.toISOString() || "",
+                    attachments: [],
+                    history: [],
+                  },
+                  template,
+                  voyage,
+                )
+
+                const today = new Date()
+                const dueDiff = dueAt ? differenceInCalendarDays(dueAt, today) : null
+                const dueText = dueAt ? format(dueAt, "yyyy-MM-dd") : "—"
+                const dueBadge =
+                  dueDiff === null
+                    ? ""
+                    : dueDiff > 0
+                      ? `D-${dueDiff}`
+                      : dueDiff === 0
+                        ? "Due today"
+                        : `Overdue ${Math.abs(dueDiff)}d`
+
+                const canSubmit = canTransition(status, "submit")
+                const canApprove = canTransition(status, "approve")
+
+                return (
+                  <TableRow
+                    key={template.id}
+                    className={dueState === "overdue" ? "bg-red-50/50 dark:bg-red-950/20" : ""}
+                  >
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="font-medium">{template.title}</div>
+                          {getPriorityBadge(template.priority)}
+                        </div>
+                        {template.description && (
+                          <div className="text-xs text-muted-foreground">{template.description}</div>
+                        )}
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="text-sm">{dueText}</div>
+                        {dueBadge && <div className="text-xs text-muted-foreground">{dueBadge}</div>}
+                        {getDueStateBadge(dueState)}
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="space-y-1">
+                        {getStatusBadge(status)}
+                        <div className="text-xs text-muted-foreground">{statusLabel(status)}</div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          disabled={!canSubmit}
+                          onClick={() => handleAction(template.id, "submit")}
+                        >
+                          Submit
+                        </Button>
+                        <Button size="sm" disabled={!canApprove} onClick={() => handleAction(template.id, "approve")}>
+                          Approve
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+
+              {templatesInCategory.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-sm text-muted-foreground text-center">
+                    No templates in this category.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          variant={layoutMode === "card" ? "default" : "outline"}
+          size="sm"
+          className="h-8 text-xs"
+          onClick={() => setLayoutMode("card")}
+        >
+          <LayoutGrid className="w-3 h-3 mr-1.5" />
+          Card View
+        </Button>
+        <Button
+          variant={layoutMode === "table" ? "default" : "outline"}
+          size="sm"
+          className="h-8 text-xs"
+          onClick={() => setLayoutMode("table")}
+        >
+          <Table2 className="w-3 h-3 mr-1.5" />
+          Table View
+        </Button>
+      </div>
+
+      {layoutMode === "card" ? renderCardView() : renderTableView()}
     </div>
   )
 }

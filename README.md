@@ -17,9 +17,12 @@ AGI TR Gantt Generator is a modern web application for generating professional m
 - 📊 **3-Level WBS Hierarchy**: Activity ID (1), (2), (3) for project organization
 - 🎯 **Multi-scenario Generation**: Optimistic, Baseline, and Pessimistic scenarios
 - 📈 **Interactive Excel Output**: Generated workbooks with VBA macros
+- 📋 **Document Management**: Voyage document checklist with hybrid layout (Card/Table views)
+- 🔄 **Workflow State Machine**: Status transitions (`not_started → submitted → approved`) with Submit/Approve actions
+- 📅 **Deadline Tracking**: Automatic due date calculation with D-countdown display
 - 🎨 **Modern UI**: Built with Next.js, React, and Tailwind CSS
 - 🌙 **Dark Mode Support**: Automatic theme switching
-- ⚡ **Real-time Preview**: Visual Gantt chart preview before download
+- ⚡ **Real-time Preview**: Visual Gantt chart preview with 5 tab views before download
 - 🔄 **Bulk Processing**: Upload and process multiple files simultaneously
 
 ## 🚀 Quick Start
@@ -227,6 +230,7 @@ For Excel workbook generation, integrate with a Python backend. See `DEPLOYMENT.
 - [Deployment Guide](./DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - Detailed deployment instructions
 - [System Architecture](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - Technical architecture documentation
 - [System Layout](./SYSTEM_LAYOUT.md) / [System Layout (English)](./SYSTEM_LAYOUT_EN.md) - Detailed component structure
+- [Document Workflow Guide](./docs/DOCUMENT_WORKFLOW_GUIDE.md) - Deadline calculation logic and hybrid layout usage guide
 
 ## 🤝 Contributing
 

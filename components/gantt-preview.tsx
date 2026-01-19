@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useMemo, useState, useRef, useCallback } from "react"
+import { useMemo, useState, useRef, useCallback, useLayoutEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -27,6 +27,8 @@ import { deriveVoyagesFromScheduleData } from "@/lib/voyage/derive-voyages"
 import { DocumentChecklist } from "@/components/documents/document-checklist"
 import { VoyageMiniGrid } from "@/components/documents/voyage-mini-grid"
 import docTemplatesData from "@/data/doc-templates.json"
+import { DeadlineLadderOverlay, type DeadlineMarker } from "@/components/overlays/deadline-ladder-overlay"
+import { computeDeadlineMarkers } from "@/lib/documents/to-deadline-markers"
 
 import tideData from "@/data/tide-data.json"
 import weatherData from "@/data/weather-data.json"
@@ -36,6 +38,10 @@ interface GanttPreviewProps {
   scheduleData: ScheduleData | null
   config: ProjectConfig
   isGenerating: boolean
+
+  // (추가) 오버레이 입력
+  deadlineMarkers?: DeadlineMarker[]
+  defaultShowDeadlines?: boolean
 }
 
 interface TideRecord {
@@ -138,14 +144,23 @@ const getTripGroupColors = (color: string) => {
   return colorMap[color] || colorMap.sky
 }
 
-export function GanttPreview({ scheduleData, config, isGenerating }: GanttPreviewProps) {
+export function GanttPreview({
+  scheduleData,
+  config,
+  isGenerating,
+  deadlineMarkers,
+  defaultShowDeadlines = true,
+}: GanttPreviewProps) {
   const [zoomLevel, setZoomLevel] = useState(DEFAULT_ZOOM)
   const [useFixedData, setUseFixedData] = useState(true)
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
+  const [showDeadlines, setShowDeadlines] = useState<boolean>(defaultShowDeadlines)
 
   const leftPanelRef = useRef<HTMLDivElement>(null)
   const rightPanelRef = useRef<HTMLDivElement>(null)
   const timelineHeaderRef = useRef<HTMLDivElement>(null)
+  const barsContentRef = useRef<HTMLDivElement>(null)
+  const [barsHeight, setBarsHeight] = useState<number>(0)
 
   const cellWidth = CELL_WIDTH_OPTIONS[zoomLevel]
 
@@ -326,6 +341,20 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
     }
   }, [])
 
+  // Update bars height for overlay
+  useLayoutEffect(() => {
+    const el = barsContentRef.current
+    if (!el) return
+
+    const update = () => setBarsHeight(el.scrollHeight || el.clientHeight || 0)
+    update()
+
+    const ro = new ResizeObserver(() => update())
+    ro.observe(el)
+
+    return () => ro.disconnect()
+  }, [effectiveScheduleData, zoomLevel])
+
   if (isGenerating) {
     return (
       <Card className="bg-card border-border h-full">
@@ -376,6 +405,13 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
               <Database className="w-3 h-3" />
               {useFixedData ? "Fixed Data" : "Uploaded Data"}
             </Button>
+            <DeadlineToggleButton
+              deadlineMarkers={deadlineMarkers}
+              voyages={voyages}
+              templates={templates}
+              showDeadlines={showDeadlines}
+              onToggle={() => setShowDeadlines((v) => !v)}
+            />
             <div className="flex items-center gap-1">
               <Button
                 variant="outline"
@@ -459,7 +495,10 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
                     className="flex-1 overflow-hidden"
                     style={{ backgroundColor: "hsl(var(--background))" }}
                   >
-                    <div style={{ width: `${chartData.totalDays * cellWidth}px`, minWidth: "100%" }}>
+                    <div
+                      className="relative"
+                      style={{ width: `${chartData.totalDays * cellWidth}px`, minWidth: "100%" }}
+                    >
                       {/* Month row */}
                       <div className="h-8 border-b border-border flex">
                         {chartData.months.map((month, i) => (
@@ -492,6 +531,17 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
                           </div>
                         ))}
                       </div>
+
+                      {/* Header overlay */}
+                      <DeadlineHeaderOverlay
+                        deadlineMarkers={deadlineMarkers}
+                        voyages={voyages}
+                        templates={templates}
+                        showDeadlines={showDeadlines}
+                        timelineStart={chartData.minDate}
+                        totalDays={chartData.totalDays}
+                        cellWidth={cellWidth}
+                      />
                     </div>
                   </div>
                 </div>
@@ -551,7 +601,23 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
 
                   {/* Right panel - Gantt bars (scrolls both directions) */}
                   <div ref={rightPanelRef} onScroll={handleRightScroll} className="flex-1 overflow-auto">
-                    <div style={{ width: `${chartData.totalDays * cellWidth}px`, minWidth: "100%" }}>
+                    <div
+                      ref={barsContentRef}
+                      className="relative"
+                      style={{ width: `${chartData.totalDays * cellWidth}px`, minWidth: "100%" }}
+                    >
+                      {/* Body overlay */}
+                      <DeadlineBodyOverlay
+                        deadlineMarkers={deadlineMarkers}
+                        voyages={voyages}
+                        templates={templates}
+                        showDeadlines={showDeadlines}
+                        timelineStart={chartData.minDate}
+                        totalDays={chartData.totalDays}
+                        cellWidth={cellWidth}
+                        heightPx={barsHeight}
+                      />
+
                       {groupedTasks?.map((group) => {
                         const isCollapsed = collapsedGroups.has(group.id)
 
@@ -870,5 +936,122 @@ function DocsTabContent({ voyages, templates }: { voyages: Voyage[]; templates: 
       <VoyageMiniGrid voyages={voyages} />
       <DocumentChecklist voyage={selectedVoyage} templates={templates} docs={docs} />
     </div>
+  )
+}
+
+function useResolvedDeadlineMarkers({
+  deadlineMarkers,
+  voyages,
+  templates,
+}: {
+  deadlineMarkers?: DeadlineMarker[]
+  voyages: Voyage[]
+  templates: DocTemplate[]
+}) {
+  const { selectedVoyageId, docsByVoyage } = useVoyageContext()
+
+  return useMemo(() => {
+    if (deadlineMarkers !== undefined) {
+      return deadlineMarkers
+    }
+
+    const selectedVoyage = voyages.find((v) => v.id === selectedVoyageId) || voyages[0]
+    if (!selectedVoyage) return []
+
+    const docs = docsByVoyage[selectedVoyage.id] || []
+    return computeDeadlineMarkers(selectedVoyage, templates, docs)
+  }, [deadlineMarkers, voyages, selectedVoyageId, docsByVoyage, templates])
+}
+
+function DeadlineToggleButton({
+  deadlineMarkers,
+  voyages,
+  templates,
+  showDeadlines,
+  onToggle,
+}: {
+  deadlineMarkers?: DeadlineMarker[]
+  voyages: Voyage[]
+  templates: DocTemplate[]
+  showDeadlines: boolean
+  onToggle: () => void
+}) {
+  const markers = useResolvedDeadlineMarkers({ deadlineMarkers, voyages, templates })
+
+  if (markers.length === 0) return null
+
+  return (
+    <Button variant={showDeadlines ? "default" : "outline"} size="sm" className="h-7 text-xs gap-1.5" onClick={onToggle}>
+      <FileText className="w-3 h-3" />
+      Deadlines
+    </Button>
+  )
+}
+
+function DeadlineHeaderOverlay({
+  deadlineMarkers,
+  voyages,
+  templates,
+  showDeadlines,
+  timelineStart,
+  totalDays,
+  cellWidth,
+}: {
+  deadlineMarkers?: DeadlineMarker[]
+  voyages: Voyage[]
+  templates: DocTemplate[]
+  showDeadlines: boolean
+  timelineStart: Date
+  totalDays: number
+  cellWidth: number
+}) {
+  const markers = useResolvedDeadlineMarkers({ deadlineMarkers, voyages, templates })
+
+  if (!showDeadlines || markers.length === 0) return null
+
+  return (
+    <DeadlineLadderOverlay
+      timelineStart={timelineStart}
+      totalDays={totalDays}
+      cellWidth={cellWidth}
+      heightPx={64}
+      markers={markers}
+      showPins={true}
+    />
+  )
+}
+
+function DeadlineBodyOverlay({
+  deadlineMarkers,
+  voyages,
+  templates,
+  showDeadlines,
+  timelineStart,
+  totalDays,
+  cellWidth,
+  heightPx,
+}: {
+  deadlineMarkers?: DeadlineMarker[]
+  voyages: Voyage[]
+  templates: DocTemplate[]
+  showDeadlines: boolean
+  timelineStart: Date
+  totalDays: number
+  cellWidth: number
+  heightPx: number
+}) {
+  const markers = useResolvedDeadlineMarkers({ deadlineMarkers, voyages, templates })
+
+  if (!showDeadlines || markers.length === 0 || heightPx <= 0) return null
+
+  return (
+    <DeadlineLadderOverlay
+      timelineStart={timelineStart}
+      totalDays={totalDays}
+      cellWidth={cellWidth}
+      heightPx={heightPx}
+      markers={markers}
+      showPins={false}
+    />
   )
 }

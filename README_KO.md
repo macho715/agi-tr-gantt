@@ -17,9 +17,11 @@ AGI TR Gantt Generator는 TSV/JSON 작업 데이터 파일로부터 전문적인
 - 📊 **3단계 WBS 계층 구조**: 프로젝트 조직을 위한 Activity ID (1), (2), (3)
 - 🎯 **다중 시나리오 생성**: 낙관적, 기준선, 비관적 시나리오
 - 📈 **대화형 Excel 출력**: VBA 매크로가 포함된 생성된 워크북
+- 📋 **Voyage Documents 관리**: 문서 체크리스트, 마감일 추적, 워크플로우 상태 관리
+- 📅 **Deadline 오버레이**: Gantt 차트에 문서 마감일 시각화
 - 🎨 **현대적 UI**: Next.js, React, Tailwind CSS로 구축
 - 🌙 **다크 모드 지원**: 자동 테마 전환
-- ⚡ **실시간 미리보기**: 다운로드 전 시각적 Gantt 차트 미리보기
+- ⚡ **실시간 미리보기**: 다운로드 전 시각적 Gantt 차트 미리보기 (5가지 탭 뷰)
 - 🔄 **일괄 처리**: 여러 파일을 동시에 업로드 및 처리
 
 ## 🚀 빠른 시작
@@ -111,17 +113,31 @@ agi-tr-gantt/
 │   └── globals.css           # 전역 스타일
 ├── components/               # React 컴포넌트
 │   ├── ui/                   # shadcn/ui 컴포넌트
+│   ├── documents/            # 문서 관리 컴포넌트
+│   │   ├── document-checklist.tsx
+│   │   └── voyage-mini-grid.tsx
+│   ├── overlays/             # 오버레이 컴포넌트
+│   │   └── deadline-ladder-overlay.tsx
 │   ├── configuration-panel.tsx
 │   ├── file-uploader.tsx
 │   ├── gantt-generator.tsx
 │   ├── gantt-preview.tsx
 │   └── generation-status.tsx
+├── contexts/                 # React Context
+│   └── voyage-context.tsx    # Voyage 상태 관리
 ├── lib/                      # 유틸리티 라이브러리
+│   ├── documents/            # 문서 관련 로직
+│   │   ├── deadline-engine.ts
+│   │   └── to-deadline-markers.ts
+│   ├── voyage/               # Voyage 관련 로직
+│   │   └── derive-voyages.ts
 │   ├── file-parser.ts        # 파일 파싱 로직
 │   ├── types.ts              # TypeScript 타입 정의
 │   └── utils.ts              # 헬퍼 함수
 ├── data/                     # 샘플 데이터 파일
 │   ├── activity-data.json
+│   ├── doc-templates.json    # 문서 템플릿 정의
+│   ├── milestone-map.json    # 마일스톤 패턴 매핑
 │   ├── tide-data.json
 │   └── weather-data.json
 ├── hooks/                    # 커스텀 React 훅
@@ -227,6 +243,7 @@ Excel 워크북 생성을 위해 Python 백엔드와 통합합니다. 통합 옵
 - [배포 가이드](./DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - 상세한 배포 지침
 - [시스템 아키텍처](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처 문서
 - [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./SYSTEM_LAYOUT_EN.md) - 상세 컴포넌트 구조
+- [문서 워크플로우 가이드](./docs/DOCUMENT_WORKFLOW_GUIDE.md) - 마감일 계산 로직 및 하이브리드 레이아웃 사용 가이드
 
 ## 🤝 기여
 
