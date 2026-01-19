@@ -240,7 +240,10 @@ graph LR
 - **책임**: Voyage 문서 체크리스트 관리
 - **기능**:
   - 카테고리별 문서 그룹화
-  - Workflow 상태 관리 (not_started → approved)
+  - Workflow 상태 관리 (not_started → submitted → approved)
+  - Reset/Reopen 액션 지원
+    - Reset: `submitted → not_started` (제출 취소)
+    - Reopen: `approved → submitted` (재검토)
   - 마감일 계산 및 Due state 표시
   - 진행률 표시
 
@@ -271,6 +274,17 @@ graph LR
   - 클릭 인터랙션: Docs 탭으로 이동 + 해당 Voyage 자동 선택
   - 키보드 접근성 지원 (Tab, Enter/Space)
   - 포커스 링 스타일 (focus-visible)
+
+#### 10. **trip-groups.ts** (공용 상수)
+
+- **위치**: `lib/voyage/trip-groups.ts`
+- **책임**: Trip 그룹 정의 및 필터링 상수 제공
+- **내용**:
+  - `TRIP_GROUPS_BY_ACTIVITY_ID2`: Trip 그룹 정의 배열 (4개 그룹)
+  - `VALID_TRIP_ACTIVITY_ID2`: Voyage 필터링용 허용 목록
+- **사용처**:
+  - `lib/voyage/derive-voyages.ts`: Voyage 추출 시 필터링 (실제 Trip 그룹 4개만 표시)
+  - `components/gantt-preview.tsx`: Trip 그룹 색상 매핑
 
 #### 9. **GenerationStatus**
 

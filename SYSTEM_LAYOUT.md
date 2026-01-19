@@ -612,6 +612,16 @@ interface WeatherRecord {
 - **Uploaded Data**: 사용자 업로드 파일 사용
 - 실시간 전환 가능
 
+**Voyage 추출 로직**:
+- `lib/voyage/derive-voyages.ts`: `activityId2` 기반 Voyage 추출
+- `lib/voyage/trip-groups.ts`: 공용 Trip 그룹 정의 및 필터링 상수
+- `VALID_TRIP_ACTIVITY_ID2`를 사용하여 실제 Trip 그룹 4개만 표시
+  - AGI TR Units 1-2
+  - AGI TR Units 3-4
+  - AGLI TR Units 5-6
+  - AGL TR Unit 7
+- "SPMT", "MARINE" 등 다른 `activityId2`는 자동 제외
+
 ### 5. Documents 탭 (Voyage 문서 체크리스트)
 
 **위치**: `components/documents/document-checklist.tsx`
@@ -628,6 +638,8 @@ interface WeatherRecord {
 - **상태 머신**: `not_started → submitted → approved` 전이
   - Submit 버튼: `not_started` → `submitted`
   - Approve 버튼: `submitted` → `approved`
+  - Reset 버튼: `submitted` → `not_started` (제출 취소)
+  - Reopen 버튼: `approved` → `submitted` (재검토)
   - 가드 로직: `canTransition()` 함수로 전이 허용 여부 확인
 - **마감일 계산**: Anchor Milestone + Offset Days
   - Anchor: `mzp_arrival`, `loadout_start`, `mzp_departure` 등
@@ -653,6 +665,7 @@ interface WeatherRecord {
 - 좌측: 카테고리 탭 (Tabs, 진행률 표시: approved/total)
 - 우측: 문서 테이블 (Document, Due, Status, Action 컬럼)
 - Submit/Approve 버튼으로 상태 전이 (상태 머신 가드 적용)
+- Reset/Reopen 버튼 (조건부 표시: submitted일 때 Reset, approved일 때 Reopen)
 - D-카운트다운 + Due State Badge
 - 카테고리별 필터링
 

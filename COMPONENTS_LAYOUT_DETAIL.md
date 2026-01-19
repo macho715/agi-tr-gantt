@@ -564,6 +564,21 @@ interface GenerationStatusProps {
     - **통합**: `components/gantt-preview.tsx`의 Trip group header row에 삽입
     - **매칭**: Voyage의 `tripGroupKey`와 Gantt group의 `activityId2` 매칭
 
+11. **trip-groups.ts** (공용 상수)
+    - **위치**: `lib/voyage/trip-groups.ts`
+    - **책임**: Trip 그룹 정의 및 필터링 상수 제공
+    - **내용**:
+      - `TRIP_GROUPS_BY_ACTIVITY_ID2`: Trip 그룹 정의 배열 (4개 그룹)
+        - AGI TR Units 1-2 (Sky)
+        - AGI TR Units 3-4 (Emerald)
+        - AGLI TR Units 5-6 (Amber)
+        - AGL TR Unit 7 (Violet)
+      - `VALID_TRIP_ACTIVITY_ID2`: Voyage 필터링용 허용 목록
+    - **사용처**:
+      - `lib/voyage/derive-voyages.ts`: Voyage 추출 시 필터링 (실제 Trip 그룹 4개만 표시)
+      - `components/gantt-preview.tsx`: Trip 그룹 색상 매핑
+    - **필터링 로직**: "SPMT", "MARINE" 등 다른 `activityId2`는 자동 제외하여 Voyage 4개만 생성
+
 #### Gantt Chart 탭 추가 세부사항
 
 **Group Header 기간 표시**:
@@ -781,6 +796,7 @@ interface GenerationStatusProps {
   - 좌측: 카테고리 탭 (Tabs, 4열 중 일부)
   - 우측: 문서 테이블 (Document, Due, Status, Action 컬럼)
   - Submit/Approve 버튼으로 상태 전이 (상태 머신 가드 적용)
+  - Reset/Reopen 버튼 (조건부 표시: submitted일 때 Reset, approved일 때 Reopen)
   - D-카운트다운 + Due state Badge
   - 카테고리별 진행률 표시 (approved/total)
 
@@ -788,8 +804,13 @@ interface GenerationStatusProps {
 - **전이 경로**: `not_started` → `submitted` → `approved`
 - **가드 로직**: `canTransition()` 함수로 전이 허용 여부 확인
   - `not_started`에서만 "Submit" 액션 가능
-  - `submitted`에서만 "Approve" 액션 가능
+  - `submitted`에서만 "Approve" 또는 "Reset" 액션 가능
+  - `approved`에서만 "Reopen" 액션 가능
 - **전이 함수**: `transitionStatus()` - 상태 전이 수행
+  - Submit: `not_started` → `submitted`
+  - Approve: `submitted` → `approved`
+  - Reset: `submitted` → `not_started` (제출 취소)
+  - Reopen: `approved` → `submitted` (재검토)
 - **History 자동 추가**: `updateDoc`에서 상태 변경 시 자동 기록 (`STATE_${STATUS}`)
 - **라벨 표시**: `statusLabel()` - 상태를 읽기 쉬운 텍스트로 변환
 
