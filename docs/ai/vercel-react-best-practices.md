@@ -36,6 +36,16 @@ AI 코딩은 기능 구현 속도는 빠르지만, 복잡도가 올라가면 다
 - React, Next.js(App Router/Server Components 포함), TypeScript 코드베이스
 - 특히 "데이터 페칭/렌더링/번들"과 관련된 변경(PR, 기능 추가, 리팩토링)에 우선 적용
 
+### 프로젝트 컨텍스트 (agi-tr-gantt)
+이 프로젝트는 **Control Tower 대시보드**로 확장 중이며, 다음 기능에 특히 주의:
+- **Gantt 차트 렌더링**: 무거운 뷰이므로 동적 import 필수
+- **Deadline Ladder 오버레이**: Gantt 위 오버레이 컴포넌트 성능 최적화 필요
+- **다중 뷰 전환**: Schedule/Documents/Voyages 등 뷰 간 전환 시 번들 분할
+- **파일 업로드/다운로드**: 대용량 Excel 생성 시 메모리/성능 고려
+- **실시간 미리보기**: ScheduleData 변경 시 불필요한 전체 리렌더 방지
+
+> 프로젝트 전용 운영 규칙은 `.cursor/AGENTS.md` 참조
+
 ## 원칙 (에이전트 실행 규약)
 1. **Audit First**: 코드를 바로 고치기 전에, 항상 규칙 위반을 먼저 식별하고 우선순위를 정한다.
 2. **High-Impact First**: CRITICAL/HIGH 영향도 규칙(특히 Waterfall/Bundle)을 최우선으로 처리한다.
