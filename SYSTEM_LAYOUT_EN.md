@@ -249,6 +249,11 @@ interface ConfigurationPanelProps {
 - Fixed data / Uploaded data toggle
 - Weather/tide data integration display
 - Deadline overlay visualization (toggle with "Deadlines" button)
+- **Docs Progress Overlay**: Document progress indicator on Trip rows
+  - Shows Approved/Total ratio (Progress bar + Badge)
+  - Click to navigate to Docs tab + auto-select Voyage
+  - Keyboard accessibility (Tab, Enter/Space)
+  - Focus ring styling (focus-visible)
 - Voyage documents checklist with workflow states
 - Trip group color coding:
   - AGI TR Units 1-2: Sky

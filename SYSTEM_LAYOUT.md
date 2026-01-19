@@ -581,6 +581,11 @@ interface WeatherRecord {
 - **접기/펼치기**: 그룹별 토글
 - **주말 하이라이트**: 시각적 구분
 - **툴팁**: 작업 상세 정보
+- **Docs Progress Overlay**: Trip row 위에 문서 진행률 표시
+  - Approved/Total 비율 표시 (Progress bar + Badge)
+  - 클릭 시 Docs 탭으로 이동 + 해당 Voyage 자동 선택
+  - 키보드 접근성 지원 (Tab, Enter/Space)
+  - 포커스 링 스타일 (focus-visible)
 
 ### 3. Voyage Summary
 

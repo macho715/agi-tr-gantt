@@ -19,6 +19,7 @@ AGI TR Gantt Generator는 TSV/JSON 작업 데이터 파일로부터 전문적인
 - 📈 **대화형 Excel 출력**: VBA 매크로가 포함된 생성된 워크북
 - 📋 **Voyage Documents 관리**: 문서 체크리스트, 마감일 추적, 워크플로우 상태 관리
 - 📅 **Deadline 오버레이**: Gantt 차트에 문서 마감일 시각화
+- 📊 **Docs Progress Overlay**: Gantt Trip row 위에 문서 진행률 표시 (클릭 시 Docs 탭으로 이동)
 - 🎨 **현대적 UI**: Next.js, React, Tailwind CSS로 구축
 - 🌙 **다크 모드 지원**: 자동 테마 전환
 - ⚡ **실시간 미리보기**: 다운로드 전 시각적 Gantt 차트 미리보기 (5가지 탭 뷰)

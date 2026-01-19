@@ -599,11 +599,11 @@ Gantt Chart의 Trip row 위에 문서 진행률을 시각화하는 오버레이�
 
 ### 시각적 요소
 
-- **Progress bar**: 
+- **Progress bar**:
   - 배경: `bg-muted/40`
   - 진행률: `bg-emerald-500/80` (초록색)
   - 높이: `h-2` (2px)
-- **Badge**: 
+- **Badge**:
   - 텍스트: `Docs X/Y` (Approved/Total)
   - 스타일: `variant="outline"`, `text-[9px]`
   - 배경: `bg-background/90 backdrop-blur-sm`
@@ -720,3 +720,4 @@ A: Gantt Chart의 Trip row 위에 표시되는 progress bar를 클릭하면 해�
 
 **문서 버전**: 1.0.0
 **최종 업데이트**: 2026-01-19
+**유지보수자**: 개발 팀

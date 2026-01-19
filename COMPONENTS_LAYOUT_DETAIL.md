@@ -553,6 +553,17 @@ interface GenerationStatusProps {
    - Workflow 상태 관리
    - 마감일 추적 및 Due state 표시
 
+10. **Docs Progress Overlay**
+    - **위치**: Trip group header row 위에 오버레이
+    - **기능**:
+      - 문서 진행률 표시 (Approved/Total 비율)
+      - Progress bar + Badge (`Docs X/Y`)
+      - 클릭 시 Docs 탭으로 이동 + 해당 Voyage 자동 선택
+      - 키보드 접근성 지원 (Tab, Enter/Space)
+      - 포커스 링 스타일 (focus-visible)
+    - **통합**: `components/gantt-preview.tsx`의 Trip group header row에 삽입
+    - **매칭**: Voyage의 `tripGroupKey`와 Gantt group의 `activityId2` 매칭
+
 #### Gantt Chart 탭 추가 세부사항
 
 **Group Header 기간 표시**:
