@@ -1,89 +1,87 @@
-# AGI TR Gantt Generator - Deployment Guide
+# AGI TR Gantt Generator - 배포 가이드
 
-## Overview
+## 개요
 
-This web application provides a UI for generating multi-scenario Excel Gantt workbooks from TSV/JSON task files. The frontend handles file uploads, configuration, and preview, while the backend integrates with Python scripts for Excel generation.
+이 웹 애플리케이션은 TSV/JSON 작업 파일로부터 다중 시나리오 Excel Gantt 워크북을 생성하는 UI를 제공합니다. 프론트엔드는 파일 업로드, 설정, 미리보기를 처리하고, 백엔드는 Excel 생성을 위한 Python 스크립트와 통합됩니다.
 
-**Current Status**: Frontend and file parsing are fully implemented. Excel generation requires Python script integration.
+**현재 상태**: 프론트엔드와 파일 파싱이 완전히 구현되었습니다. Excel 생성은 Python 스크립트 통합이 필요합니다.
 
-## Architecture
+## 아키텍처
 
 ```
-
 ┌─────────────────────────────────────────────────────────────┐
-│                    Client Browser                           │
+│                    클라이언트 브라우저                       │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │         Next.js Frontend (React 19 + TypeScript)      │   │
-│  │  - File Upload & Validation                           │   │
-│  │  - Configuration Panel                                │   │
-│  │  - Real-time Gantt Preview                            │   │
+│  │         Next.js 프론트엔드 (React 19 + TypeScript)    │   │
+│  │  - 파일 업로드 및 검증                                 │   │
+│  │  - 설정 패널                                          │   │
+│  │  - 실시간 Gantt 미리보기                              │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                           │ HTTP/HTTPS
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│              Next.js Server (Node.js 18+)                    │
+│              Next.js 서버 (Node.js 18+)                     │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │              API Routes (App Router)                  │   │
+│  │              API 라우트 (App Router)                  │   │
 │  │  ┌──────────────┐         ┌──────────────┐            │   │
 │  │  │/api/generate  │         │/api/download│            │   │
 │  │  └──────────────┘         └──────────────┘            │   │
 │  └──────────────────────────────────────────────────────┘   │
 │                          │                                   │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │      File Parser (lib/file-parser.ts)                 │   │
-│  │  ✅ TSV/CSV Parser (implemented)                      │   │
-│  │  ✅ JSON Parser (implemented)                         │   │
-│  │  ✅ Header Mapping & Validation (implemented)           │   │
-│  │  ✅ WBS Hierarchy Builder (implemented)                │   │
+│  │      파일 파서 (lib/file-parser.ts)                   │   │
+│  │  ✅ TSV/CSV 파서 (구현됨)                              │   │
+│  │  ✅ JSON 파서 (구현됨)                                 │   │
+│  │  ✅ 헤더 매핑 및 검증 (구현됨)                           │   │
+│  │  ✅ WBS 계층 구조 빌더 (구현됨)                        │   │
 │  └──────────────────────────────────────────────────────┘   │
 │                          │                                   │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │   Schedule Generator (app/api/generate/route.ts)      │   │
-│  │  ✅ Task Parsing (implemented)                        │   │
-│  │  ✅ Schedule Calculation (implemented)                 │   │
-│  │  ⚠️  Excel Generation (requires Python integration)    │   │
+│  │   일정 생성기 (app/api/generate/route.ts)              │   │
+│  │  ✅ 작업 파싱 (구현됨)                                 │   │
+│  │  ✅ 일정 계산 (구현됨)                                 │   │
+│  │  ⚠️  Excel 생성 (Python 통합 필요)                    │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
-│         Excel Generation Service (External - Required)       │
+│         Excel 생성 서비스 (외부 - 필수)                       │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │  Option 1: Python Subprocess (same server)           │   │
-│  │  Option 2: Docker Container (recommended)              │   │
-│  │  Option 3: Serverless Function (AWS Lambda/Cloud Run)│   │
-│  │  Option 4: External API (Railway/Render/AWS)          │   │
+│  │  옵션 1: Python Subprocess (동일 서버)               │   │
+│  │  옵션 2: Docker 컨테이너 (권장)                      │   │
+│  │  옵션 3: 서버리스 함수 (AWS Lambda/Cloud Run)        │   │
+│  │  옵션 4: 외부 API (Railway/Render/AWS)              │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
-
 ```
 
-## Current Implementation Status
+## 현재 구현 상태
 
-### ✅ Implemented Features
+### ✅ 구현된 기능
 
-- **File Upload & Validation**: Multi-file drag & drop, type/size validation
-- **File Parsing**: TSV/CSV/JSON parsers with flexible header mapping
-- **WBS Hierarchy**: 3-level Activity ID support (Activity ID 1, 2, 3)
-- **Schedule Generation**: Task scheduling with date calculations
-- **Gantt Preview**: Real-time visual preview of schedule
-- **UI Components**: Complete React component library (shadcn/ui)
-- **Type Safety**: Full TypeScript implementation
+- **파일 업로드 및 검증**: 다중 파일 드래그 앤 드롭, 타입/크기 검증
+- **파일 파싱**: 유연한 헤더 매핑을 가진 TSV/CSV/JSON 파서
+- **WBS 계층 구조**: 3단계 Activity ID 지원 (Activity ID 1, 2, 3)
+- **일정 생성**: 날짜 계산을 포함한 작업 일정 생성
+- **Gantt 미리보기**: 일정의 실시간 시각적 미리보기
+- **UI 컴포넌트**: 완전한 React 컴포넌트 라이브러리 (shadcn/ui)
+- **타입 안전성**: 완전한 TypeScript 구현
 
-### ⚠️ Requires Integration
+### ⚠️ 통합 필요
 
-- **Excel Generation**: Python script integration needed
-- **File Storage**: Temporary file storage for generated Excel files
-- **Download Endpoint**: Currently returns sample Excel (needs real file)
+- **Excel 생성**: Python 스크립트 통합 필요
+- **파일 저장소**: 생성된 Excel 파일을 위한 임시 파일 저장소
+- **다운로드 엔드포인트**: 현재 샘플 Excel 반환 (실제 파일 필요)
 
-## Python Integration Options
+## Python 통합 옵션
 
-### Option 1: Subprocess (Simplest - Same Server)
+### 옵션 1: Subprocess (가장 간단 - 동일 서버)
 
-**Best for**: Development, small deployments, single-server setups
+**최적 용도**: 개발, 소규모 배포, 단일 서버 설정
 
-Install Python 3.11+ on your server and call the script directly:
+서버에 Python 3.11+를 설치하고 스크립트를 직접 호출:
 
 ```typescript
 // app/api/generate/route.ts
@@ -102,7 +100,7 @@ async function runPythonGenerator(
   const inputPath = join(tempDir, `gantt_input_${timestamp}.json`)
   const outputPath = join(tempDir, `gantt_output_${timestamp}.xlsx`)
 
-  // Prepare input data matching your Python script's expected format
+  // Python 스크립트가 예상하는 형식에 맞는 입력 데이터 준비
   const inputData = {
     tasks: tasks.map(task => ({
       activityId1: task.activityId1,
@@ -121,7 +119,7 @@ async function runPythonGenerator(
     }
   }
 
-  // Write input JSON
+  // 입력 JSON 작성
   await writeFile(inputPath, JSON.stringify(inputData, null, 2))
 
   return new Promise((resolve, reject) => {
@@ -149,8 +147,8 @@ async function runPythonGenerator(
 
     const timeout = setTimeout(() => {
       python.kill('SIGTERM')
-      reject(new Error('Python script timeout after 60 seconds'))
-    }, 60000) // 60 second timeout
+      reject(new Error('Python 스크립트가 60초 후 타임아웃되었습니다'))
+    }, 60000) // 60초 타임아웃
 
     python.on('close', async (code) => {
       clearTimeout(timeout)
@@ -158,36 +156,36 @@ async function runPythonGenerator(
       if (code !== 0) {
         await unlink(inputPath).catch(() => {})
         await unlink(outputPath).catch(() => {})
-        reject(new Error(`Python script failed with code ${code}: ${stderr}`))
+        reject(new Error(`Python 스크립트가 코드 ${code}로 실패했습니다: ${stderr}`))
         return
       }
 
       try {
         const result = await readFile(outputPath)
-        // Cleanup
+        // 정리
         await unlink(inputPath).catch(() => {})
         await unlink(outputPath).catch(() => {})
         resolve(result)
       } catch (err) {
         await unlink(inputPath).catch(() => {})
         await unlink(outputPath).catch(() => {})
-        reject(new Error(`Failed to read output file: ${err}`))
+        reject(new Error(`출력 파일 읽기 실패: ${err}`))
       }
     })
   })
 }
 
-// Update the POST handler in /api/generate/route.ts
+// /api/generate/route.ts의 POST 핸들러 업데이트
 export async function POST(request: NextRequest) {
-  // ... existing file parsing code ...
+  // ... 기존 파일 파싱 코드 ...
 
-  // After generating scheduleData, call Python generator
+  // scheduleData 생성 후, Python 생성기 호출
   try {
     const excelBuffer = await runPythonGenerator(allTasks, config)
 
-    // Store file temporarily (in-memory or filesystem)
+    // 파일을 임시로 저장 (메모리 또는 파일시스템)
     const fileId = Date.now().toString()
-    // TODO: Store excelBuffer with fileId (use Redis, filesystem, or S3)
+    // TODO: fileId와 함께 excelBuffer 저장 (Redis, filesystem, 또는 S3 사용)
 
     return NextResponse.json({
       success: true,
@@ -198,26 +196,26 @@ export async function POST(request: NextRequest) {
       scheduleData,
     })
   } catch (err) {
-    console.error("Excel generation error:", err)
+    console.error("Excel 생성 오류:", err)
     return NextResponse.json(
-      { error: `Excel generation failed: ${err instanceof Error ? err.message : "Unknown error"}` },
+      { error: `Excel 생성 실패: ${err instanceof Error ? err.message : "알 수 없는 오류"}` },
       { status: 500 }
     )
   }
 }
 ```
 
-**Requirements**:
+**요구사항**:
 
-- Python 3.11+ installed on server
-- Required Python packages: `openpyxl`, `pandas` (or your dependencies)
-- Script location: `scripts/gantt_generator.py`
+- 서버에 Python 3.11+ 설치
+- 필요한 Python 패키지: `openpyxl`, `pandas` (또는 의존성)
+- 스크립트 위치: `scripts/gantt_generator.py`
 
-### Option 2: Docker Container (Recommended for Production)
+### 옵션 2: Docker 컨테이너 (프로덕션 권장)
 
-**Best for**: Production deployments, isolation, dependency management
+**최적 용도**: 프로덕션 배포, 격리, 의존성 관리
 
-#### Dockerfile for Python Service
+#### Python 서비스를 위한 Dockerfile
 
 ```dockerfile
 # Dockerfile.python
@@ -225,25 +223,25 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies if needed
+# 필요한 경우 시스템 의존성 설치
 RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# requirements 복사
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy Python script
+# Python 스크립트 복사
 COPY scripts/gantt_generator.py .
 
-# Create shared volume mount point
+# 공유 볼륨 마운트 포인트 생성
 VOLUME ["/data"]
 
 ENTRYPOINT ["python", "gantt_generator.py"]
 ```
 
-#### Docker Compose Setup
+#### Docker Compose 설정
 
 ```yaml
 # docker-compose.yml
@@ -273,14 +271,14 @@ services:
     volumes:
       - shared-files:/data
     restart: unless-stopped
-    # Or run as HTTP service
+    # 또는 HTTP 서비스로 실행
     command: python -m http.server 8000
 
 volumes:
   shared-files:
 ```
 
-#### Next.js API Integration
+#### Next.js API 통합
 
 ```typescript
 // app/api/generate/route.ts
@@ -293,7 +291,7 @@ async function runPythonGeneratorViaDocker(
     config
   }
 
-  // Option A: HTTP API (if Python service exposes HTTP endpoint)
+  // 옵션 A: HTTP API (Python 서비스가 HTTP 엔드포인트를 노출하는 경우)
   const response = await fetch(process.env.PYTHON_SERVICE_URL || 'http://python-worker:8000/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -301,22 +299,22 @@ async function runPythonGeneratorViaDocker(
   })
 
   if (!response.ok) {
-    throw new Error(`Python service error: ${response.statusText}`)
+    throw new Error(`Python 서비스 오류: ${response.statusText}`)
   }
 
   return Buffer.from(await response.arrayBuffer())
 
-  // Option B: Shared volume (write to shared volume, read result)
-  // const tempDir = '/data' // Shared volume
-  // ... similar to subprocess approach but using shared volume
+  // 옵션 B: 공유 볼륨 (공유 볼륨에 쓰고, 결과 읽기)
+  // const tempDir = '/data' // 공유 볼륨
+  // ... subprocess 접근 방식과 유사하지만 공유 볼륨 사용
 }
 ```
 
-### Option 3: Serverless Function (AWS Lambda / Google Cloud Functions)
+### 옵션 3: 서버리스 함수 (AWS Lambda / Google Cloud Functions)
 
-**Best for**: Scalability, cost efficiency, cloud-native deployments
+**최적 용도**: 확장성, 비용 효율성, 클라우드 네이티브 배포
 
-#### AWS Lambda Handler
+#### AWS Lambda 핸들러
 
 ```python
 # lambda_handler.py
@@ -331,10 +329,10 @@ def handler(event, context):
         tasks = body['tasks']
         config = body['config']
 
-        # Generate workbook
+        # 워크북 생성
         excel_bytes = generate_workbook(tasks=tasks, config=config)
 
-        # Upload to S3
+        # S3에 업로드
         s3 = boto3.client('s3')
         bucket_name = os.environ.get('S3_BUCKET', 'gantt-outputs')
         key = f"generated/{context.aws_request_id}.xlsx"
@@ -346,7 +344,7 @@ def handler(event, context):
             ContentType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
-        # Generate presigned URL (valid for 1 hour)
+        # 사전 서명된 URL 생성 (1시간 유효)
         url = s3.generate_presigned_url(
             'get_object',
             Params={'Bucket': bucket_name, 'Key': key},
@@ -372,7 +370,7 @@ def handler(event, context):
         }
 ```
 
-#### Next.js Integration
+#### Next.js 통합
 
 ```typescript
 // app/api/generate/route.ts
@@ -391,7 +389,7 @@ async function runPythonGeneratorViaLambda(
 
   if (!response.ok) {
     const error = await response.json()
-    throw new Error(error.error || 'Lambda function failed')
+    throw new Error(error.error || 'Lambda 함수 실패')
   }
 
   const result = await response.json()
@@ -402,11 +400,11 @@ async function runPythonGeneratorViaLambda(
 }
 ```
 
-### Option 4: External API Service (Railway / Render / Fly.io)
+### 옵션 4: 외부 API 서비스 (Railway / Render / Fly.io)
 
-**Best for**: Quick deployment, managed infrastructure
+**최적 용도**: 빠른 배포, 관리형 인프라
 
-Deploy Python script as a separate API service and call it from Next.js:
+Python 스크립트를 별도의 API 서비스로 배포하고 Next.js에서 호출:
 
 ```typescript
 // app/api/generate/route.ts
@@ -425,34 +423,34 @@ async function runPythonGeneratorViaAPI(
 
   if (!response.ok) {
     const error = await response.json()
-    throw new Error(error.error || 'Python API failed')
+    throw new Error(error.error || 'Python API 실패')
   }
 
   return Buffer.from(await response.arrayBuffer())
 }
 ```
 
-## File Storage Strategy
+## 파일 저장소 전략
 
-### Option 1: In-Memory (Development Only)
+### 옵션 1: 메모리 내 (개발 전용)
 
 ```typescript
-// Simple in-memory store (not recommended for production)
+// 간단한 메모리 저장소 (프로덕션에는 권장하지 않음)
 const fileStore = new Map<string, Buffer>()
 
-// In /api/generate
+// /api/generate에서
 const fileId = Date.now().toString()
 fileStore.set(fileId, excelBuffer)
 
-// In /api/download
+// /api/download에서
 const file = fileStore.get(id)
 if (!file) {
-  return NextResponse.json({ error: 'File not found' }, { status: 404 })
+  return NextResponse.json({ error: '파일을 찾을 수 없습니다' }, { status: 404 })
 }
-fileStore.delete(id) // Cleanup after download
+fileStore.delete(id) // 다운로드 후 정리
 ```
 
-### Option 2: Filesystem (Single Server)
+### 옵션 2: 파일시스템 (단일 서버)
 
 ```typescript
 import { writeFile, readFile, unlink } from 'fs/promises'
@@ -461,18 +459,18 @@ import { tmpdir } from 'os'
 
 const STORAGE_DIR = join(tmpdir(), 'gantt-files')
 
-// In /api/generate
+// /api/generate에서
 const fileId = Date.now().toString()
 const filePath = join(STORAGE_DIR, `${fileId}.xlsx`)
 await writeFile(filePath, excelBuffer)
 
-// In /api/download
+// /api/download에서
 const filePath = join(STORAGE_DIR, `${id}.xlsx`)
 const file = await readFile(filePath)
-await unlink(filePath) // Cleanup
+await unlink(filePath) // 정리
 ```
 
-### Option 3: Object Storage (S3 / GCS / Azure Blob) - Recommended
+### 옵션 3: 객체 저장소 (S3 / GCS / Azure Blob) - 권장
 
 ```typescript
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
@@ -480,7 +478,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const s3 = new S3Client({ region: process.env.AWS_REGION })
 
-// In /api/generate
+// /api/generate에서
 const fileId = Date.now().toString()
 const key = `generated/${fileId}.xlsx`
 
@@ -491,156 +489,156 @@ await s3.send(new PutObjectCommand({
   ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 }))
 
-// Generate presigned URL
+// 사전 서명된 URL 생성
 const downloadUrl = await getSignedUrl(s3, new GetObjectCommand({
   Bucket: process.env.S3_BUCKET!,
   Key: key,
-}), { expiresIn: 3600 }) // 1 hour
+}), { expiresIn: 3600 }) // 1시간
 
-// In /api/download - redirect to presigned URL or fetch and stream
+// /api/download - 사전 서명된 URL로 리다이렉트하거나 가져와서 스트리밍
 ```
 
-### Option 4: Redis (Fast, Temporary)
+### 옵션 4: Redis (빠름, 임시)
 
 ```typescript
 import Redis from 'ioredis'
 const redis = new Redis(process.env.REDIS_URL)
 
-// In /api/generate
+// /api/generate에서
 const fileId = Date.now().toString()
-await redis.setex(`gantt:${fileId}`, 3600, excelBuffer.toString('base64')) // 1 hour TTL
+await redis.setex(`gantt:${fileId}`, 3600, excelBuffer.toString('base64')) // 1시간 TTL
 
-// In /api/download
+// /api/download에서
 const base64 = await redis.get(`gantt:${id}`)
 if (!base64) {
-  return NextResponse.json({ error: 'File not found' }, { status: 404 })
+  return NextResponse.json({ error: '파일을 찾을 수 없습니다' }, { status: 404 })
 }
 const buffer = Buffer.from(base64, 'base64')
-await redis.del(`gantt:${id}`) // Cleanup
+await redis.del(`gantt:${id}`) // 정리
 ```
 
-## Security Considerations
+## 보안 고려사항
 
-### Input Validation
+### 입력 검증
 
-Already implemented in `lib/file-parser.ts`:
+`lib/file-parser.ts`에 이미 구현됨:
 
-- ✅ File type whitelist (TSV/JSON only)
-- ✅ File size limit (10MB max)
-- ✅ Header validation
-- ✅ Data type validation
+- ✅ 파일 타입 화이트리스트 (TSV/JSON만 허용)
+- ✅ 파일 크기 제한 (최대 10MB)
+- ✅ 헤더 검증
+- ✅ 데이터 타입 검증
 
-### Additional Security Measures
+### 추가 보안 조치
 
 ```typescript
-// Add rate limiting
+// 속도 제한 추가
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(10, '10 m'), // 10 requests per 10 minutes
+  limiter: Ratelimit.slidingWindow(10, '10 m'), // 10분에 10회 요청
 })
 
-// In /api/generate
+// /api/generate에서
 const { success } = await ratelimit.limit(request.headers.get('x-forwarded-for') || 'anonymous')
 if (!success) {
-  return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
+  return NextResponse.json({ error: '속도 제한 초과' }, { status: 429 })
 }
 ```
 
-### Sandboxing (Docker)
+### 샌드박싱 (Docker)
 
 ```bash
-# Run with gVisor for additional security
+# 추가 보안을 위해 gVisor로 실행
 docker run --runtime=runsc gantt-python
 ```
 
-### Resource Limits
+### 리소스 제한
 
 ```typescript
-// Set timeout for subprocess
+// subprocess에 타임아웃 설정
 const timeout = setTimeout(() => {
   python.kill('SIGTERM')
-  reject(new Error('Generation timeout'))
-}, 60000) // 60 second timeout
+  reject(new Error('생성 타임아웃'))
+}, 60000) // 60초 타임아웃
 
 python.on('close', () => clearTimeout(timeout))
 ```
 
-## Environment Variables
+## 환경 변수
 
-Create `.env.local` for local development:
+로컬 개발을 위해 `.env.local` 생성:
 
 ```env
-# Python Integration
+# Python 통합
 PYTHON_PATH=/usr/bin/python3
 PYTHON_API_URL=http://localhost:8000/generate
 PYTHON_API_KEY=your-api-key-here
 
-# File Storage
-STORAGE_TYPE=filesystem  # or 's3', 'redis', 'memory'
+# 파일 저장소
+STORAGE_TYPE=filesystem  # 또는 's3', 'redis', 'memory'
 S3_BUCKET=gantt-outputs
 S3_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your-key
 AWS_SECRET_ACCESS_KEY=your-secret
 REDIS_URL=redis://localhost:6379
 
-# Limits
-MAX_FILE_SIZE=10485760  # 10MB in bytes
-GENERATION_TIMEOUT=60000  # 60 seconds in milliseconds
+# 제한
+MAX_FILE_SIZE=10485760  # 바이트 단위 10MB
+GENERATION_TIMEOUT=60000  # 밀리초 단위 60초
 TEMP_DIR=/tmp/gantt-generator
 
-# Security
+# 보안
 RATE_LIMIT_ENABLED=true
 ALLOWED_ORIGINS=https://yourdomain.com
 ```
 
-## Deployment Platforms
+## 배포 플랫폼
 
-### Vercel (Recommended for Next.js)
+### Vercel (Next.js 권장)
 
-**Limitations**: No server-side Python support
+**제한사항**: 서버 측 Python 지원 없음
 
-**Solution**: Use external Python API
+**해결책**: 외부 Python API 사용
 
-1. Deploy Next.js app to Vercel
-2. Deploy Python service separately (Railway, Render, AWS Lambda)
-3. Configure environment variables
+1. Next.js 앱을 Vercel에 배포
+2. Python 서비스를 별도로 배포 (Railway, Render, AWS Lambda)
+3. 환경 변수 구성
 
 ```bash
-# Install Vercel CLI
+# Vercel CLI 설치
 npm i -g vercel
 
-# Deploy
+# 배포
 vercel
 
-# Set environment variables
+# 환경 변수 설정
 vercel env add PYTHON_API_URL
 vercel env add PYTHON_API_KEY
 ```
 
 ### Railway
 
-Full-stack deployment with Python support:
+Python 지원을 포함한 전체 스택 배포:
 
 ```bash
-# Install Railway CLI
+# Railway CLI 설치
 npm i -g @railway/cli
 
-# Login and deploy
+# 로그인 및 배포
 railway login
 railway init
 railway up
 ```
 
-### Docker / Self-Hosted
+### Docker / 자체 호스팅
 
 ```bash
-# Build and run
+# 빌드 및 실행
 docker-compose up -d
 
-# Or with Dockerfile
+# 또는 Dockerfile 사용
 docker build -t gantt-generator .
 docker run -p 3000:3000 gantt-generator
 ```
@@ -648,26 +646,26 @@ docker run -p 3000:3000 gantt-generator
 ### AWS (ECS / EC2)
 
 ```bash
-# Build Docker image
+# Docker 이미지 빌드
 docker build -t gantt-generator .
 
-# Push to ECR
+# ECR에 푸시
 aws ecr get-login-password | docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com
 docker tag gantt-generator:latest <account>.dkr.ecr.<region>.amazonaws.com/gantt-generator:latest
 docker push <account>.dkr.ecr.<region>.amazonaws.com/gantt-generator:latest
 ```
 
-## Python Script Interface
+## Python 스크립트 인터페이스
 
-Your Python script should accept the following input format:
+Python 스크립트는 다음 입력 형식을 받아야 합니다:
 
-### Command Line Interface
+### 명령줄 인터페이스
 
 ```bash
 python gantt_generator.py --input input.json --output output.xlsx
 ```
 
-### Input JSON Format
+### 입력 JSON 형식
 
 ```json
 {
@@ -676,7 +674,7 @@ python gantt_generator.py --input input.json --output output.xlsx
       "activityId1": "1.0",
       "activityId2": "1.1",
       "activityId3": "1.1.1",
-      "activityName": "Site Preparation",
+      "activityName": "현장 준비",
       "originalDuration": 14,
       "plannedStart": "2025-02-01",
       "plannedFinish": "2025-02-15",
@@ -691,29 +689,29 @@ python gantt_generator.py --input input.json --output output.xlsx
 }
 ```
 
-### Expected Output
+### 예상 출력
 
-- Excel workbook (.xlsx) with:
-  - Control panel sheet with settings
-  - Multiple scenario sheets (one per scenario)
-  - VBA macros for interactivity
-  - Gantt chart visualization
+- Excel 워크북 (.xlsx) 포함:
+  - 설정이 있는 제어판 시트
+  - 다중 시나리오 시트 (시나리오당 하나)
+  - 대화형을 위한 VBA 매크로
+  - Gantt 차트 시각화
 
-## Testing
+## 테스트
 
-### Local API Testing
+### 로컬 API 테스트
 
 ```bash
-# Test file upload
+# 파일 업로드 테스트
 curl -X POST http://localhost:3000/api/generate \
   -F "files=@public/sample-tasks.tsv" \
   -F 'config={"projectStart":"2025-01-01","scenarios":["baseline"]}'
 
-# Test download
+# 다운로드 테스트
 curl -O http://localhost:3000/api/download?id=1234567890
 ```
 
-### Integration Testing
+### 통합 테스트
 
 ```typescript
 // __tests__/api/generate.test.ts
@@ -738,19 +736,19 @@ describe('/api/generate', () => {
 })
 ```
 
-## Monitoring & Logging
+## 모니터링 및 로깅
 
-### Error Logging
+### 오류 로깅
 
 ```typescript
 // lib/logger.ts
 import { logger } from '@/lib/logger'
 
-// In API routes
+// API 라우트에서
 try {
-  // ... generation logic
+  // ... 생성 로직
 } catch (err) {
-  logger.error('Excel generation failed', {
+  logger.error('Excel 생성 실패', {
     error: err,
     taskCount: tasks.length,
     userId: request.headers.get('user-id'),
@@ -759,60 +757,63 @@ try {
 }
 ```
 
-### Performance Monitoring
+### 성능 모니터링
 
 ```typescript
-// Add performance tracking
+// 성능 추적 추가
 const startTime = Date.now()
-// ... generation logic
+// ... 생성 로직
 const duration = Date.now() - startTime
-logger.info('Generation completed', { duration, taskCount: tasks.length })
+logger.info('생성 완료', { duration, taskCount: tasks.length })
 ```
 
-## Troubleshooting
+## 문제 해결
 
-### Common Issues
+### 일반적인 문제
 
-1. **Python script not found**
+1. **Python 스크립트를 찾을 수 없음**
 
-   - Check `PYTHON_PATH` environment variable
-   - Verify script exists at expected location
-   - Check file permissions
-2. **Timeout errors**
+   - `PYTHON_PATH` 환경 변수 확인
+   - 스크립트가 예상 위치에 있는지 확인
+   - 파일 권한 확인
 
-   - Increase `GENERATION_TIMEOUT`
-   - Optimize Python script performance
-   - Consider async processing with job queue
-3. **File storage errors**
+2. **타임아웃 오류**
 
-   - Check disk space
-   - Verify S3/Redis credentials
-   - Check network connectivity
-4. **Memory issues**
+   - `GENERATION_TIMEOUT` 증가
+   - Python 스크립트 성능 최적화
+   - 작업 큐를 사용한 비동기 처리 고려
 
-   - Process files in batches
-   - Stream large files
-   - Increase server memory
+3. **파일 저장소 오류**
 
-## Next Steps
+   - 디스크 공간 확인
+   - S3/Redis 자격 증명 확인
+   - 네트워크 연결 확인
 
-1. ✅ Implement Python script integration (choose one option above)
-2. ✅ Implement file storage solution
-3. ✅ Update `/api/download` to serve real files
-4. ✅ Add error handling and logging
-5. ✅ Add rate limiting
-6. ✅ Set up monitoring
-7. ✅ Write integration tests
-8. ✅ Deploy to production
+4. **메모리 문제**
 
----
+   - 파일을 배치로 처리
+   - 대용량 파일 스트리밍
+   - 서버 메모리 증가
 
-## Related Documentation
+## 다음 단계
 
-- [System Architecture](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - Technical architecture documentation
-- [System Layout](./SYSTEM_LAYOUT.md) / [System Layout (English)](./SYSTEM_LAYOUT_EN.md) - Component hierarchy and UI layout details
+1. ✅ Python 스크립트 통합 구현 (위 옵션 중 선택)
+2. ✅ 파일 저장소 솔루션 구현
+3. ✅ `/api/download`를 실제 파일 제공하도록 업데이트
+4. ✅ 오류 처리 및 로깅 추가
+5. ✅ 속도 제한 추가
+6. ✅ 모니터링 설정
+7. ✅ 통합 테스트 작성
+8. ✅ 프로덕션 배포
 
 ---
 
-**Last Updated**: 2025-01-01
-**Version**: 2.0.0
+## 관련 문서
+
+- [시스템 아키텍처](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처 문서
+- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./SYSTEM_LAYOUT_EN.md) - 컴포넌트 계층 구조 및 UI 레이아웃 상세 정보
+
+---
+
+**최종 업데이트**: 2025-01-01
+**버전**: 2.0.0
