@@ -690,8 +690,8 @@ This system is a modern web application based on **Next.js App Router** with **t
 
 ## Related Documentation
 
-- [System Architecture](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - Technical architecture documentation
-- [Deployment Guide](./DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - Deployment instructions
+- [System Architecture](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](../SYSTEM_ARCHITECTURE_KO.md) - Technical architecture documentation
+- [Deployment Guide](./DEPLOYMENT.md) / [배포 가이드 (한국어)](../DEPLOYMENT_KO.md) - Deployment instructions
 
 ---
 

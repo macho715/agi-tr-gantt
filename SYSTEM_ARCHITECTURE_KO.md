@@ -610,8 +610,8 @@ graph TB
 
 ## 관련 문서
 
-- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./SYSTEM_LAYOUT_EN.md) - 컴포넌트 계층 구조 및 UI 레이아웃 상세 정보
-- [배포 가이드](./DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - 배포 지침
+- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./docs/en/SYSTEM_LAYOUT_EN.md) - 컴포넌트 계층 구조 및 UI 레이아웃 상세 정보
+- [배포 가이드](./docs/en/DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - 배포 지침
 
 ---
 

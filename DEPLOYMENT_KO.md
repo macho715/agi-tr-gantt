@@ -810,8 +810,8 @@ logger.info('생성 완료', { duration, taskCount: tasks.length })
 
 ## 관련 문서
 
-- [시스템 아키텍처](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처 문서
-- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./SYSTEM_LAYOUT_EN.md) - 컴포넌트 계층 구조 및 UI 레이아웃 상세 정보
+- [시스템 아키텍처](./docs/en/SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처 문서
+- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./docs/en/SYSTEM_LAYOUT_EN.md) - 컴포넌트 계층 구조 및 UI 레이아웃 상세 정보
 
 ---
 

@@ -220,7 +220,7 @@ pnpm type-check  # package.json에 구성된 경우
 
 ## 🚢 배포
 
-자세한 배포 지침은 [DEPLOYMENT.md](./DEPLOYMENT.md) 또는 [DEPLOYMENT_KO.md](./DEPLOYMENT_KO.md)를 참조하세요.
+자세한 배포 지침은 [DEPLOYMENT.md](./docs/en/DEPLOYMENT.md) 또는 [DEPLOYMENT_KO.md](./DEPLOYMENT_KO.md)를 참조하세요.
 
 ### Vercel (권장)
 
@@ -233,7 +233,7 @@ pnpm type-check  # package.json에 구성된 경우
 
 ## 📝 Python 통합
 
-Excel 워크북 생성을 위해 Python 백엔드와 통합합니다. 통합 옵션은 `DEPLOYMENT.md` 또는 `DEPLOYMENT_KO.md`를 참조하세요:
+Excel 워크북 생성을 위해 Python 백엔드와 통합합니다. 통합 옵션은 [`docs/en/DEPLOYMENT.md`](./docs/en/DEPLOYMENT.md) 또는 [`DEPLOYMENT_KO.md`](./DEPLOYMENT_KO.md)를 참조하세요:
 
 - Subprocess 실행
 - Docker 컨테이너
@@ -241,9 +241,9 @@ Excel 워크북 생성을 위해 Python 백엔드와 통합합니다. 통합 옵
 
 ## 📚 문서
 
-- [배포 가이드](./DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - 상세한 배포 지침
-- [시스템 아키텍처](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처 문서
-- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./SYSTEM_LAYOUT_EN.md) - 상세 컴포넌트 구조
+- [배포 가이드](./docs/en/DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - 상세한 배포 지침
+- [시스템 아키텍처](./docs/en/SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - 기술 아키텍처 문서
+- [시스템 레이아웃](./SYSTEM_LAYOUT.md) / [시스템 레이아웃 (영어)](./docs/en/SYSTEM_LAYOUT_EN.md) - 상세 컴포넌트 구조
 - [문서 워크플로우 가이드](./docs/DOCUMENT_WORKFLOW_GUIDE.md) - 마감일 계산 로직 및 하이브리드 레이아웃 사용 가이드
 
 ## 🤝 기여

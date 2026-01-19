@@ -809,8 +809,8 @@ logger.info('Generation completed', { duration, taskCount: tasks.length })
 
 ## Related Documentation
 
-- [System Architecture](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](./SYSTEM_ARCHITECTURE_KO.md) - Technical architecture documentation
-- [System Layout](./SYSTEM_LAYOUT.md) / [System Layout (English)](./SYSTEM_LAYOUT_EN.md) - Component hierarchy and UI layout details
+- [System Architecture](./SYSTEM_ARCHITECTURE.md) / [시스템 아키텍처 (한국어)](../SYSTEM_ARCHITECTURE_KO.md) - Technical architecture documentation
+- [System Layout](../SYSTEM_LAYOUT.md) / [System Layout (English)](./SYSTEM_LAYOUT_EN.md) - Component hierarchy and UI layout details
 
 ---
 

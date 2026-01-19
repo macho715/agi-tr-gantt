@@ -238,7 +238,9 @@ graph LR
   - Hybrid layout: Card view ↔ Table view toggle
   - Category-based document grouping (Accordion or Tabs)
   - Workflow state machine (`not_started → submitted → approved`)
-  - Submit/Approve buttons for status transitions (state machine guard)
+  - Submit/Approve/Reset/Reopen buttons for status transitions (state machine guard)
+  - Reset action: `submitted → not_started`
+  - Reopen action: `approved → submitted`
   - Due date calculation and Due state display (on_track/at_risk/overdue)
   - D-countdown display (days until due, Card/Table views)
   - Progress tracking (Progress bar, per category)
@@ -587,8 +589,8 @@ graph TB
 
 ## Related Documentation
 
-- [System Layout](./SYSTEM_LAYOUT.md) / [System Layout (English)](./SYSTEM_LAYOUT_EN.md) - Component hierarchy and UI layout details
-- [Deployment Guide](./DEPLOYMENT.md) / [배포 가이드 (한국어)](./DEPLOYMENT_KO.md) - Deployment instructions
+- [System Layout](../SYSTEM_LAYOUT.md) / [System Layout (English)](./SYSTEM_LAYOUT_EN.md) - Component hierarchy and UI layout details
+- [Deployment Guide](./DEPLOYMENT.md) / [배포 가이드 (한국어)](../DEPLOYMENT_KO.md) - Deployment instructions
 
 ---
 
