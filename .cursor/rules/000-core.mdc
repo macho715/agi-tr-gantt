@@ -1,0 +1,29 @@
+---
+description: Core Cursor rules for agi-tr-gantt (Next.js + TypeScript + pnpm)
+globs: ["**/*"]
+alwaysApply: true
+---
+
+## Core operating rules
+
+- **Language:** 한국어 간결(KR concise). 필요한 경우 **영문(EN)**은 짧게 inline.
+- **Response structure:** `ExecSummary → Visual → Options → Roadmap → Automation → QA` 순서로 출력.
+- **Non‑hallucination:** 불확실하면 반드시 `가정:`으로 표시하고, 근거가 없으면 단정 금지.
+- **Small diffs:** 큰 리팩터링보다 **작은 PR 단위**로 쪼개어 안전하게 변경.
+- **Repo context (from README):** Next.js(App Router) + React + TypeScript + Tailwind. 패키지 매니저는 **pnpm**. Node.js **18+** 기준.
+- **Do not invent APIs:** 기존 파일/함수/라우트가 확인되지 않으면, 먼저 레포를 탐색하여 실제 구현을 확인.
+
+## Scope guard (edit boundaries)
+
+- 기본 변경 범위: `app/**`, `components/**`, `hooks/**`, `lib/**`, `data/**`, `styles/**`.
+- 설정/문서 변경이 필요한 경우에만: `.cursor/**`, `.github/**`, `README*.md`, `*.md`.
+
+## Quality bar
+
+- 변경 후 최소 검증: `pnpm lint`(있으면), `pnpm build`.
+- 테스트 스크립트가 있으면 `pnpm test`까지 실행.
+
+## Security / Safety
+
+- 토큰/키/비밀정보를 코드/로그/문서에 포함 금지.
+- 파일 업로드/다운로드, Excel 생성 등 바이너리 취급 시 **경로 탐색/임의 실행** 금지.

@@ -1,0 +1,9 @@
+---
+description: CI expectations for Node + pnpm projects
+globs: [".github/workflows/*","package.json","pnpm-lock.yaml","**/*.ts","**/*.tsx"]
+alwaysApply: true
+---
+
+- CI는 기본적으로 `pnpm install` → `pnpm lint`(있으면) → `pnpm build` → `pnpm test`(있으면) 순으로 수행.
+- pnpm 버전은 가능하면 `package.json`의 `packageManager` 필드를 우선 사용(없으면 안전한 기본값 사용).
+- 캐시를 사용하되, lockfile 변경 시 올바르게 무효화.

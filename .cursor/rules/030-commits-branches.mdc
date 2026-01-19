@@ -1,0 +1,12 @@
+---
+description: Git workflow (Conventional Commits + short-lived branches)
+globs: ["**/*"]
+alwaysApply: true
+---
+
+- 커밋 메시지는 **Conventional Commits** 권장: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`.
+- 브랜치 모델: `main` + 짧은 `feature/*`.
+- PR 설명에는 반드시 포함:
+  - 변경 요약
+  - 리스크/롤백
+  - 검증 방법(`pnpm lint`, `pnpm build`, 테스트 등)

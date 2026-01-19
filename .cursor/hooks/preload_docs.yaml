@@ -1,0 +1,5 @@
+load:
+  - path: "README_KO.md"
+  - path: "SYSTEM_ARCHITECTURE_KO.md"
+  - path: "DEPLOYMENT_KO.md"
+  - path: "plan.md"

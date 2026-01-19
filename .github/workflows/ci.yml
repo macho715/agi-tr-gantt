@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Detect pnpm version (packageManager) and setup
+        id: pnpmver
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f package.json ]; then
+            VER=$(node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); const pm=p.packageManager||''; const m=pm.match(/^pnpm@(.*)$/); console.log(m?m[1]:'9');")
+          else
+            VER=9
+          fi
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ steps.pnpmver.outputs.version }}
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (if script exists)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); process.exit(p.scripts && p.scripts.lint ? 0 : 1)"; then
+            pnpm lint
+          else
+            echo "No lint script; skipping"
+          fi
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test (if script exists)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); process.exit(p.scripts && p.scripts.test ? 0 : 1)"; then
+            pnpm test
+          else
+            echo "No test script; skipping"
+          fi

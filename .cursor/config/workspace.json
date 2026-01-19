@@ -1,0 +1,16 @@
+{
+  "openOnStart": [
+    "README_KO.md",
+    "SYSTEM_ARCHITECTURE_KO.md",
+    "DEPLOYMENT_KO.md",
+    "plan.md"
+  ],
+  "terminals": {
+    "shortcuts": [
+      {"name": "dev", "cmd": "pnpm dev"},
+      {"name": "lint", "cmd": "pnpm lint"},
+      {"name": "build", "cmd": "pnpm build"},
+      {"name": "ci-local", "cmd": "pnpm install && (pnpm lint || true) && pnpm build && (pnpm test || true)"}
+    ]
+  }
+}

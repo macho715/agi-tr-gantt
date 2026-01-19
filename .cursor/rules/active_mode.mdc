@@ -1,0 +1,9 @@
+---
+description: Cursor workspace behavior hints (docs first)
+globs: ["**/*"]
+alwaysApply: true
+---
+
+- 프로젝트 오픈 시 문서(README/아키텍처/배포 문서)부터 확인하고 작업을 시작.
+- 기능 추가/수정 전: 관련 API(route handler), 파서, Excel 생성 로직의 경계부터 파악.
+- 변경 전후 비교가 가능하도록 **작은 커밋/작은 PR** 단위 유지.

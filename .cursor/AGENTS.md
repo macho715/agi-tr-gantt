@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## 0) 목적 (Renovation 운영 지침)
-본 저장소는 **Vercel 배포(Next.js App Router)** 기반의 기존 **Gantt 대시보드**를 리뉴얼하여, 정적 HTML(운영/서류) 대시보드를 흡수한 **통합형 Control Tower 대시보드**로 확장한다.  
+본 저장소는 **Vercel 배포(Next.js App Router)** 기반의 기존 **Gantt 대시보드**를 리뉴얼하여, 정적 HTML(운영/서류) 대시보드를 흡수한 **통합형 Control Tower 대시보드**로 확장한다.
 에이전트(Claude/Cursor/Codex 등)는 아래 규칙을 준수하여 **하드코딩 없이(설정/스키마 기반)** 기능을 추가·변경한다.
 
 ---

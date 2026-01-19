@@ -1,0 +1,26 @@
+---
+description: Next.js(App Router) + React + TypeScript conventions
+globs: ["app/**/*","components/**/*","hooks/**/*","lib/**/*","data/**/*","styles/**/*","**/*.ts","**/*.tsx"]
+alwaysApply: true
+---
+
+## Next.js App Router
+
+- 기본은 **Server Components**로 설계하고, 필요한 경우에만 `"use client"`를 최소 범위로 적용.
+- API는 `app/api/**/route.ts` 패턴을 우선 사용(이미 레포가 해당 구조를 사용 중).
+- 데이터 페칭은 가능한 서버 측에서 병렬화(avoid async waterfalls)하고, 클라이언트 페칭은 최소화.
+
+## TypeScript
+
+- `any` 사용은 최후의 수단. 도입 시 근거/대안을 주석 또는 PR 설명에 기록.
+- 타입은 **입출력 경계(파일 업로드 파싱 / API request/response / Excel 생성)**에 먼저 적용.
+
+## React
+
+- 불필요한 re-render 최소화: props 안정화, memoization은 **측정 근거** 있을 때만.
+- 상태는 가까운 곳에 두고, 전역 상태 도입은 신중.
+
+## Styling (Tailwind)
+
+- Tailwind 클래스는 반복되는 패턴이면 유틸/컴포넌트로 승격.
+- 기존 스타일/컴포넌트 시스템(shadcn/ui 추정)이 있으면 우선 재사용.

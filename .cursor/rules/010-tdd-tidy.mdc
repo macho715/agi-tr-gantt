@@ -1,0 +1,11 @@
+---
+description: TDD + tidy-first workflow (SoT=plan.md)
+globs: ["**/*"]
+alwaysApply: true
+---
+
+- **SoT = `plan.md`** (Source of Truth).
+- 사용자가 `go`라고 하면 **plan.md에서 다음 미체크 항목 1개만** 선택.
+- 사이클: **RED → GREEN → REFACTOR**.
+- 커밋은 구조 변경(structural)과 동작 변경(behavioral)을 분리.
+- 검증은 가능한 자동화(스크립트/CI)로 재현 가능하게 유지.
