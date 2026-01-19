@@ -229,8 +229,8 @@ pnpm build
 ### 아키텍처/설계 문서
 - 시스템 아키텍처/데이터 흐름: `SYSTEM_ARCHITECTURE.md` / `SYSTEM_ARCHITECTURE_KO.md`
 - 시스템 레이아웃/컴포넌트 계층: `SYSTEM_LAYOUT.md` / `SYSTEM_LAYOUT_EN.md`
-- 통합 프로토타입 설계(사이드바 멀티뷰/DocRule/Deadline 엔진): `통합.md`
-- 정적 HTML(운영/서류) 원본: `option_a_dashboard_...html`, `gate_pass_customs_checklist_...html`
+- 통합 프로토타입 설계(사이드바 멀티뷰/DocRule/Deadline 엔진): `docs/design/통합.md`
+- 정적 HTML(운영/서류) 원본: `docs/legacy/option_a_dashboard_...html`, `docs/legacy/gate_pass_customs_checklist_...html`
 
 ### 성능/코딩 표준 문서
 - Vercel React Best Practices: `docs/ai/vercel-react-best-practices.md`
