@@ -535,28 +535,26 @@ graph TB
 
 ### Planned Features
 
-```mermaid
-roadmap
-    title Development Roadmap
-    section Phase 1
-        Python Integration : Active
-        File Storage : Active
-        Download Endpoint : Active
-    section Phase 2
-        User Authentication : Planned
-        Saved Projects : Planned
-        Generation History : Planned
-    section Phase 3
-        Task Dependencies : Future
-        Resource Allocation : Future
-        Critical Path : Future
-    section Phase 4
-        Custom Templates : Future
-        Advanced Charts : Future
-        API Documentation : Future
-```
+#### Phase 1 (Active)
+- ✅ Python Integration
+- ✅ File Storage
+- ✅ Download Endpoint
 
----
+#### Phase 2 (Planned)
+- 📋 User Authentication
+- 📋 Saved Projects
+- 📋 Generation History
+
+#### Phase 3 (Future)
+- 🔮 Task Dependencies
+- 🔮 Resource Allocation
+- 🔮 Critical Path
+
+#### Phase 4 (Future)
+- 🔮 Custom Templates
+- 🔮 Advanced Charts
+- 🔮 API Documentation
+```
 
 ---
 
