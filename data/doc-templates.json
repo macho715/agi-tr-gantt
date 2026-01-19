@@ -1,0 +1,773 @@
+{
+    "version": "0.1.0",
+    "updatedAt": "2026-01-19",
+    "defaultCalendar": {
+        "timezone": "Asia/Dubai",
+        "weekendDays": [
+            "SAT",
+            "SUN"
+        ]
+    },
+    "milestoneKeys": [
+        "mzp_arrival",
+        "mzp_departure",
+        "loadout_start",
+        "loadout_end",
+        "agi_arrival",
+        "doc_deadline"
+    ],
+    "categories": [
+        {
+            "id": "ptw_pack",
+            "label": "PTW Land / HM / HSE / MZ Ops Submission Pack",
+            "sort": 10
+        },
+        {
+            "id": "cargo_docs",
+            "label": "Loading Cargo Related Documents",
+            "sort": 20
+        },
+        {
+            "id": "ad_maritime_noc",
+            "label": "AD Maritime NOC Documents",
+            "sort": 30
+        }
+    ],
+    "templates": [
+        {
+            "id": "ptw.risk_assessment",
+            "title": "Risk Assessment",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "AD Port format (shared)",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "leadTime": {
+                "value": 2,
+                "type": "business_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "ra_pdf",
+                    "type": "file",
+                    "label": "Signed RA (PDF)",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP",
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.consent_form",
+            "title": "PTW Applicant/Receiver Consent Form",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "AD Port format (shared)",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.risk_assessment"
+            ],
+            "evidence": [
+                {
+                    "id": "consent_pdf",
+                    "type": "file",
+                    "label": "Signed Consent (PDF)",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.land_oversize_application",
+            "title": "PTW Application for Land Oversized & Heavy Load",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "SPMT/heavy load; approval lead time 2–3 business days",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -5,
+                "offsetType": "calendar_days"
+            },
+            "leadTime": {
+                "value": 3,
+                "type": "business_days"
+            },
+            "dependencies": [
+                "ptw.risk_assessment",
+                "ptw.method_statement"
+            ],
+            "evidence": [
+                {
+                    "id": "land_ptw_form",
+                    "type": "file",
+                    "label": "Land PTW Form",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "SPMT",
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.stowage_plan",
+            "title": "Stowage Plan",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "Cargo layout/weights",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "loadout_start",
+                "offsetDays": -3,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "stowage",
+                    "type": "file",
+                    "label": "Stowage Plan File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.method_statement",
+            "title": "Method Statement (incl. Weather Criteria)",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "AD Port format incl weather criteria",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.risk_assessment"
+            ],
+            "evidence": [
+                {
+                    "id": "ms",
+                    "type": "file",
+                    "label": "Method Statement",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP",
+                    "Load-out",
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.countdown_plan",
+            "title": "Countdown Plan",
+            "categoryId": "ptw_pack",
+            "priority": "important",
+            "description": "Operation countdown schedule",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "loadout_start",
+                "offsetDays": -2,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.method_statement"
+            ],
+            "evidence": [
+                {
+                    "id": "countdown",
+                    "type": "file",
+                    "label": "Countdown Plan",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.undertaking_letter",
+            "title": "Undertaking Letter",
+            "categoryId": "ptw_pack",
+            "priority": "important",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "undertaking",
+                    "type": "file",
+                    "label": "Signed Undertaking",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.stability_calculation",
+            "title": "Stability Calculation",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "For HM review",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_departure",
+                "offsetDays": -5,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.stowage_plan"
+            ],
+            "evidence": [
+                {
+                    "id": "stability",
+                    "type": "file",
+                    "label": "Stability Calc",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Departure"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.equipment_certificates",
+            "title": "3rd Party Equipment Certificates",
+            "categoryId": "ptw_pack",
+            "priority": "important",
+            "description": "SPMT certificates + operator competency",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "loadout_start",
+                "offsetDays": -3,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "certs",
+                    "type": "file",
+                    "label": "Certificates Bundle",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "SPMT",
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.mws",
+            "title": "Marine Warranty Survey (MWS)",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "Required before sailing for HM approval",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_departure",
+                "offsetDays": -2,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.stability_calculation"
+            ],
+            "evidence": [
+                {
+                    "id": "mws",
+                    "type": "file",
+                    "label": "MWS Approval/Report",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Departure"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.mooring_plan",
+            "title": "Mooring Plan",
+            "categoryId": "ptw_pack",
+            "priority": "standard",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -3,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "mooring",
+                    "type": "file",
+                    "label": "Mooring Plan",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.lashing_plan",
+            "title": "Lashing Plan",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_departure",
+                "offsetDays": -3,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.stowage_plan"
+            ],
+            "evidence": [
+                {
+                    "id": "lashing",
+                    "type": "file",
+                    "label": "Lashing Plan",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Departure"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "ptw.tide_confirmation",
+            "title": "Tide Table / Tide Window Confirmation (Mina Zayed)",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "Confirm workable window for RoRo/linkspan ops",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "loadout_start",
+                "offsetDays": -2,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "tide_ref",
+                    "type": "file",
+                    "label": "Tide Reference / Confirmation",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Load-out"
+                ],
+                "tideRequired": true
+            }
+        },
+        {
+            "id": "cargo.manifest",
+            "title": "Cargo List / Manifest (per voyage)",
+            "categoryId": "cargo_docs",
+            "priority": "recommended",
+            "description": "Unit No., dims/weight/CoG etc.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "manifest",
+                    "type": "file",
+                    "label": "Cargo Manifest",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "cargo.packing_list",
+            "title": "Packing List / CI (if applicable)",
+            "categoryId": "cargo_docs",
+            "priority": "recommended",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "packing",
+                    "type": "file",
+                    "label": "Packing List / CI",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "MZP"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "cargo.photos",
+            "title": "Cargo Photos (current condition)",
+            "categoryId": "cargo_docs",
+            "priority": "recommended",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "loadout_start",
+                "offsetDays": -1,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "photos",
+                    "type": "file",
+                    "label": "Photos",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "cargo.load_sequence",
+            "title": "Load sequence / trailer allocation",
+            "categoryId": "cargo_docs",
+            "priority": "important",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "loadout_start",
+                "offsetDays": -2,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.stowage_plan"
+            ],
+            "evidence": [
+                {
+                    "id": "sequence",
+                    "type": "file",
+                    "label": "Load sequence",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Load-out"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "noc.trading_license",
+            "title": "Local Trading License",
+            "categoryId": "ad_maritime_noc",
+            "priority": "critical",
+            "appliesTo": {
+                "scope": "project"
+            },
+            "anchor": {
+                "milestoneKey": "agi_arrival",
+                "offsetDays": -7,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "license",
+                    "type": "file",
+                    "label": "Trading License",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "noc.ra_erp",
+            "title": "Detailed Risk Assessment & Emergency Response Plan",
+            "categoryId": "ad_maritime_noc",
+            "priority": "critical",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "agi_arrival",
+                "offsetDays": -5,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "ptw.risk_assessment"
+            ],
+            "evidence": [
+                {
+                    "id": "erp",
+                    "type": "file",
+                    "label": "ERP Document",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "noc.no_objection",
+            "title": "No Objection from Relevant Authorities",
+            "categoryId": "ad_maritime_noc",
+            "priority": "critical",
+            "appliesTo": {
+                "scope": "project"
+            },
+            "anchor": {
+                "milestoneKey": "agi_arrival",
+                "offsetDays": -7,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "nol",
+                    "type": "file",
+                    "label": "No Objection Letter",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "noc.voyage_plan",
+            "title": "Voyage Plan (MZP → AGI)",
+            "categoryId": "ad_maritime_noc",
+            "priority": "critical",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "agi_arrival",
+                "offsetDays": -3,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "voyage_plan",
+                    "type": "file",
+                    "label": "Voyage Plan",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "noc.route_map",
+            "title": "Route Map",
+            "categoryId": "ad_maritime_noc",
+            "priority": "important",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "agi_arrival",
+                "offsetDays": -3,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [
+                "noc.voyage_plan"
+            ],
+            "evidence": [
+                {
+                    "id": "route",
+                    "type": "file",
+                    "label": "Route Map",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        },
+        {
+            "id": "noc.contract_award",
+            "title": "Contract Award Letter Copy",
+            "categoryId": "ad_maritime_noc",
+            "priority": "important",
+            "appliesTo": {
+                "scope": "project"
+            },
+            "anchor": {
+                "milestoneKey": "agi_arrival",
+                "offsetDays": -10,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "award",
+                    "type": "file",
+                    "label": "Contract Award Letter",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {
+                "scheduleTags": [
+                    "Transport"
+                ],
+                "tideRequired": false
+            }
+        }
+    ]
+}

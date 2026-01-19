@@ -8,8 +8,25 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { ProjectConfig, ScheduleData } from "@/lib/types"
-import { BarChart3, Table, Calendar, ZoomIn, ZoomOut, Ship, Waves, Wind, AlertTriangle, Database } from "lucide-react"
+import type { ProjectConfig, ScheduleData, DocTemplate, Voyage } from "@/lib/types"
+import {
+  BarChart3,
+  Table,
+  Calendar,
+  ZoomIn,
+  ZoomOut,
+  Ship,
+  Waves,
+  Wind,
+  AlertTriangle,
+  Database,
+  FileText,
+} from "lucide-react"
+import { VoyageProvider, useVoyageContext } from "@/contexts/voyage-context"
+import { deriveVoyagesFromScheduleData } from "@/lib/voyage/derive-voyages"
+import { DocumentChecklist } from "@/components/documents/document-checklist"
+import { VoyageMiniGrid } from "@/components/documents/voyage-mini-grid"
+import docTemplatesData from "@/data/doc-templates.json"
 
 import tideData from "@/data/tide-data.json"
 import weatherData from "@/data/weather-data.json"
@@ -170,6 +187,9 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
     }
     return scheduleData
   }, [scheduleData, useFixedData])
+
+  const voyages = useMemo(() => deriveVoyagesFromScheduleData(effectiveScheduleData), [effectiveScheduleData])
+  const templates = useMemo(() => docTemplatesData.templates as DocTemplate[], [])
 
   const chartData = useMemo(() => {
     if (!effectiveScheduleData) return null
@@ -338,7 +358,8 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
   }
 
   return (
-    <Card className="bg-card border-border overflow-hidden h-full flex flex-col">
+    <VoyageProvider voyages={voyages}>
+      <Card className="bg-card border-border overflow-hidden h-full flex flex-col">
       <CardHeader className="pb-3 border-b border-border flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
@@ -399,6 +420,10 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
               <TabsTrigger value="voyage" className="text-xs h-7 px-3 data-[state=active]:bg-background">
                 <Ship className="w-3 h-3 mr-1.5" />
                 Voyage Summary
+              </TabsTrigger>
+              <TabsTrigger value="docs" className="text-xs h-7 px-3 data-[state=active]:bg-background">
+                <FileText className="w-3 h-3 mr-1.5" />
+                Documents
               </TabsTrigger>
               <TabsTrigger value="summary" className="text-xs h-7 px-3 data-[state=active]:bg-background">
                 <Calendar className="w-3 h-3 mr-1.5" />
@@ -755,6 +780,10 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
             </div>
           </TabsContent>
 
+          <TabsContent value="docs" className="mt-0 flex-1 min-h-0 overflow-auto">
+            <DocsTabContent voyages={voyages} templates={templates} />
+          </TabsContent>
+
           <TabsContent
             value="summary"
             className="mt-0 flex-1 min-h-0 overflow-auto"
@@ -821,6 +850,25 @@ export function GanttPreview({ scheduleData, config, isGenerating }: GanttPrevie
           </TabsContent>
         </Tabs>
       </CardContent>
-    </Card>
+      </Card>
+    </VoyageProvider>
+  )
+}
+
+function DocsTabContent({ voyages, templates }: { voyages: Voyage[]; templates: DocTemplate[] }) {
+  const { selectedVoyageId, docsByVoyage } = useVoyageContext()
+  const selectedVoyage = voyages.find((v) => v.id === selectedVoyageId) || voyages[0]
+
+  if (!selectedVoyage) {
+    return <div className="p-4 text-center text-muted-foreground">No voyages available. Please generate a schedule first.</div>
+  }
+
+  const docs = docsByVoyage[selectedVoyage.id] || []
+
+  return (
+    <div className="p-4 space-y-4">
+      <VoyageMiniGrid voyages={voyages} />
+      <DocumentChecklist voyage={selectedVoyage} templates={templates} docs={docs} />
+    </div>
   )
 }

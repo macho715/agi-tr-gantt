@@ -78,11 +78,100 @@ export interface WeatherRecord {
 }
 
 export interface ActivityRecord {
-    activityId1: string
-    activityId2: string // Primary grouping key (2rtrack pattern)
-    activityId3: string
+  activityId1: string
+  activityId2: string // Primary grouping key (2rtrack pattern)
+  activityId3: string
+  name: string
+  duration: number
+  startDate: string
+  endDate: string
+}
+
+// Document Types (p2.md schema)
+export type VoyageId = string
+
+export type MilestoneKey =
+  | "mzp_arrival"
+  | "mzp_departure"
+  | "loadout_start"
+  | "loadout_end"
+  | "agi_arrival"
+  | "agi_departure"
+  | "doc_deadline"
+
+export interface Voyage {
+  id: VoyageId
+  label: string
+  cargoLabel?: string
+  tripGroupKey?: string
+  milestones: Partial<Record<MilestoneKey, string>>
+  notes?: string
+}
+
+export type DocWorkflowState =
+  | "not_started"
+  | "in_progress"
+  | "in_review"
+  | "ready_to_submit"
+  | "submitted"
+  | "approved"
+  | "revision_required"
+  | "rejected"
+  | "waived"
+
+export type DocDueState = "on_track" | "at_risk" | "overdue" | "completed_late"
+
+export interface DocTemplate {
+  id: string
+  title: string
+  categoryId: string
+  priority: "critical" | "important" | "standard" | "recommended"
+  description?: string
+  appliesTo: { scope: "voyage" | "unit" | "project" }
+  anchor: {
+    milestoneKey: MilestoneKey
+    offsetDays: number
+    offsetType: "calendar_days" | "business_days"
+  }
+  leadTime?: { value: number; type: "calendar_days" | "business_days" }
+  dependencies: string[]
+  evidence: Array<{
+    id: string
+    type: "file" | "url" | "text"
+    label: string
+    required: boolean
+    minCount: number
+  }>
+  links: {
+    scheduleTags?: string[]
+    tideRequired?: boolean
+  }
+}
+
+export interface DocInstance {
+  templateId: string
+  voyageId: VoyageId
+  workflowState: DocWorkflowState
+  dueAt: string
+  assignee?: { name: string; org?: string }
+  attachments: Array<{
+    id: string
     name: string
-    duration: number
-    startDate: string
-    endDate: string
+    type: "file" | "url"
+    url: string
+    uploadedAt: string
+  }>
+  history: Array<{
+    at: string
+    event: string
+    actor?: string
+  }>
+  notes?: string
+}
+
+export interface VoyageDocState {
+  voyageId: VoyageId
+  templateVersion: string
+  milestones: Partial<Record<MilestoneKey, string>>
+  documents: DocInstance[]
 }

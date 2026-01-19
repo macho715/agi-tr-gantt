@@ -1,0 +1,12 @@
+{
+  "docDeadlineOffsetDays": -4,
+  "milestones": [
+    { "key": "mzp_arrival", "pattern": "LCT Arrives|Deck Preparations|MZP Arrival", "flags": "i" },
+    { "key": "mzp_departure", "pattern": "Sail-away.*LCT to Al Ghallan|MZP Departure", "flags": "i" },
+    { "key": "loadout_start", "pattern": "Load-out|stool down", "flags": "i" },
+    { "key": "loadout_end", "pattern": "Load-out.*complete|stool.*complete", "flags": "i" },
+    { "key": "agi_arrival", "pattern": "AGI Arrival|Al Ghallan Arrival", "flags": "i" },
+    { "key": "agi_departure", "pattern": "AGI Departure|Return to MZP", "flags": "i" },
+    { "key": "doc_deadline", "pattern": "Document Deadline", "flags": "i" }
+  ]
+}
