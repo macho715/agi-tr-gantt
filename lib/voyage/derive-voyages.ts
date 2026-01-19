@@ -1,5 +1,6 @@
 import type { ScheduleData, ScheduleTask, Voyage, MilestoneKey } from "@/lib/types"
 import milestoneMap from "@/data/milestone-map.json"
+import { VALID_TRIP_ACTIVITY_ID2 } from "@/lib/voyage/trip-groups"
 
 type MilestonePattern = {
   key: MilestoneKey
@@ -25,14 +26,15 @@ export function deriveVoyagesFromScheduleData(scheduleData: ScheduleData | null)
   if (!scheduleData) return []
 
   const byTrip = new Map<string, ScheduleTask[]>()
-  const tripOrder: string[] = []
 
   scheduleData.tasks.forEach((task) => {
     if (!task.activityId2) return
-    const existing = byTrip.get(task.activityId2)
+    const tripKey = task.activityId2.trim()
+    if (!VALID_TRIP_ACTIVITY_ID2.includes(tripKey)) return
+
+    const existing = byTrip.get(tripKey)
     if (!existing) {
-      tripOrder.push(task.activityId2)
-      byTrip.set(task.activityId2, [task])
+      byTrip.set(tripKey, [task])
       return
     }
     existing.push(task)
@@ -40,7 +42,9 @@ export function deriveVoyagesFromScheduleData(scheduleData: ScheduleData | null)
 
   const milestonePatterns = buildMilestonePatterns(milestoneMap.milestones as MilestonePattern[])
 
-  return tripOrder.map((tripKey, index) => {
+  const sortedTripOrder = VALID_TRIP_ACTIVITY_ID2.filter((tripKey) => byTrip.has(tripKey))
+
+  return sortedTripOrder.map((tripKey, index) => {
     const tasks = byTrip.get(tripKey) || []
     const milestones: Partial<Record<MilestoneKey, string>> = {}
 

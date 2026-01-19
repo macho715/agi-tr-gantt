@@ -24,6 +24,7 @@ import {
 } from "lucide-react"
 import { VoyageProvider, useVoyageContext } from "@/contexts/voyage-context"
 import { deriveVoyagesFromScheduleData } from "@/lib/voyage/derive-voyages"
+import { TRIP_GROUPS_BY_ACTIVITY_ID2 } from "@/lib/voyage/trip-groups"
 import { DocumentChecklist } from "@/components/documents/document-checklist"
 import { VoyageMiniGrid } from "@/components/documents/voyage-mini-grid"
 import docTemplatesData from "@/data/doc-templates.json"
@@ -102,13 +103,6 @@ const getRiskBadgeColor = (risk: string) => {
       return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
   }
 }
-
-const TRIP_GROUPS_BY_ACTIVITY_ID2 = [
-  { id: "tr12", activityId2: "AGI TR Units 1-2", label: "AGI TR Units 1-2", color: "sky" },
-  { id: "tr34", activityId2: "AGI TR Units 3-4", label: "AGI TR Units 3-4", color: "emerald" },
-  { id: "tr56", activityId2: "AGLI TR Units 5-6", label: "AGI TR Units 5-6", color: "amber" },
-  { id: "tr7", activityId2: "AGL TR Unit 7", label: "AGI TR Unit 7", color: "violet" },
-]
 
 const getTripGroupColors = (color: string) => {
   const colorMap: Record<string, { header: string; headerText: string; row: string; bar: string; barBorder: string }> =

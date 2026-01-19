@@ -88,7 +88,7 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
     return result
   }, [categories, templates, docs])
 
-  const handleAction = (templateId: string, action: "submit" | "approve") => {
+  const handleAction = (templateId: string, action: "submit" | "approve" | "reset" | "reopen") => {
     const doc = docs.find((d) => d.templateId === templateId)
     const currentStatus = (doc?.workflowState || "not_started") as DocWorkflowState
 
@@ -364,6 +364,8 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
 
                 const canSubmit = canTransition(status, "submit")
                 const canApprove = canTransition(status, "approve")
+                const canReset = canTransition(status, "reset")
+                const canReopen = canTransition(status, "reopen")
 
                 return (
                   <TableRow
@@ -398,18 +400,30 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
                     </TableCell>
 
                     <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          disabled={!canSubmit}
-                          onClick={() => handleAction(template.id, "submit")}
-                        >
-                          Submit
-                        </Button>
-                        <Button size="sm" disabled={!canApprove} onClick={() => handleAction(template.id, "approve")}>
-                          Approve
-                        </Button>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            disabled={!canSubmit}
+                            onClick={() => handleAction(template.id, "submit")}
+                          >
+                            Submit
+                          </Button>
+                          <Button size="sm" disabled={!canApprove} onClick={() => handleAction(template.id, "approve")}>
+                            Approve
+                          </Button>
+                        </div>
+                        {(canReset || canReopen) && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-xs h-7"
+                            onClick={() => handleAction(template.id, canReopen ? "reopen" : "reset")}
+                          >
+                            {canReopen ? "Reopen" : "Reset"}
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
