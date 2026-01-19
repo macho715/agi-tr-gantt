@@ -3,7 +3,8 @@
     "README_KO.md",
     "SYSTEM_ARCHITECTURE_KO.md",
     "DEPLOYMENT_KO.md",
-    "plan.md"
+    "plan.md",
+    "docs/design/통합.md"
   ],
   "terminals": {
     "shortcuts": [
