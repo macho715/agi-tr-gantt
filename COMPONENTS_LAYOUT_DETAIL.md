@@ -901,11 +901,11 @@ interface GenerationStatusProps {
 
 **레이아웃**:
 - **Card 구조**: 표준 Card 컴포넌트 사용
-- **Header**: 
+- **Header**:
   - 제목: "Key Notes (OFCO Agency Guidance)" (`text-sm font-semibold`)
   - 버튼: "View Full Notes" (`variant="outline"`, `size="sm"`, `h-8`, `text-xs`)
   - 반응형: `flex-col sm:flex-row` (모바일에서 세로 배치)
-- **Content**: 
+- **Content**:
   - 컴팩트 버전: `max-h-[300px] overflow-y-auto`
   - 텍스트: `text-sm` (본문)
   - 구조: 각 항목별 섹션 (`space-y-4`)
