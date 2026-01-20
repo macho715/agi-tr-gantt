@@ -11,6 +11,8 @@ import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
+import { useTideFocus } from '@/contexts/tide-focus-context'
+
 type TideDay = {
   date: string // YYYY-MM-DD
   values: number[] // length 24
@@ -143,6 +145,8 @@ export function WaterTidePanel({
   className?: string
   title?: string
 }) {
+  const { focusedDate, focusNonce, source, setDateSilently } = useTideFocus()
+
   const dayByDate = React.useMemo(() => {
     const map = new Map<string, TideDay>()
     for (const d of tideDataset.days) map.set(d.date, d)
@@ -155,8 +159,41 @@ export function WaterTidePanel({
   const todayIso = React.useMemo(() => new Date().toISOString().slice(0, 10), [])
   const fallback = tideDataset.days[0]?.date ?? todayIso
 
-  const [selectedDate, setSelectedDate] = React.useState(
-    pickInitialDate({ todayIso, minDate, maxDate, fallback })
+  const initialSelectedDate = React.useMemo(() => {
+    const candidate = focusedDate ?? pickInitialDate({ todayIso, minDate, maxDate, fallback })
+    // Clamp into range if needed.
+    if (minDate && candidate < minDate) return minDate
+    if (maxDate && candidate > maxDate) return maxDate
+    return candidate
+  }, [focusedDate, todayIso, minDate, maxDate, fallback])
+
+  const [selectedDate, setSelectedDate] = React.useState(initialSelectedDate)
+
+  // Sync when an external focus request comes in.
+  React.useEffect(() => {
+    if (!focusedDate) return
+    setSelectedDate((prev) => (prev === focusedDate ? prev : focusedDate))
+  }, [focusedDate])
+
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
+  const [highlight, setHighlight] = React.useState(false)
+
+  React.useEffect(() => {
+    if (focusNonce <= 0) return
+    // Focus the date input (preventScroll avoids undoing scrollIntoView from the click side)
+    inputRef.current?.focus({ preventScroll: true })
+
+    setHighlight(true)
+    const t = window.setTimeout(() => setHighlight(false), 1200)
+    return () => window.clearTimeout(t)
+  }, [focusNonce])
+
+  const setSelectedDateAndSync = React.useCallback(
+    (nextDate: string) => {
+      setSelectedDate(nextDate)
+      setDateSilently(nextDate)
+    },
+    [setDateSilently]
   )
 
   const selectedDay = dayByDate.get(selectedDate) ?? tideDataset.days[0]
@@ -165,8 +202,21 @@ export function WaterTidePanel({
   const meanSeaLevel =
     typeof tideDataset.meta.meanSeaLevelMeters === 'number' ? tideDataset.meta.meanSeaLevelMeters : undefined
 
+  const linkedFromTaskLabel =
+    source?.type === 'task'
+      ? source.taskName
+        ? `Linked from: ${source.taskName}`
+        : 'Linked from task'
+      : null
+
   return (
-    <Card className={cn(className)}>
+    <Card
+      id="water-tide-panel"
+      className={cn(
+        className,
+        highlight ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : undefined
+      )}
+    >
       <CardHeader className={cn(compact ? 'pb-2' : undefined)}>
         <CardTitle className="flex items-center justify-between gap-2">
           <span>{title}</span>
@@ -176,7 +226,15 @@ export function WaterTidePanel({
             </Badge>
           ) : null}
         </CardTitle>
-        <CardDescription className="truncate">{locationLabel}</CardDescription>
+
+        <CardDescription className="space-y-1">
+          <div className="truncate">{locationLabel}</div>
+          {linkedFromTaskLabel ? (
+            <div className="truncate text-xs" aria-live="polite">
+              {linkedFromTaskLabel}
+            </div>
+          ) : null}
+        </CardDescription>
       </CardHeader>
 
       <CardContent className={cn(compact ? 'pt-0' : undefined)}>
@@ -186,11 +244,12 @@ export function WaterTidePanel({
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Input
+                ref={inputRef}
                 type="date"
                 value={selectedDate}
                 min={minDate}
                 max={maxDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => setSelectedDateAndSync(e.target.value)}
                 className={cn('h-8', compact ? 'text-xs' : undefined)}
                 aria-label="Select date for tide"
               />
@@ -201,7 +260,7 @@ export function WaterTidePanel({
                 className={cn('h-8', compact ? 'px-2 text-xs' : undefined)}
                 onClick={() => {
                   const next = pickInitialDate({ todayIso, minDate, maxDate, fallback })
-                  setSelectedDate(next)
+                  setSelectedDateAndSync(next)
                 }}
               >
                 Today
@@ -227,7 +286,7 @@ export function WaterTidePanel({
               mean={meanSeaLevel}
             />
 
-            {/* Daily extremes list: scrollable so it fits as a “window/card”. */}
+            {/* Daily extremes list: scrollable so it fits as a "window/card". */}
             <div>
               <div className="mb-2 text-xs font-medium text-muted-foreground">Daily highs/lows</div>
               <ScrollArea className={cn('rounded-md border', compact ? 'h-32' : 'h-40')}>
@@ -238,7 +297,7 @@ export function WaterTidePanel({
                       <button
                         key={d.date}
                         type="button"
-                        onClick={() => setSelectedDate(d.date)}
+                        onClick={() => setSelectedDateAndSync(d.date)}
                         className={cn(
                           'flex w-full items-center justify-between gap-2 rounded-sm px-2 py-1 text-left text-xs',
                           'hover:bg-accent hover:text-accent-foreground',
@@ -247,7 +306,8 @@ export function WaterTidePanel({
                       >
                         <span className="font-medium tabular-nums">{d.date}</span>
                         <span className="truncate text-muted-foreground">
-                          L {d.min.toFixed(2)}@{formatHour(d.minHour)} · H {d.max.toFixed(2)}@{formatHour(d.maxHour)}
+                          L {d.min.toFixed(2)}@{formatHour(d.minHour)} · H {d.max.toFixed(2)}@
+                          {formatHour(d.maxHour)}
                         </span>
                       </button>
                     )
