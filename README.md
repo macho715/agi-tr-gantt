@@ -19,6 +19,7 @@ AGI TR Gantt Generator is a modern web application for generating professional m
 - 🎯 **Multi-scenario Generation**: Optimistic, Baseline, and Pessimistic scenarios
 - 📈 **Interactive Excel Output**: Generated workbooks with VBA macros
 - 📋 **Voyage Documents Management**: Document checklist, deadline tracking, workflow state management (Submit/Approve/Reset/Reopen actions)
+- 📝 **Key Notes (OFCO Agency Guidance)**: PTW, Marine PTW, Land Permit, Pre-arrival Meeting, and AD Maritime NOC guidelines available in document management views
 - 📅 **Deadline Overlay**: Document deadline visualization on Gantt chart
 - 📊 **Docs Progress Overlay**: Document progress display on Gantt Trip rows (click to navigate to Docs tab)
 - 🌊 **Water Tide Data**: Comprehensive tide data visualization with date selection, high/low tide windows, and height tracking

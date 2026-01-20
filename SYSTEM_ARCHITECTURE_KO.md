@@ -268,6 +268,10 @@ graph LR
     - Reopen: `approved → submitted` (재검토)
   - 마감일 계산 및 Due state 표시
   - 진행률 표시
+  - **Key Notes (OFCO Agency Guidance)**: Card View와 Table View 모두에 표시되는 가이드라인
+    - PTW, Marine PTW, Land Permit, Pre-arrival Meeting, AD Maritime NOC 가이드라인
+    - 인라인 컴팩트 버전 + Dialog로 전체 내용 확인
+    - 두 뷰 모두에서 일관된 위치에 표시
 
 #### 8. **VoyageMiniGrid**
 

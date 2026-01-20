@@ -267,6 +267,10 @@ graph LR
   - D-countdown display (days until due, Card/Table views)
   - Progress tracking (Progress bar, per category)
   - Automatic history logging (on state changes)
+  - **Key Notes (OFCO Agency Guidance)**: Guidelines available in both Card and Table views
+    - PTW, Marine PTW, Land Permit, Pre-arrival Meeting, and AD Maritime NOC guidelines
+    - Inline compact version + Dialog for full content
+    - Consistent placement in both views
 
 #### 8. **DocsProgressOverlay**
 - **Location**: `components/overlays/docs-progress-overlay.tsx`

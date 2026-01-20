@@ -736,7 +736,14 @@ interface GenerationStatusProps {
 │ ┌─────────────────────────────────────────────────┐ │
 │ │ DocumentChecklist                               │ │
 │ │ ┌─────────────────────────────────────────────┐ │ │
-│ │ │ Category Accordion                          │ │ │
+│ │ │ Key Notes Card (첫 번째)                    │ │ │
+│ │ │ [Info] Key Notes (OFCO Agency Guidance)     │ │ │
+│ │ │ [View Full Notes Button]                    │ │ │
+│ │ │ PTW | Marine PTW | Land Permit | ...        │ │ │
+│ │ └─────────────────────────────────────────────┘ │ │
+│ │ ┌─────────────────────────────────────────────┐ │ │
+│ │ │ Category Accordion (카드 뷰)                │ │ │
+│ │ │ 또는 Categories/Documents Grid (테이블 뷰)  │ │ │
 │ │ │ ┌─────────────────────────────────────────┐ │ │ │
 │ │ │ │ [Checkbox] Document Name                │ │ │ │
 │ │ │ │ [Badge] Priority [Badge] Due State     │ │ │ │
@@ -784,15 +791,26 @@ interface GenerationStatusProps {
 - **D-카운트다운**: 마감일까지 남은 일수 표시 (카드/테이블 뷰)
 - **진행률 표시**: Progress bar (카테고리별)
 - **History 자동 추가**: 상태 변경 시 자동 기록
+- **Key Notes (OFCO Agency Guidance)**: Card View와 Table View 모두에 표시되는 가이드라인 카드
+  - PTW, Marine PTW, Land Permit, Pre-arrival Meeting, AD Maritime NOC 가이드라인
+  - 카드 뷰: 첫 번째 카드로 표시, 컴팩트 버전 (max-h-[300px] 스크롤 가능)
+  - 테이블 뷰: 그리드 위에 표시, 컴팩트 버전
+  - Dialog 버튼: "View Full Notes"로 전체 내용 확인 가능
 
 **레이아웃 모드**:
 - **카드 뷰** (기본):
+  - Key Notes 카드가 첫 번째로 표시됨 (카테고리 카드들 위)
+  - 컴팩트 버전으로 핵심 정보 요약 표시 (PTW, Marine PTW, Land Permit, Pre-arrival, AD Maritime NOC)
+  - "View Full Notes" 버튼으로 Dialog에서 전체 가이드라인 확인 가능
   - 카테고리별 Card 그룹 (Accordion 스타일)
   - 체크박스로 approved 상태 토글 (`not_started` ↔ `in_progress` ↔ `approved`)
   - D-카운트다운 Badge 표시 (D-N, Due today, Overdue Nd)
   - Due state 색상 Badge (on_track/at_risk/overdue)
   - Priority Badge (critical/important/standard/recommended)
 - **테이블 뷰**:
+  - Key Notes 카드가 그리드 위에 표시됨 (Categories/Documents 그리드 위)
+  - 컴팩트 버전으로 핵심 정보 요약 표시
+  - "View Full Notes" 버튼으로 Dialog에서 전체 가이드라인 확인 가능
   - 좌측: 카테고리 탭 (Tabs, 4열 중 일부)
   - 우측: 문서 테이블 (Document, Due, Status, Action 컬럼)
   - Submit/Approve 버튼으로 상태 전이 (상태 머신 가드 적용)
@@ -872,6 +890,63 @@ interface GenerationStatusProps {
 - 모든 상태 변경 이벤트는 `STATE_${STATUS}` 형식으로 통일
 - 예: `STATE_SUBMITTED`, `STATE_APPROVED`
 - `updateDoc`에서 자동 추가 (상태 변경 감지)
+
+**Key Notes (OFCO Agency Guidance)**:
+
+**위치**: Card View와 Table View 모두에 표시
+
+**표시 위치**:
+- **Card View**: `space-y-6` 컨테이너 내부 첫 번째 요소 (카테고리 카드들 위)
+- **Table View**: `space-y-4` 컨테이너 내부 첫 번째 요소 (Categories/Documents 그리드 위)
+
+**레이아웃**:
+- **Card 구조**: 표준 Card 컴포넌트 사용
+- **Header**: 
+  - 제목: "Key Notes (OFCO Agency Guidance)" (`text-sm font-semibold`)
+  - 버튼: "View Full Notes" (`variant="outline"`, `size="sm"`, `h-8`, `text-xs`)
+  - 반응형: `flex-col sm:flex-row` (모바일에서 세로 배치)
+- **Content**: 
+  - 컴팩트 버전: `max-h-[300px] overflow-y-auto`
+  - 텍스트: `text-sm` (본문)
+  - 구조: 각 항목별 섹션 (`space-y-4`)
+  - 리스트: `list-disc list-inside` (불릿 포인트)
+
+**내용**:
+1. **PTW (Permit to Work)**: 항차 단위 운용, D-4 기준 권고
+   - PTW (Hot Work/Working Over Water 등)은 일반적으로 항차(voyage) 단위로 운용되며, 작업/입항 기간에 종속됩니다.
+   - (Land permit는 월단위 가능 케이스 존재)
+2. **Marine PTW**: 작업 시작 ≥24h 전 신청 (D-4 기준)
+   - Marine PTW는 통상 작업 시작 ≥24h 전 신청이 요구될 수 있으므로, D-4 기준으로 패키지 완비 권고.
+3. **Land Permit (SPMT operations)**: 2-3 business days (주말 포함 시 추가 시간 필요)
+   - Approval takes 2-3 business days; allow additional time if weekends are included
+4. **Pre-arrival Meeting**: 입항 전 필수 미팅 (Port Authority)
+   - Mandatory operations planning meeting with Port Authority prior to vessel arrival
+5. **AD Maritime NOC**: AGI transit 전 필수
+   - Must be obtained prior to AGI transit
+
+**Dialog (View Full Notes)**:
+- **트리거**: "View Full Notes" 버튼 클릭
+- **크기**: `max-w-2xl max-h-[80vh]`
+- **스크롤**: `overflow-y-auto`
+- **내용**: 전체 가이드라인 상세 설명
+  - 각 항목별 상세 설명 (ul/li 리스트)
+  - 강조 텍스트 (`<strong>` 태그 사용 가능)
+  - 구조화된 레이아웃 (`space-y-4 text-sm`)
+- **접근성**: Radix UI Dialog 컴포넌트 사용 (키보드 접근성 내장)
+
+**스타일링**:
+- **Card 배경**: `bg-card`
+- **Card 테두리**: `border-border`
+- **Header 배경**: `bg-card` (기본)
+- **Content 배경**: `bg-card` (기본)
+- **스크롤바**: 기본 브라우저 스크롤바 (컴팩트 버전)
+- **아이콘**: `Info` 아이콘 (`w-3 h-3`)
+
+**접근성**:
+- Dialog는 Radix UI Dialog 컴포넌트 사용 (키보드 접근성 내장)
+- 버튼은 `asChild` prop으로 DialogTrigger와 연결
+- ARIA 레이블은 Dialog 컴포넌트가 자동 처리
+- `aria-live="polite"` 속성 사용 (필요 시)
 
 **카드 뷰 D-카운트다운 개선**:
 - Badge로 표시 (기존 텍스트에서 개선)

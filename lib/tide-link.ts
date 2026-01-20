@@ -17,10 +17,16 @@ export function normalizeTideText(input: string) {
  * Examples matched:
  * - "if tide allows"
  * - "... tide allows ..."
+ * - "Load-out" / "load-out" / "loadout"
  */
 export function isTideAllowsActivityName(activityName: string) {
   const n = normalizeTideText(activityName)
-  return n.includes('if tide allows') || n.includes('tide allows')
+  return (
+    n.includes('if tide allows') ||
+    n.includes('tide allows') ||
+    n.includes('load-out') ||
+    n.includes('loadout')
+  )
 }
 
 /**

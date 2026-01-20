@@ -141,6 +141,60 @@ const getTripGroupColors = (color: string) => {
   return colorMap[color] || colorMap.sky
 }
 
+const IMPORTANT_ACTIVITY_COLORS: Record<string, { bar: string; barBorder: string; row: string }> = {
+  A1029: { bar: "bg-blue-600", barBorder: "border-blue-700", row: "bg-blue-50/60 dark:bg-blue-950/30" },
+  A1228: { bar: "bg-blue-600", barBorder: "border-blue-700", row: "bg-blue-50/60 dark:bg-blue-950/30" },
+  A1499: { bar: "bg-blue-600", barBorder: "border-blue-700", row: "bg-blue-50/60 dark:bg-blue-950/30" },
+  A1789: { bar: "bg-blue-600", barBorder: "border-blue-700", row: "bg-blue-50/60 dark:bg-blue-950/30" },
+  A1060: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1074: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1259: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1309: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1539: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1599: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1829: { bar: "bg-orange-600", barBorder: "border-orange-700", row: "bg-orange-50/60 dark:bg-orange-950/30" },
+  A1081: { bar: "bg-emerald-600", barBorder: "border-emerald-700", row: "bg-emerald-50/60 dark:bg-emerald-950/30" },
+  A1329: { bar: "bg-emerald-600", barBorder: "border-emerald-700", row: "bg-emerald-50/60 dark:bg-emerald-950/30" },
+  A1619: { bar: "bg-emerald-600", barBorder: "border-emerald-700", row: "bg-emerald-50/60 dark:bg-emerald-950/30" },
+  A1909: { bar: "bg-emerald-600", barBorder: "border-emerald-700", row: "bg-emerald-50/60 dark:bg-emerald-950/30" },
+  A1210: { bar: "bg-purple-600", barBorder: "border-purple-700", row: "bg-purple-50/60 dark:bg-purple-950/30" },
+  A1479: { bar: "bg-purple-600", barBorder: "border-purple-700", row: "bg-purple-50/60 dark:bg-purple-950/30" },
+  A1769: { bar: "bg-purple-600", barBorder: "border-purple-700", row: "bg-purple-50/60 dark:bg-purple-950/30" },
+}
+
+const ACTIVITY_COLOR_PALETTE = [
+  { bar: "bg-indigo-500", barBorder: "border-indigo-600", row: "bg-indigo-50/50 dark:bg-indigo-950/20" },
+  { bar: "bg-purple-500", barBorder: "border-purple-600", row: "bg-purple-50/50 dark:bg-purple-950/20" },
+  { bar: "bg-pink-500", barBorder: "border-pink-600", row: "bg-pink-50/50 dark:bg-pink-950/20" },
+  { bar: "bg-rose-500", barBorder: "border-rose-600", row: "bg-rose-50/50 dark:bg-rose-950/20" },
+  { bar: "bg-amber-500", barBorder: "border-amber-600", row: "bg-amber-50/50 dark:bg-amber-950/20" },
+  { bar: "bg-yellow-500", barBorder: "border-yellow-600", row: "bg-yellow-50/50 dark:bg-yellow-950/20" },
+  { bar: "bg-lime-500", barBorder: "border-lime-600", row: "bg-lime-50/50 dark:bg-lime-950/20" },
+  { bar: "bg-green-500", barBorder: "border-green-600", row: "bg-green-50/50 dark:bg-green-950/20" },
+  { bar: "bg-teal-500", barBorder: "border-teal-600", row: "bg-teal-50/50 dark:bg-teal-950/20" },
+  { bar: "bg-cyan-500", barBorder: "border-cyan-600", row: "bg-cyan-50/50 dark:bg-cyan-950/20" },
+  { bar: "bg-sky-500", barBorder: "border-sky-600", row: "bg-sky-50/50 dark:bg-sky-950/20" },
+  { bar: "bg-violet-500", barBorder: "border-violet-600", row: "bg-violet-50/50 dark:bg-violet-950/20" },
+  { bar: "bg-fuchsia-500", barBorder: "border-fuchsia-600", row: "bg-fuchsia-50/50 dark:bg-fuchsia-950/20" },
+  { bar: "bg-red-500", barBorder: "border-red-600", row: "bg-red-50/50 dark:bg-red-950/20" },
+  { bar: "bg-stone-500", barBorder: "border-stone-600", row: "bg-stone-50/50 dark:bg-stone-950/20" },
+] as const
+
+function getActivityColor(task: { activityId3?: string; id: string }): (typeof ACTIVITY_COLOR_PALETTE)[number] {
+  if (task.activityId3 && IMPORTANT_ACTIVITY_COLORS[task.activityId3]) {
+    return IMPORTANT_ACTIVITY_COLORS[task.activityId3]
+  }
+
+  const hashKey = task.activityId3 || task.id
+  let hash = 0
+  for (let i = 0; i < hashKey.length; i++) {
+    hash = (hash << 5) - hash + hashKey.charCodeAt(i)
+    hash |= 0
+  }
+  const index = Math.abs(hash) % ACTIVITY_COLOR_PALETTE.length
+  return ACTIVITY_COLOR_PALETTE[index]
+}
+
 export function GanttPreview({
   scheduleData,
   config,
@@ -292,9 +346,14 @@ export function GanttPreview({
       const totalDuration =
         startDate && endDate ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1 : 0
 
+      const tasksWithColors = tasks.map((task) => ({
+        ...task,
+        activityColor: getActivityColor(task),
+      }))
+
       return {
         ...group,
-        tasks,
+        tasks: tasksWithColors,
         startDate,
         endDate,
         totalDuration,
@@ -609,7 +668,7 @@ export function GanttPreview({
                               {group.tasks.map((task, index) => (
                                 <div
                                   key={`${group.id}-${index}`}
-                                  className={`flex items-center h-9 border-b border-border/50 ${group.colors.row}`}
+                                  className={`flex items-center h-9 border-b border-border/50 ${task.activityColor.row}`}
                                   style={{ paddingLeft: "12px" }}
                                 >
                                   <div className="flex items-center gap-1.5 w-full">
@@ -696,7 +755,7 @@ export function GanttPreview({
                                   return (
                                     <div
                                       key={`bar-${group.id}-${index}`}
-                                      className={`h-9 border-b border-border/50 relative ${group.colors.row}`}
+                                      className={`h-9 border-b border-border/50 relative ${task.activityColor.row}`}
                                     >
                                       {chartData.days.map(
                                         (day, dayIndex) =>
@@ -711,7 +770,7 @@ export function GanttPreview({
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                           <div
-                                            className={`absolute top-1/2 -translate-y-1/2 h-5 ${group.colors.bar} rounded-sm border ${group.colors.barBorder} cursor-pointer hover:opacity-80 transition-opacity flex items-center px-1.5 overflow-hidden`}
+                                            className={`absolute top-1/2 -translate-y-1/2 h-5 ${task.activityColor.bar} rounded-sm border ${task.activityColor.barBorder} cursor-pointer hover:opacity-80 transition-opacity flex items-center px-1.5 overflow-hidden`}
                                             style={{
                                               left: `${startOffset * cellWidth}px`,
                                               width: `${duration * cellWidth}px`,
@@ -765,7 +824,7 @@ export function GanttPreview({
                   <tbody>
                     {groupedTasks?.flatMap((group) =>
                       group.tasks.map((task, index) => (
-                        <tr key={`${group.id}-${index}`} className={`${group.colors.row} hover:bg-muted/30`}>
+                        <tr key={`${group.id}-${index}`} className={`${task.activityColor.row} hover:bg-muted/30`}>
                           <td className="p-2 border-b border-border/50">
                             <Badge className={`text-[10px] ${group.colors.header} ${group.colors.headerText} border-0`}>
                               {group.label}

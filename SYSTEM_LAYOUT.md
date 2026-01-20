@@ -654,8 +654,19 @@ interface WeatherRecord {
 - **Due State**: `on_track` / `at_risk` / `overdue` (색상 Badge)
 - **진행률 표시**: 카테고리별 완료율 (Progress bar)
 - **History 자동 추가**: 상태 변경 시 자동 기록 (`STATE_${STATUS}` 형식)
+- **Key Notes (OFCO Agency Guidance)**: Card View와 Table View 모두에 표시되는 가이드라인 카드
+  - PTW (Permit to Work): 항차 단위 운용, D-4 기준 권고
+  - Marine PTW: 작업 시작 ≥24h 전 신청 (D-4 기준)
+  - Land Permit (SPMT operations): 2-3 business days 승인 소요
+  - Pre-arrival Meeting: 입항 전 필수 미팅 (Port Authority)
+  - AD Maritime NOC: AGI transit 전 필수
+  - 인라인 컴팩트 버전 표시 + Dialog로 전체 내용 확인 가능
+  - "View Full Notes" 버튼으로 상세 가이드라인 확인
 
 **카드 뷰 특징**:
+- Key Notes 카드가 첫 번째로 표시됨 (카테고리 카드들 위)
+- 컴팩트 버전으로 핵심 정보 요약 표시
+- Dialog 버튼으로 전체 내용 확인 가능
 - 카테고리별 Card 그룹 (Accordion 스타일)
 - 체크박스로 `approved` 상태 토글
 - D-카운트다운 Badge 표시 (Overdue 시 빨간색 강조)
@@ -663,6 +674,9 @@ interface WeatherRecord {
 - Priority Badge (critical/important/standard/recommended)
 
 **테이블 뷰 특징**:
+- Key Notes 카드가 그리드 위에 표시됨 (Categories/Documents 그리드 위)
+- 컴팩트 버전으로 핵심 정보 요약 표시
+- Dialog 버튼으로 전체 내용 확인 가능
 - 좌측: 카테고리 탭 (Tabs, 진행률 표시: approved/total)
 - 우측: 문서 테이블 (Document, Due, Status, Action 컬럼)
 - Submit/Approve 버튼으로 상태 전이 (상태 머신 가드 적용)

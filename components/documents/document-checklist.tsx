@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { AlertTriangle, CheckCircle2, Clock, FileText, LayoutGrid, Table2 } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Clock, FileText, Info, LayoutGrid, Table2 } from "lucide-react"
 import { differenceInCalendarDays, format } from "date-fns"
 import type { DocTemplate, DocInstance, Voyage, DocDueState, DocWorkflowState } from "@/lib/types"
 import { calculateDueDate, calculateDueState } from "@/lib/documents/deadline-engine"
@@ -171,9 +172,80 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
     }, {} as Record<string, string>)
   }, [])
 
+  const KeyNotesContent = () => (
+    <div className="space-y-4 text-sm">
+      <div>
+        <p className="font-medium mb-2">PTW (Permit to Work)</p>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-2">
+          <li>PTW (Hot Work/Working Over Water 등)은 일반적으로 항차(voyage) 단위로 운용되며, 작업/입항 기간에 종속됩니다.</li>
+          <li>(Land permit는 월단위 가능 케이스 존재)</li>
+        </ul>
+      </div>
+
+      <div>
+        <p className="font-medium mb-2">Marine PTW</p>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-2">
+          <li>Marine PTW는 통상 작업 시작 ≥24h 전 신청이 요구될 수 있으므로, D-4 기준으로 패키지 완비 권고.</li>
+        </ul>
+      </div>
+
+      <div>
+        <p className="font-medium mb-2">Land Permit (SPMT operations)</p>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-2">
+          <li>Approval takes 2-3 business days; allow additional time if weekends are included</li>
+        </ul>
+      </div>
+
+      <div>
+        <p className="font-medium mb-2">Pre-arrival Meeting</p>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-2">
+          <li>Mandatory operations planning meeting with Port Authority prior to vessel arrival</li>
+        </ul>
+      </div>
+
+      <div>
+        <p className="font-medium mb-2">AD Maritime NOC</p>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-2">
+          <li>Must be obtained prior to AGI transit</li>
+        </ul>
+      </div>
+    </div>
+  )
+
+  const KeyNotesDialog = () => {
+    return (
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5">
+            <Info className="w-3 h-3" />
+            View Full Notes
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Key Notes (OFCO Agency Guidance)</DialogTitle>
+          </DialogHeader>
+          <KeyNotesContent />
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   const renderCardView = () => {
     return (
       <div className="space-y-6">
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <CardTitle className="text-sm font-semibold">Key Notes (OFCO Agency Guidance)</CardTitle>
+              <KeyNotesDialog />
+            </div>
+          </CardHeader>
+          <CardContent className="max-h-[300px] overflow-y-auto">
+            <KeyNotesContent />
+          </CardContent>
+        </Card>
+
         {Array.from(categorizedDocs.entries()).map(([categoryId, items]) => {
           const categoryLabel = categoryLabels[categoryId] || categoryId
           const completed = items.filter((i) => i.doc?.workflowState === "approved").length
@@ -298,31 +370,44 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
     }
 
     return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
-        <Card className="p-2 md:col-span-4">
-          <div className="px-2 py-2 text-sm font-semibold">Categories</div>
-          <Tabs value={selectedCategoryId} onValueChange={setSelectedCategoryId} className="flex-1">
-            <TabsList className="flex-col items-stretch h-auto w-full">
-              {categories.map((cat) => {
-                const progress = categoryProgress[cat.id] || { total: 0, approved: 0, submitted: 0 }
-                const active = cat.id === selectedCategoryId
-
-                return (
-                  <TabsTrigger key={cat.id} value={cat.id} className={`justify-between w-full ${active ? "bg-accent" : ""}`}>
-                    <div className="flex-1 min-w-0 text-left">
-                      <div className="truncate text-sm font-medium">{cat.label}</div>
-                    </div>
-                    <div className="shrink-0 text-xs text-muted-foreground ml-2">
-                      {progress.approved}/{progress.total}
-                    </div>
-                  </TabsTrigger>
-                )
-              })}
-            </TabsList>
-          </Tabs>
+      <div className="space-y-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <CardTitle className="text-sm font-semibold">Key Notes (OFCO Agency Guidance)</CardTitle>
+              <KeyNotesDialog />
+            </div>
+          </CardHeader>
+          <CardContent className="max-h-[300px] overflow-y-auto">
+            <KeyNotesContent />
+          </CardContent>
         </Card>
 
-        <Card className="p-4 md:col-span-8">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+          <Card className="p-2 md:col-span-4">
+            <div className="px-2 py-2 text-sm font-semibold">Categories</div>
+            <Tabs value={selectedCategoryId} onValueChange={setSelectedCategoryId} className="flex-1">
+              <TabsList className="flex-col items-stretch h-auto w-full">
+                {categories.map((cat) => {
+                  const progress = categoryProgress[cat.id] || { total: 0, approved: 0, submitted: 0 }
+                  const active = cat.id === selectedCategoryId
+
+                  return (
+                    <TabsTrigger key={cat.id} value={cat.id} className={`justify-between w-full ${active ? "bg-accent" : ""}`}>
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="truncate text-sm font-medium">{cat.label}</div>
+                      </div>
+                      <div className="shrink-0 text-xs text-muted-foreground ml-2">
+                        {progress.approved}/{progress.total}
+                      </div>
+                    </TabsTrigger>
+                  )
+                })}
+              </TabsList>
+            </Tabs>
+          </Card>
+
+          <Card className="p-4 md:col-span-8">
           <div className="mb-3 space-y-2">
             <div className="text-sm text-muted-foreground">Documents</div>
             <div className="text-base font-semibold">
@@ -538,6 +623,7 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
             </TableBody>
           </Table>
         </Card>
+        </div>
       </div>
     )
   }
