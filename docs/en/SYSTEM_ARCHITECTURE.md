@@ -79,12 +79,14 @@ graph TD
     Root --> FileUpload[FileUploader<br/>- Drag & Drop<br/>- Validation<br/>- Multi-file]
     Root --> ConfigPanel[ConfigurationPanel<br/>- Project Start Date<br/>- Scenario Selection]
     Root --> GenStatus[GenerationStatus<br/>- Generate Button<br/>- Progress Indicator<br/>- Download Link]
-    Root --> Preview[GanttPreview<br/>- Visual Chart<br/>- Task Hierarchy<br/>- Timeline View]
+    Root --> Preview[GanttPreview<br/>- Visual Chart<br/>- Task Hierarchy<br/>- Timeline View<br/>- 6 Tab Views]
+    Root --> WaterTidePanel[WaterTidePanel<br/>- Compact Tide Display<br/>- Date Selection]
 
     FileUpload --> |Files| Root
     ConfigPanel --> |Config| Root
     GenStatus --> |API Call| Root
     Root --> |Schedule Data| Preview
+    Preview --> WaterTideTab[WaterTideTab<br/>- Detailed Tide View<br/>- High/Low Tide Info]
 ```
 
 ### Data Flow Diagram
@@ -221,7 +223,7 @@ graph LR
 - **Location**: `components/gantt-preview.tsx`
 - **Responsibility**: Visual Gantt chart preview
 - **Features**:
-  - Interactive timeline view (5 tab views: Gantt Chart, Table View, Voyage Summary, Documents, Summary)
+  - Interactive timeline view (6 tab views: Gantt Chart, Table View, Voyage Summary, Documents, Water Tide, Summary)
   - Task hierarchy visualization
   - Color-coded by WBS level
   - Deadline overlay visualization
@@ -231,7 +233,27 @@ graph LR
     - Focus ring styling (focus-visible)
   - Responsive design
 
-#### 5. **DocumentChecklist**
+#### 5. **WaterTidePanel**
+- **Location**: `components/water-tide-panel.tsx`
+- **Responsibility**: Compact tide information display in GanttGenerator header
+- **Features**:
+  - Date selection for tide data lookup
+  - High/low tide window display
+  - Tide height information display
+  - Compact mode support (compact prop)
+  - Data source: `tide-data-2026Q1.json`
+
+#### 6. **WaterTideTab**
+- **Location**: `components/water-tide-tab.tsx`
+- **Responsibility**: Detailed tide information display in GanttPreview Water Tide tab
+- **Features**:
+  - Date selection and Today button
+  - Detailed high/low tide window information
+  - Tide height graph visualization
+  - Location information and mean sea level display
+  - Data source: `tide-data-2026Q1.json`
+
+#### 7. **DocumentChecklist**
 - **Location**: `components/documents/document-checklist.tsx`
 - **Responsibility**: Voyage document checklist management
 - **Features**:
@@ -246,7 +268,7 @@ graph LR
   - Progress tracking (Progress bar, per category)
   - Automatic history logging (on state changes)
 
-#### 6. **DocsProgressOverlay**
+#### 8. **DocsProgressOverlay**
 - **Location**: `components/overlays/docs-progress-overlay.tsx`
 - **Responsibility**: Document progress visualization on Gantt Trip rows
 - **Features**:
@@ -255,7 +277,7 @@ graph LR
   - Keyboard accessibility support (Tab, Enter/Space)
   - Focus ring styling (focus-visible)
 
-#### 7. **GenerationStatus**
+#### 9. **GenerationStatus**
 - **Location**: `components/generation-status.tsx`
 - **Responsibility**: Generation control and status
 - **Features**:

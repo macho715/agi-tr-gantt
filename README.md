@@ -21,9 +21,10 @@ AGI TR Gantt Generator is a modern web application for generating professional m
 - 📋 **Voyage Documents Management**: Document checklist, deadline tracking, workflow state management (Submit/Approve/Reset/Reopen actions)
 - 📅 **Deadline Overlay**: Document deadline visualization on Gantt chart
 - 📊 **Docs Progress Overlay**: Document progress display on Gantt Trip rows (click to navigate to Docs tab)
+- 🌊 **Water Tide Data**: Comprehensive tide data visualization with date selection, high/low tide windows, and height tracking
 - 🎨 **Modern UI**: Built with Next.js, React, and Tailwind CSS
 - 🌙 **Dark Mode Support**: Automatic theme switching
-- ⚡ **Real-time Preview**: Visual Gantt chart preview with 5 tab views before download
+- ⚡ **Real-time Preview**: Visual Gantt chart preview with 6 tab views before download
 - 🔄 **Bulk Processing**: Upload and process multiple files simultaneously
 
 ## 🏗️ System Architecture
@@ -73,7 +74,9 @@ graph TD
     Root --> FileUpload[FileUploader<br/>- Drag & Drop<br/>- Validation<br/>- Multi-file]
     Root --> ConfigPanel[ConfigurationPanel<br/>- Project Start Date<br/>- Scenario Selection]
     Root --> GenStatus[GenerationStatus<br/>- Generate Button<br/>- Progress Indicator<br/>- Download Link]
-    Root --> Preview[GanttPreview<br/>- Visual Chart<br/>- Task Hierarchy<br/>- Timeline View<br/>- 5 Tab Views]
+    Root --> Preview[GanttPreview<br/>- Visual Chart<br/>- Task Hierarchy<br/>- Timeline View<br/>- 6 Tab Views]
+    Root --> WaterTidePanel[WaterTidePanel<br/>- Compact Tide Display<br/>- Date Selection]
+    Preview --> WaterTideTab[WaterTideTab<br/>- Detailed Tide View<br/>- High/Low Tide Info]
 
     FileUpload --> |Files| Root
     ConfigPanel --> |Config| Root
@@ -299,6 +302,8 @@ agi-tr-gantt/
 │   ├── overlays/             # Overlay components
 │   │   ├── deadline-ladder-overlay.tsx
 │   │   └── docs-progress-overlay.tsx
+│   ├── water-tide-panel.tsx  # Water Tide compact panel
+│   ├── water-tide-tab.tsx    # Water Tide detailed tab view
 │   ├── configuration-panel.tsx
 │   ├── file-uploader.tsx
 │   ├── gantt-generator.tsx
@@ -321,7 +326,8 @@ agi-tr-gantt/
 │   ├── activity-data.json
 │   ├── doc-templates.json    # Document template definitions
 │   ├── milestone-map.json    # Milestone pattern mapping
-│   ├── tide-data.json
+│   ├── tide-data.json        # Legacy tide data (legacy format)
+│   ├── tide-data-2026Q1.json # Water Tide dataset (2026 Q1)
 │   └── weather-data.json
 ├── hooks/                    # Custom React hooks
 ├── public/                   # Static assets

@@ -20,9 +20,10 @@ AGI TR Gantt Generator는 TSV/JSON 작업 데이터 파일로부터 전문적인
 - 📋 **Voyage Documents 관리**: 문서 체크리스트, 마감일 추적, 워크플로우 상태 관리 (Submit/Approve/Reset/Reopen 액션)
 - 📅 **Deadline 오버레이**: Gantt 차트에 문서 마감일 시각화
 - 📊 **Docs Progress Overlay**: Gantt Trip row 위에 문서 진행률 표시 (클릭 시 Docs 탭으로 이동)
+- 🌊 **Water Tide 데이터**: 날짜 선택, 고조/저조 시간대, 높이 추적이 포함된 조수 데이터 시각화
 - 🎨 **현대적 UI**: Next.js, React, Tailwind CSS로 구축
 - 🌙 **다크 모드 지원**: 자동 테마 전환
-- ⚡ **실시간 미리보기**: 다운로드 전 시각적 Gantt 차트 미리보기 (5가지 탭 뷰)
+- ⚡ **실시간 미리보기**: 다운로드 전 시각적 Gantt 차트 미리보기 (6가지 탭 뷰)
 - 🔄 **일괄 처리**: 여러 파일을 동시에 업로드 및 처리
 
 ## 🚀 빠른 시작

@@ -236,12 +236,13 @@ interface ConfigurationPanelProps {
 **위치**: `components/gantt-preview.tsx`
 
 **기능**:
-- 5가지 탭 뷰 제공:
+- 6가지 탭 뷰 제공:
   1. **Gantt Chart**: 타임라인 기반 Gantt 차트 (Deadline 오버레이 포함)
   2. **Table View**: 테이블 형식 일정
   3. **Voyage Summary**: 항해 마일스톤 및 날씨/조수 정보
   4. **Documents**: Voyage 문서 체크리스트 관리 (하이브리드 레이아웃: 카드/테이블 뷰)
-  5. **Summary**: 프로젝트 요약 통계
+  5. **Water Tide**: 상세 조수 데이터 뷰 (날짜 선택, 고조/저조 시간대, 높이 추적)
+  6. **Summary**: 프로젝트 요약 통계
 
 **주요 기능**:
 - 줌 인/아웃 (4단계: 24px, 32px, 48px, 64px)

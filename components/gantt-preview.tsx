@@ -27,6 +27,7 @@ import { deriveVoyagesFromScheduleData } from "@/lib/voyage/derive-voyages"
 import { TRIP_GROUPS_BY_ACTIVITY_ID2 } from "@/lib/voyage/trip-groups"
 import { DocumentChecklist } from "@/components/documents/document-checklist"
 import { VoyageMiniGrid } from "@/components/documents/voyage-mini-grid"
+import { WaterTideTab } from "@/components/water-tide-tab"
 import docTemplatesData from "@/data/doc-templates.json"
 import { DeadlineLadderOverlay, type DeadlineMarker } from "@/components/overlays/deadline-ladder-overlay"
 import { computeDeadlineMarkers } from "@/lib/documents/to-deadline-markers"
@@ -199,7 +200,28 @@ export function GanttPreview({
     return scheduleData
   }, [scheduleData, useFixedData])
 
-  const voyages = useMemo(() => deriveVoyagesFromScheduleData(effectiveScheduleData), [effectiveScheduleData])
+  const voyages = useMemo(() => {
+    const derived = deriveVoyagesFromScheduleData(effectiveScheduleData)
+
+    // 개발 환경에서 디버깅 로그 추가
+    if (process.env.NODE_ENV === "development") {
+      console.log("=== Derived Voyages (upstream) ===")
+      console.log("Effective ScheduleData tasks count:", effectiveScheduleData?.tasks.length)
+      console.log("Derived voyages count:", derived.length)
+      derived.forEach((voyage) => {
+        console.log(`\n📋 Voyage ${voyage.id}:`)
+        console.log("  Label:", voyage.label)
+        console.log("  Trip Group:", voyage.tripGroupKey)
+        console.log("  Milestones keys:", Object.keys(voyage.milestones))
+        console.log("  mzp_arrival:", voyage.milestones.mzp_arrival || "(not found)")
+        console.log("  doc_deadline:", voyage.milestones.doc_deadline || "(not found)")
+        console.log("  All milestones:", JSON.stringify(voyage.milestones, null, 2))
+      })
+      console.log("=== End Derived Voyages ===\n")
+    }
+
+    return derived
+  }, [effectiveScheduleData])
   const templates = useMemo(() => docTemplatesData.templates as DocTemplate[], [])
 
   const chartData = useMemo(() => {
@@ -456,6 +478,10 @@ export function GanttPreview({
               <TabsTrigger value="docs" className="text-xs h-7 px-3 data-[state=active]:bg-background">
                 <FileText className="w-3 h-3 mr-1.5" />
                 Documents
+              </TabsTrigger>
+              <TabsTrigger value="tide" className="text-xs h-7 px-3 data-[state=active]:bg-background">
+                <Waves className="w-3 h-3 mr-1.5" />
+                Water Tide
               </TabsTrigger>
               <TabsTrigger value="summary" className="text-xs h-7 px-3 data-[state=active]:bg-background">
                 <Calendar className="w-3 h-3 mr-1.5" />
@@ -860,6 +886,10 @@ export function GanttPreview({
 
           <TabsContent value="docs" className="mt-0 flex-1 min-h-0 overflow-auto">
             <DocsTabContent voyages={voyages} templates={templates} />
+          </TabsContent>
+
+          <TabsContent value="tide" className="mt-0 flex-1 min-h-0 overflow-auto">
+            <WaterTideTab />
           </TabsContent>
 
           <TabsContent

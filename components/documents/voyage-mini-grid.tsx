@@ -4,6 +4,7 @@ import React from "react"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle } from "lucide-react"
+import { format, isValid, parseISO } from "date-fns"
 import type { Voyage } from "@/lib/types"
 import { useVoyageContext } from "@/contexts/voyage-context"
 
@@ -27,6 +28,30 @@ export function VoyageMiniGrid({ voyages }: VoyageMiniGridProps) {
           return dueDate < now
         }).length
         const isSelected = selectedVoyageId === voyage.id
+        const isDev = process.env.NODE_ENV === "development"
+        const parseMilestoneDate = (dateStr: string | undefined): Date | null => {
+          if (!dateStr) return null
+          const date = parseISO(dateStr)
+          if (!isValid(date)) {
+            if (isDev) {
+              console.warn(`Invalid milestone date: ${dateStr}`)
+            }
+            return null
+          }
+          return date
+        }
+        const mzpArrival = parseMilestoneDate(voyage.milestones.mzp_arrival)
+        const docDeadline = parseMilestoneDate(voyage.milestones.doc_deadline)
+
+        if (isDev) {
+          console.log(`\n📅 Voyage ${voyage.id} milestones:`)
+          console.log("  mzp_arrival_raw:", voyage.milestones?.mzp_arrival || "(undefined)")
+          console.log("  doc_deadline_raw:", voyage.milestones?.doc_deadline || "(undefined)")
+          console.log("  mzpArrival_parsed:", mzpArrival ? format(mzpArrival, "yyyy-MM-dd") : "(null)")
+          console.log("  docDeadline_parsed:", docDeadline ? format(docDeadline, "yyyy-MM-dd") : "(null)")
+          console.log("  Will display arrival?", !!mzpArrival)
+          console.log("  Will display deadline?", !!docDeadline)
+        }
 
         return (
           <Card
@@ -44,15 +69,32 @@ export function VoyageMiniGrid({ voyages }: VoyageMiniGridProps) {
                   </Badge>
                 )}
               </div>
-              {voyage.milestones.mzp_arrival && (
+              {mzpArrival ? (
                 <div className="text-xs text-muted-foreground">
-                  Arrival: {new Date(voyage.milestones.mzp_arrival).toLocaleDateString()}
+                  Arrival: {format(mzpArrival, "M/d/yyyy")}
                 </div>
+              ) : (
+                isDev &&
+                voyage.milestones.mzp_arrival && (
+                  <div className="text-xs text-muted-foreground text-amber-600 dark:text-amber-400">
+                    Arrival: {voyage.milestones.mzp_arrival} (parse failed)
+                  </div>
+                )
               )}
-              {voyage.milestones.doc_deadline && (
+              {docDeadline ? (
                 <div className="text-xs text-muted-foreground mt-1">
-                  Doc Deadline: {new Date(voyage.milestones.doc_deadline).toLocaleDateString()}
+                  Doc Deadline: {format(docDeadline, "M/d/yyyy")}
                 </div>
+              ) : (
+                isDev &&
+                voyage.milestones.doc_deadline && (
+                  <div className="text-xs text-muted-foreground mt-1 text-amber-600 dark:text-amber-400">
+                    Doc Deadline: {voyage.milestones.doc_deadline} (parse failed)
+                  </div>
+                )
+              )}
+              {isDev && !mzpArrival && !docDeadline && Object.keys(voyage.milestones).length === 0 && (
+                <div className="text-xs text-muted-foreground mt-1 text-gray-400">No milestones data</div>
               )}
             </div>
           </Card>

@@ -5,6 +5,7 @@ import { FileUploader } from "./file-uploader"
 import { ConfigurationPanel } from "./configuration-panel"
 import { GanttPreview } from "./gantt-preview"
 import { GenerationStatus } from "./generation-status"
+import { WaterTidePanel } from "./water-tide-panel"
 import type { ProjectConfig, UploadedFile, GenerationResult, ScheduleData } from "@/lib/types"
 
 const defaultConfig: ProjectConfig = {
@@ -93,7 +94,7 @@ export function GanttGenerator() {
 
       <div className="flex-shrink-0 border-b border-border bg-muted/30 px-4 py-2">
         {/* Input Files Box */}
-        <div className="container mx-auto grid grid-cols-3 gap-4 min-h-[70px]">
+        <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 min-h-[70px]">
           <FileUploader files={uploadedFiles} onFilesChange={handleFilesUploaded} compact />
 
           {/* Settings Box */}
@@ -108,6 +109,9 @@ export function GanttGenerator() {
             hasFiles={uploadedFiles.length > 0}
             compact
           />
+
+          {/* Water Tide Box */}
+          <WaterTidePanel compact />
         </div>
       </div>
 

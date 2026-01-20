@@ -55,6 +55,19 @@ export function deriveVoyagesFromScheduleData(scheduleData: ScheduleData | null)
       }
     })
 
+    // 개발 환경에서 디버깅 로그 추가 (첫 번째 voyage만)
+    if (process.env.NODE_ENV === "development" && index === 0) {
+      console.log(`\n🔍 Milestone Extraction for ${tripKey} ===`)
+      console.log("Tasks count:", tasks.length)
+      console.log("Task names sample:", tasks.slice(0, 5).map((t) => t.name))
+      console.log(
+        "Milestone patterns:",
+        milestonePatterns.map(([k, p]) => [k, p.toString()]),
+      )
+      console.log("Extracted milestones:", JSON.stringify(milestones, null, 2))
+      console.log("=== End Milestone Extraction ===\n")
+    }
+
     if (!milestones.doc_deadline && milestones.mzp_arrival && milestoneMap.docDeadlineOffsetDays !== undefined) {
       const arrivalDate = new Date(milestones.mzp_arrival)
       arrivalDate.setDate(arrivalDate.getDate() + milestoneMap.docDeadlineOffsetDays)

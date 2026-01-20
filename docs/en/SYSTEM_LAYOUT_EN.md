@@ -236,12 +236,13 @@ interface ConfigurationPanelProps {
 **Location**: `components/gantt-preview.tsx`
 
 **Features**:
-- 5 tab views:
+- 6 tab views:
   1. **Gantt Chart**: Timeline-based Gantt chart with Deadline overlay
   2. **Table View**: Table format schedule
   3. **Voyage Summary**: Voyage milestones and weather/tide information
   4. **Documents**: Voyage documents management with checklist and deadline tracking
-  5. **Summary**: Project summary statistics
+  5. **Water Tide**: Detailed tide data view (date selection, high/low tide windows, height tracking)
+  6. **Summary**: Project summary statistics
 
 **Key Features**:
 - Zoom in/out (4 levels: 24px, 32px, 48px, 64px)

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useMemo, useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { useVoyageContext } from "@/contexts/voyage-context"
 import type { DocTemplate } from "@/lib/types"
@@ -27,8 +27,17 @@ export function DocsProgressOverlay({
 }: DocsProgressOverlayProps) {
   const { docsByVoyage, setSelectedVoyageId } = useVoyageContext()
   const templates = docTemplatesData.templates as DocTemplate[]
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const stats = useMemo(() => {
+    if (!mounted) {
+      return { total: 0, approved: 0, pct: 0 }
+    }
+
     const docs = docsByVoyage[voyageId] || []
     let total = 0
     let approved = 0
@@ -49,7 +58,7 @@ export function DocsProgressOverlay({
       approved,
       pct: total > 0 ? Math.round((approved / total) * 100) : 0,
     }
-  }, [voyageId, docsByVoyage, templates, excludeGlobal])
+  }, [voyageId, docsByVoyage, templates, excludeGlobal, mounted])
 
   const startOffset = Math.floor((startDate.getTime() - timelineStart.getTime()) / (1000 * 60 * 60 * 24))
   const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
@@ -57,7 +66,7 @@ export function DocsProgressOverlay({
   const left = Math.max(0, startOffset * cellWidth)
   const width = Math.max(cellWidth, duration * cellWidth)
 
-  if (stats.total === 0) return null
+  if (!mounted || stats.total === 0) return null
 
   const handleClick = () => {
     setSelectedVoyageId(voyageId)

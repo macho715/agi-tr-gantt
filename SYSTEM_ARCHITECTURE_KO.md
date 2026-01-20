@@ -82,12 +82,14 @@ graph TD
     Root --> FileUpload[FileUploader<br/>- 드래그 앤 드롭<br/>- 검증<br/>- 다중 파일]
     Root --> ConfigPanel[ConfigurationPanel<br/>- 프로젝트 시작일<br/>- 시나리오 선택]
     Root --> GenStatus[GenerationStatus<br/>- 생성 버튼<br/>- 진행 표시기<br/>- 다운로드 링크]
-    Root --> Preview[GanttPreview<br/>- 시각적 차트<br/>- 작업 계층 구조<br/>- 타임라인 뷰]
+    Root --> Preview[GanttPreview<br/>- 시각적 차트<br/>- 작업 계층 구조<br/>- 타임라인 뷰<br/>- 6가지 탭 뷰]
+    Root --> WaterTidePanel[WaterTidePanel<br/>- 컴팩트 조수 표시<br/>- 날짜 선택]
 
     FileUpload --> |파일| Root
     ConfigPanel --> |설정| Root
     GenStatus --> |API 호출| Root
     Root --> |일정 데이터| Preview
+    Preview --> WaterTideTab[WaterTideTab<br/>- 상세 조수 뷰<br/>- 고조/저조 정보]
 ```
 
 ### 데이터 흐름 다이어그램
@@ -228,13 +230,33 @@ graph LR
 - **위치**: `components/gantt-preview.tsx`
 - **책임**: 시각적 Gantt 차트 미리보기
 - **기능**:
-  - 대화형 타임라인 뷰 (5가지 탭: Gantt Chart, Table View, Voyage Summary, Documents, Summary)
+  - 대화형 타임라인 뷰 (6가지 탭: Gantt Chart, Table View, Voyage Summary, Documents, Water Tide, Summary)
   - 작업 계층 구조 시각화
   - WBS 레벨별 색상 코딩
   - Deadline 오버레이 시각화
   - 반응형 디자인
 
-#### 5. **DocumentChecklist**
+#### 5. **WaterTidePanel**
+- **위치**: `components/water-tide-panel.tsx`
+- **책임**: GanttGenerator 상단에 컴팩트한 조수 정보 표시
+- **기능**:
+  - 날짜 선택을 통한 조수 데이터 조회
+  - 고조/저조 시간대 표시
+  - 조수 높이 정보 표시
+  - 컴팩트 모드 지원 (compact prop)
+  - 데이터 소스: `tide-data-2026Q1.json`
+
+#### 6. **WaterTideTab**
+- **위치**: `components/water-tide-tab.tsx`
+- **책임**: GanttPreview의 Water Tide 탭에서 상세 조수 정보 표시
+- **기능**:
+  - 날짜 선택 및 Today 버튼
+  - 고조/저조 시간대 상세 정보
+  - 조수 높이 그래프 시각화
+  - 위치 정보 및 평균 해수면 표시
+  - 데이터 소스: `tide-data-2026Q1.json`
+
+#### 7. **DocumentChecklist**
 
 - **위치**: `components/documents/document-checklist.tsx`
 - **책임**: Voyage 문서 체크리스트 관리
@@ -247,7 +269,7 @@ graph LR
   - 마감일 계산 및 Due state 표시
   - 진행률 표시
 
-#### 6. **VoyageMiniGrid**
+#### 8. **VoyageMiniGrid**
 
 - **위치**: `components/documents/voyage-mini-grid.tsx`
 - **책임**: Voyage 선택 UI
@@ -256,7 +278,7 @@ graph LR
   - 선택된 Voyage 강조
   - Overdue 문서 개수 표시
 
-#### 7. **DeadlineLadderOverlay**
+#### 9. **DeadlineLadderOverlay**
 
 - **위치**: `components/overlays/deadline-ladder-overlay.tsx`
 - **책임**: Gantt 차트에 문서 마감일 시각화
@@ -265,7 +287,7 @@ graph LR
   - Risk 레벨별 색상 구분 (ON_TRACK/AT_RISK/OVERDUE)
   - 줌 레벨 변경 시 위치 자동 조정
 
-#### 8. **DocsProgressOverlay**
+#### 10. **DocsProgressOverlay**
 
 - **위치**: `components/overlays/docs-progress-overlay.tsx`
 - **책임**: Gantt Trip row 위에 문서 진행률 표시
@@ -275,7 +297,7 @@ graph LR
   - 키보드 접근성 지원 (Tab, Enter/Space)
   - 포커스 링 스타일 (focus-visible)
 
-#### 10. **trip-groups.ts** (공용 상수)
+#### 11. **trip-groups.ts** (공용 상수)
 
 - **위치**: `lib/voyage/trip-groups.ts`
 - **책임**: Trip 그룹 정의 및 필터링 상수 제공

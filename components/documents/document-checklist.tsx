@@ -290,6 +290,13 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
   }
 
   const renderTableView = () => {
+    const voyageMilestones = {
+      tripGroup: voyage.tripGroupKey || voyage.cargoLabel || voyage.label,
+      mzpArrival: voyage.milestones.mzp_arrival,
+      docDeadline: voyage.milestones.doc_deadline,
+      allMilestones: voyage.milestones,
+    }
+
     return (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
         <Card className="p-2 md:col-span-4">
@@ -316,10 +323,46 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
         </Card>
 
         <Card className="p-4 md:col-span-8">
-          <div className="mb-3">
+          <div className="mb-3 space-y-2">
             <div className="text-sm text-muted-foreground">Documents</div>
             <div className="text-base font-semibold">
               {categories.find((c) => c.id === selectedCategoryId)?.label || "—"}
+            </div>
+            <div className="pt-2 mt-2 border-t border-border">
+              <div className="text-xs space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-foreground">Voyage:</span>
+                  <span className="text-muted-foreground">{voyage.label}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-foreground">Trip Group:</span>
+                  <span className="text-muted-foreground">{voyageMilestones.tripGroup}</span>
+                </div>
+                {voyageMilestones.mzpArrival ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">MZP Arrival:</span>
+                    <span className="text-muted-foreground">{voyageMilestones.mzpArrival}</span>
+                    <span className="text-muted-foreground italic">(LCT Arrives to MZP; Deck Preparations)</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                    <AlertTriangle className="w-3 h-3" />
+                    <span>MZP Arrival milestone not found - deadline calculation may fail</span>
+                  </div>
+                )}
+                {voyageMilestones.docDeadline && (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">Doc Deadline:</span>
+                    <span className="text-muted-foreground">{voyageMilestones.docDeadline}</span>
+                  </div>
+                )}
+                {Object.keys(voyageMilestones.allMilestones).length === 0 && (
+                  <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                    <AlertTriangle className="w-3 h-3" />
+                    <span>No milestones available - deadline calculations will fail</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -336,7 +379,7 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
               {templatesInCategory.map((template) => {
                 const doc = docs.find((d) => d.templateId === template.id)
                 const status = (doc?.workflowState || "not_started") as DocWorkflowState
-                const { dueAt } = calculateDueDate(template, voyage)
+                const { dueAt, anchorDate } = calculateDueDate(template, voyage)
                 const dueState = calculateDueState(
                   doc || {
                     templateId: template.id,
@@ -362,6 +405,25 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
                         ? "Due today"
                         : `Overdue ${Math.abs(dueDiff)}d`
 
+                // 마일스톤 계산 실패 원인 분석
+                const anchorKey = template.anchor.milestoneKey
+                const anchorValue = voyage.milestones[anchorKey]
+                const hasAnchor = !!anchorValue
+                const hasAnchorDate = !!anchorDate
+                const hasDueAt = !!dueAt
+
+                // 실패 원인 메시지
+                let failureReason: string | null = null
+                if (!hasDueAt) {
+                  if (!hasAnchor) {
+                    failureReason = `Missing anchor: ${anchorKey}`
+                  } else if (!hasAnchorDate) {
+                    failureReason = `Invalid anchor date: ${anchorValue}`
+                  } else {
+                    failureReason = "Calculation error"
+                  }
+                }
+
                 const canSubmit = canTransition(status, "submit")
                 const canApprove = canTransition(status, "approve")
                 const canReset = canTransition(status, "reset")
@@ -381,6 +443,32 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
                         {template.description && (
                           <div className="text-xs text-muted-foreground">{template.description}</div>
                         )}
+                        {/* Anchor milestone 정보 표시 */}
+                        <div className="text-xs text-muted-foreground">
+                          <span className="font-medium">Anchor:</span> {anchorKey}
+                          {anchorValue && (
+                            <>
+                              {" "}→ {anchorValue}
+                              {anchorDate && (
+                                <>
+                                  {" "}({format(anchorDate, "M/d/yyyy")})
+                                  {template.anchor.offsetDays !== 0 && (
+                                    <span className="ml-1">
+                                      {template.anchor.offsetDays > 0 ? "+" : ""}{template.anchor.offsetDays}
+                                      {template.anchor.offsetType === "business_days" ? " biz days" : " days"}
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </div>
+                        {failureReason && (
+                          <div className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            <span>{failureReason}</span>
+                          </div>
+                        )}
                       </div>
                     </TableCell>
 
@@ -388,6 +476,16 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
                       <div className="space-y-1">
                         <div className="text-sm">{dueText}</div>
                         {dueBadge && <div className="text-xs text-muted-foreground">{dueBadge}</div>}
+                        {!hasDueAt && failureReason && (
+                          <div className="text-xs text-amber-600 dark:text-amber-400">
+                            {failureReason}
+                          </div>
+                        )}
+                        {hasDueAt && anchorDate && (
+                          <div className="text-xs text-muted-foreground">
+                            from {format(anchorDate, "M/d/yyyy")}
+                          </div>
+                        )}
                         {getDueStateBadge(dueState)}
                       </div>
                     </TableCell>

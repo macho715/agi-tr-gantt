@@ -24,7 +24,7 @@ AGI TR Gantt Generator is a modern web application for generating professional m
 - ⌨️ **Keyboard Accessibility**: Full keyboard navigation support with focus ring styling
 - 🎨 **Modern UI**: Built with Next.js, React, and Tailwind CSS
 - 🌙 **Dark Mode Support**: Automatic theme switching
-- ⚡ **Real-time Preview**: Visual Gantt chart preview with 5 tab views before download
+- ⚡ **Real-time Preview**: Visual Gantt chart preview with 6 tab views before download
 - 🔄 **Bulk Processing**: Upload and process multiple files simultaneously
 
 ## 🚀 Quick Start
