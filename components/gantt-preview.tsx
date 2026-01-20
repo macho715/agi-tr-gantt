@@ -28,6 +28,7 @@ import { TRIP_GROUPS_BY_ACTIVITY_ID2 } from "@/lib/voyage/trip-groups"
 import { DocumentChecklist } from "@/components/documents/document-checklist"
 import { VoyageMiniGrid } from "@/components/documents/voyage-mini-grid"
 import { WaterTideTab } from "@/components/water-tide-tab"
+import { TideLinkChip } from "@/components/tide-link-chip"
 import docTemplatesData from "@/data/doc-templates.json"
 import { DeadlineLadderOverlay, type DeadlineMarker } from "@/components/overlays/deadline-ladder-overlay"
 import { computeDeadlineMarkers } from "@/lib/documents/to-deadline-markers"
@@ -611,7 +612,10 @@ export function GanttPreview({
                                   className={`flex items-center h-9 border-b border-border/50 ${group.colors.row}`}
                                   style={{ paddingLeft: "12px" }}
                                 >
-                                  <span className="truncate text-xs text-foreground/80">{task.name}</span>
+                                  <div className="flex items-center gap-1.5 w-full">
+                                    <span className="truncate text-xs text-foreground/80 flex-1">{task.name}</span>
+                                    <TideLinkChip taskId={task.id} taskName={task.name} taskStartDate={task.startDate} />
+                                  </div>
                                 </div>
                               ))}
                             </>
@@ -767,7 +771,12 @@ export function GanttPreview({
                               {group.label}
                             </Badge>
                           </td>
-                          <td className="p-2 border-b border-border/50">{task.name}</td>
+                          <td className="p-2 border-b border-border/50">
+                            <div className="flex items-center gap-2">
+                              <span>{task.name}</span>
+                              <TideLinkChip taskId={task.id} taskName={task.name} taskStartDate={task.startDate} />
+                            </div>
+                          </td>
                           <td className="p-2 border-b border-border/50 text-muted-foreground">
                             {task.startDate.toLocaleDateString()}
                           </td>
