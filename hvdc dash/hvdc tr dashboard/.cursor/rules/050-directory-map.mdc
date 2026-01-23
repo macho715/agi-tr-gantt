@@ -1,0 +1,56 @@
+---
+description: "DIRECTORY-MAP — src/ 디렉토리 구조 권장 표준"
+globs: ["src/**", "lib/**", "components/**", "app/**"]
+alwaysApply: false
+---
+
+## 6.1 src/ 디렉토리 맵 (권장 표준)
+
+> 목표: "페이지는 조립만 / 로직은 lib / SSOT는 ssot / UI는 components"
+
+### 권장 트리
+
+```
+src/
+├── components/          # 순수 UI 컴포넌트
+│   ├── gantt/           # Gantt 관련 컴포넌트
+│   ├── deadlines/       # DeadlineLadder(오버레이) 컴포넌트
+│   ├── dashboard/       # 홈 대시보드 섹션 컴포넌트
+│   ├── triage/          # 오늘/48h/7d Triage UI
+│   └── panels/          # Drilldown 우측 패널
+├── lib/
+│   ├── ssot/            # 단일 진실 공급원 (스키마/상수/표준 enum/룰)
+│   ├── utils/           # 날짜/마감 계산/정렬/형변환 순수 함수
+│   └── validators/      # 런타임 검증 (zod 등)
+├── data/                # 정적 JSON/TS 데이터 (SSOT와 중복 금지)
+├── types/               # 공유 타입 (SSOT 타입 재-export)
+└── styles/              # 추가 스타일 필요 시만 (최소화)
+```
+
+### Good Examples (✅ 권장)
+- `src/lib/ssot/schedule.ts`: milestone enum, 상태 enum, 기준 시간대
+- `src/lib/utils/deadlines.ts`: `calcDocumentDeadlines(...)` 순수 함수
+- `src/components/deadlines/DeadlineLadderOverlay.tsx`: 오버레이 렌더링만
+- `app/page.tsx`: 섹션 컴포넌트 import → "조립"만 수행
+
+### Bad Examples (❌ 금지)
+- `app/page.tsx` 내부에 마감 계산 로직/상수/대량 데이터 하드코딩
+- 동일 enum/상수를 여러 파일에 중복 정의
+- UI 컴포넌트에서 직접 날짜 계산/정렬/검증 로직 수행
+- 테마 색상을 컴포넌트에서 임의 하드코딩
+
+### SSOT 위치 고정
+- `src/lib/ssot/deadline.ts`: DocType, DeadlineRule, 기본 룰 세트
+- `src/lib/ssot/schedule.ts`: milestone_id 표준 enum
+- `src/lib/ssot/gantt.ts`: GanttActivity, Lane 스키마
+- `src/lib/ssot/tags.ts`: ResourceTag, MilestoneTag enum + 규칙 레지스트리
+- `src/lib/utils/deadlines.ts`: 계산 유틸
+
+### 컴포넌트 책임 분리
+- `GanttBoard`: 조립자 (레이어 토글/필터 상태)
+- `GanttTimeline`: 타임라인 렌더 (막대/의존성)
+- `MilestoneChipsLayer`: 마일스톤 마커 렌더 전용
+- `ResourceTagsLayer`: 리소스 아이콘/필터 렌더 전용
+- `DeadlineLadderOverlay`: 마감 세로선 렌더 전용 (계산 금지)
+- `TriageBar`: 오늘/48h/7d 요약 표시 전용
+- `DrilldownPanel`: 선택 항목 상세 + 체크리스트

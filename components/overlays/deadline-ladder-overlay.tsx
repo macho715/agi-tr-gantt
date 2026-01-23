@@ -57,6 +57,16 @@ export function DeadlineLadderOverlay(props: {
 }) {
   const { timelineStart, totalDays, cellWidth, heightPx, markers, showPins = true, className } = props
 
+  if (process.env.NODE_ENV === "development") {
+    console.log("DeadlineLadderOverlay render:", {
+      timelineStart: timelineStart.toISOString().split("T")[0],
+      markersCount: markers.length,
+      firstMarkerDate: markers[0]?.date.toISOString().split("T")[0],
+      cellWidth,
+      totalDays,
+    })
+  }
+
   if (!markers || markers.length === 0 || totalDays <= 0 || cellWidth <= 0) return null
 
   return (
@@ -67,6 +77,11 @@ export function DeadlineLadderOverlay(props: {
       {markers.map((m) => {
         const x = xOfDate({ timelineStart, date: m.date, cellWidth, totalDays })
         const risk = m.risk ?? "UNKNOWN"
+
+        if (process.env.NODE_ENV === "development" && markers.indexOf(m) < 3) {
+          // 처음 3개만 로그 출력
+          console.log(`  Marker ${m.label}: date=${m.date.toISOString().split("T")[0]}, x=${x}px`)
+        }
 
         return (
           <div key={m.id} className="absolute top-0" style={{ left: `${x}px`, height: "100%" }}>

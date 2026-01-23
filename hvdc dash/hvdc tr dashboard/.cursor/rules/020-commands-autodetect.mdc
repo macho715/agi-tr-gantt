@@ -1,0 +1,20 @@
+---
+description: "COMMANDS AUTODETECT — lockfile/scripts 기반 확정(추측 금지)"
+globs: ["package.json", "pnpm-lock.yaml", "yarn.lock", "package-lock.json", "tsconfig.json", "eslint.config.*", ".eslintrc.*"]
+alwaysApply: true
+---
+
+## Package Manager 결정 규칙
+
+1. `pnpm-lock.yaml` 존재 → `pnpm`
+2. `yarn.lock` 존재 → `yarn`
+3. `package-lock.json` 존재 → `npm` (`npm ci` 우선)
+4. lockfile 미존재 → `npm` (가정: 최소 호환)
+
+## Script 결정 규칙
+
+- `package.json`의 `scripts`에 존재하는 키만 사용한다.
+- 스크립트가 없으면 **추측으로 대체 커맨드 제시 금지**. 대신:
+  - 확인된 scripts 목록 출력
+  - 존재하지 않아 실행 불가한 키 출력
+  - 사용자 승인 시 추가할 스크립트(Ask-first) 제안

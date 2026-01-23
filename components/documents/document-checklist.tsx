@@ -9,13 +9,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { AlertTriangle, CheckCircle2, Clock, FileText, Info, LayoutGrid, Table2 } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Clock, FileText, Info, LayoutGrid, Table2, Upload, AlertCircle } from "lucide-react"
 import { differenceInCalendarDays, format } from "date-fns"
 import type { DocTemplate, DocInstance, Voyage, DocDueState, DocWorkflowState } from "@/lib/types"
 import { calculateDueDate, calculateDueState } from "@/lib/documents/deadline-engine"
 import { canTransition, transitionStatus, statusLabel } from "@/lib/documents/workflow"
 import { useVoyageContext } from "@/contexts/voyage-context"
 import docTemplatesData from "@/data/doc-templates.json"
+import { importAgiDocs, type AgiDocItem } from "@/lib/documents/agi-docs-importer"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface DocumentChecklistProps {
   voyage: Voyage
@@ -26,9 +28,11 @@ interface DocumentChecklistProps {
 type LayoutMode = "card" | "table"
 
 export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklistProps) {
-  const { updateDoc } = useVoyageContext()
+  const { updateDoc, importAgiDocs: importDocs } = useVoyageContext()
   const [layoutMode, setLayoutMode] = useState<LayoutMode>("card")
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("")
+  const [importDialogOpen, setImportDialogOpen] = useState(false)
+  const [importStatus, setImportStatus] = useState<{ type: "success" | "error"; message: string } | null>(null)
 
   const categories = useMemo(() => {
     return (docTemplatesData.categories || []).slice().sort((a, b) => (a.sort || 0) - (b.sort || 0))
@@ -628,27 +632,117 @@ export function DocumentChecklist({ voyage, templates, docs }: DocumentChecklist
     )
   }
 
+  const handleImportAgiDocs = async (file: File) => {
+    try {
+      const text = await file.text()
+      const agiDocs: AgiDocItem[] = JSON.parse(text)
+
+      const { instances, newTemplates, matchedTemplates } = importAgiDocs(agiDocs, voyage.id, voyage)
+
+      // Import instances
+      importDocs(voyage.id, instances)
+
+      setImportStatus({
+        type: "success",
+        message: `Successfully imported ${instances.length} documents. ${matchedTemplates.length} matched existing templates, ${newTemplates.length} new templates created.`,
+      })
+
+      // Close dialog after 2 seconds
+      setTimeout(() => {
+        setImportDialogOpen(false)
+        setImportStatus(null)
+      }, 2000)
+    } catch (error) {
+      setImportStatus({
+        type: "error",
+        message: error instanceof Error ? error.message : "Failed to import AGI documents",
+      })
+    }
+  }
+
+  const ImportDialog = () => {
+    const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+    return (
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5">
+            <Upload className="w-3 h-3" />
+            Import AGI Docs
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Import AGI Documents</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Upload the <code className="text-xs bg-muted px-1 py-0.5 rounded">agi docs check.json</code> file to import
+                document status and attachments.
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    handleImportAgiDocs(file)
+                  }
+                }}
+              />
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Select JSON File
+              </Button>
+            </div>
+
+            {importStatus && (
+              <Alert variant={importStatus.type === "error" ? "destructive" : "default"}>
+                {importStatus.type === "success" ? (
+                  <CheckCircle2 className="h-4 w-4" />
+                ) : (
+                  <AlertCircle className="h-4 w-4" />
+                )}
+                <AlertDescription>{importStatus.message}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          variant={layoutMode === "card" ? "default" : "outline"}
-          size="sm"
-          className="h-8 text-xs"
-          onClick={() => setLayoutMode("card")}
-        >
-          <LayoutGrid className="w-3 h-3 mr-1.5" />
-          Card View
-        </Button>
-        <Button
-          variant={layoutMode === "table" ? "default" : "outline"}
-          size="sm"
-          className="h-8 text-xs"
-          onClick={() => setLayoutMode("table")}
-        >
-          <Table2 className="w-3 h-3 mr-1.5" />
-          Table View
-        </Button>
+      <div className="flex items-center justify-between gap-2">
+        <ImportDialog />
+        <div className="flex items-center gap-2">
+          <Button
+            variant={layoutMode === "card" ? "default" : "outline"}
+            size="sm"
+            className="h-8 text-xs"
+            onClick={() => setLayoutMode("card")}
+          >
+            <LayoutGrid className="w-3 h-3 mr-1.5" />
+            Card View
+          </Button>
+          <Button
+            variant={layoutMode === "table" ? "default" : "outline"}
+            size="sm"
+            className="h-8 text-xs"
+            onClick={() => setLayoutMode("table")}
+          >
+            <Table2 className="w-3 h-3 mr-1.5" />
+            Table View
+          </Button>
+        </div>
       </div>
 
       {layoutMode === "card" ? renderCardView() : renderTableView()}

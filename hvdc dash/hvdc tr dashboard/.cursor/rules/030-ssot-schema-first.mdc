@@ -1,0 +1,16 @@
+---
+description: "SCHEMA-FIRST — SSOT/Enum/Join Keys 규약 (Gantt ↔ Documents)"
+globs: ["lib/**", "src/**", "components/**", "app/**"]
+alwaysApply: false
+---
+
+## SSOT 규약(권장)
+
+- 일정(Gantt)과 문서 체크리스트는 `voyage_id`, `tr_unit_id`, `milestone_id` 등 **공통 키**로 결합한다.
+- 상태값은 enum으로 제한하고 자유 텍스트를 금지한다.
+- SSOT 위치는 `src/lib/ssot/*` 또는 `src/data/*` 중 **한 곳으로 통일**한다(중복 금지).
+
+## 계산 vs 렌더 분리(권장)
+
+- 계산(마감/태그/triage/충돌탐지)은 `src/lib/utils/*`의 **순수 함수**로만 구현한다.
+- UI는 렌더링 전용(계산 로직 금지).

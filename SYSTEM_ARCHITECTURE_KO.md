@@ -272,6 +272,10 @@ graph LR
     - PTW, Marine PTW, Land Permit, Pre-arrival Meeting, AD Maritime NOC 가이드라인
     - 인라인 컴팩트 버전 + Dialog로 전체 내용 확인
     - 두 뷰 모두에서 일관된 위치에 표시
+  - **AGI 문서 Import**: 외부 JSON 파일에서 문서 일괄 가져오기
+    - `agi docs check.json` 형식 지원
+    - 자동 템플릿 매칭 및 새 템플릿 생성
+    - 기존 문서와 병합 (History 보존)
 
 #### 8. **VoyageMiniGrid**
 

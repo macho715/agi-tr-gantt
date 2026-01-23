@@ -1,0 +1,15 @@
+---
+description: "STYLE-FIRST + TRANSFER-FIRST — Deep Ocean Theme/조립 패턴 보존"
+globs: ["app/**", "components/**", "lib/**", "hooks/**", "src/**"]
+alwaysApply: true
+---
+
+## UI Style/Theme Preserve
+
+- `app/globals.css`의 **Deep Ocean Theme**(CSS variables, 그라데이션, Grid overlay, scrollbar) 스타일을 임의 변경 금지.
+- `.bg-glass`, `.shadow-glow`, `.shadow-cyan`, `.shadow-voyage` 등 **전역 유틸 클래스** 일관성 유지.
+
+## Transfer-first (Composition Pattern)
+
+- `app/layout.tsx`, `app/page.tsx`의 **구성/조립 패턴**을 유지한다.
+- `app/page.tsx`는 **조립자(composition root)** 역할만 수행한다(로직/상태는 하위로 이동).

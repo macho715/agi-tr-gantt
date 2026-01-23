@@ -2,8 +2,8 @@
 
 **AGI TR Gantt Generator - Voyage 문서 관리 시스템**
 
-버전: 1.0.0
-최종 업데이트: 2026-01-19
+버전: 1.1.0
+최종 업데이트: 2026-01-23
 
 ---
 
@@ -14,7 +14,8 @@
 3. [마감일 계산 로직](#마감일-계산-로직)
 4. [상태 머신](#상태-머신)
 5. [사용 시나리오](#사용-시나리오)
-6. [FAQ](#faq)
+6. [AGI 문서 Import](#agi-문서-import)
+7. [FAQ](#faq)
 
 ---
 
@@ -31,6 +32,7 @@ Documents 탭은 Voyage별 문서 체크리스트를 관리하는 시스템입�
 - ✅ **Due State**: `on_track` / `at_risk` / `overdue` 자동 판단
 - ✅ **History 자동 추가**: 상태 변경 시 자동 기록
 - ✅ **Docs Progress Overlay**: Gantt Chart에서 문서 진행률 즉시 확인
+- ✅ **AGI 문서 Import**: 외부 JSON 파일에서 문서 일괄 가져오기
 
 ---
 
@@ -637,6 +639,91 @@ Gantt Chart의 Trip row 위에 문서 진행률을 시각화하는 오버레이�
 
 ---
 
+## AGI 문서 Import
+
+### 개요
+
+AGI 문서 체크리스트 JSON 파일을 시스템으로 일괄 가져오는 기능입니다. 외부에서 관리되는 문서 상태를 자동으로 변환하여 시스템에 통합합니다.
+
+### 위치
+
+- **버튼 위치**: Documents 탭 상단 좌측 ("Import AGI Docs" 버튼)
+- **UI**: Dialog 기반 파일 업로드 인터페이스
+
+### 기능
+
+- ✅ **JSON 파일 업로드**: `agi docs check.json` 형식 지원
+- ✅ **자동 변환**: AGI 문서 형식을 `DocInstance` 형식으로 자동 변환
+- ✅ **템플릿 매칭**: 기존 템플릿과 자동 매칭 (Fuzzy Matching)
+- ✅ **새 템플릿 생성**: 매칭되지 않는 문서는 새 템플릿으로 자동 생성
+- ✅ **데이터 병합**: 기존 문서와 병합 (History 보존)
+- ✅ **상태 매핑**: Status2 → WorkflowState 자동 변환
+- ✅ **카테고리 매핑**: Part → CategoryId 자동 매핑
+- ✅ **마감일 계산**: Voyage 마일스톤 기반 자동 계산
+
+### 변환 로직
+
+#### 1. 필드 매핑
+
+| AGI 필드 | DocInstance 필드 | 변환 로직 |
+|---------|-----------------|----------|
+| `Document Name` | `templateId` | 템플릿 제목 매칭 또는 새 템플릿 생성 |
+| `Status2` | `workflowState` | Submitted → submitted, Pending → not_started 등 |
+| `Evidence (File/Email)` | `attachments` | 세미콜론 구분 파싱 |
+| `Last Update (GST)` | `history` | 날짜 파싱 및 History 항목 생성 |
+| `Responsible Party` | `assignee` | 이름 및 조직 추출 |
+| `Part` | `categoryId` | A → ptw_pack, C → ad_maritime_noc 등 |
+
+#### 2. 템플릿 매칭
+
+- **정확 매칭**: 문서 제목 정규화 후 정확 일치 확인
+- **부분 매칭**: 제목의 주요 키워드로 부분 일치 확인
+- **새 템플릿 생성**: 매칭 실패 시 자동으로 새 `DocTemplate` 생성
+
+#### 3. 데이터 병합
+
+- 기존 문서가 있으면 History를 보존하면서 데이터 업데이트
+- Import 이벤트를 History에 자동 추가 (`IMPORTED_FROM_AGI`)
+
+### 사용 방법
+
+1. Documents 탭 열기
+2. "Import AGI Docs" 버튼 클릭
+3. JSON 파일 선택 (또는 드롭)
+4. Import 진행 상태 확인
+5. 성공 메시지 확인 (import된 문서 수, 매칭된 템플릿 수, 새 템플릿 수)
+
+### 지원 형식
+
+```json
+[
+  {
+    "No": "1",
+    "Part": "A",
+    "Document Name": "Risk Assessment (AD Ports format)",
+    "Status2": "Submitted",
+    "Evidence (File/Email)": "file1.pdf; file2.pdf",
+    "Last Update (GST)": "2026-01-22 10:51 GST",
+    "Responsible Party": "Mammoet (prepare) + LCT Master (sign)"
+  }
+]
+```
+
+### 구현 위치
+
+- **변환 로직**: `lib/documents/agi-docs-importer.ts`
+  - `importAgiDocs()`: 메인 import 함수
+  - `convertAgiDocToInstance()`: 단일 문서 변환
+  - `findMatchingTemplate()`: 템플릿 매칭
+  - `mapStatus2ToWorkflowState()`: 상태 매핑
+- **UI 컴포넌트**: `components/documents/document-checklist.tsx`
+  - `ImportDialog`: 파일 업로드 Dialog
+  - `handleImportAgiDocs()`: Import 처리 핸들러
+- **상태 관리**: `contexts/voyage-context.tsx`
+  - `importAgiDocs()`: 문서 병합 및 저장
+
+---
+
 ## 사용 시나리오
 
 ### 시나리오 1: 빠른 체크 (카드 뷰)
@@ -670,6 +757,16 @@ Gantt Chart의 Trip row 위에 문서 진행률을 시각화하는 오버레이�
 3. D-카운트다운으로 우선순위 확인
 4. Overdue 문서부터 처리
 
+### 시나리오 5: AGI 문서 Import
+
+1. Documents 탭 열기
+2. "Import AGI Docs" 버튼 클릭
+3. `agi docs check.json` 파일 선택
+4. Import 진행 상태 확인
+5. 성공 메시지 확인 (import된 문서 수, 매칭/신규 템플릿 수)
+6. Import된 문서가 문서 목록에 표시됨
+7. 기존 문서와 병합된 경우 History에 "IMPORTED_FROM_AGI" 이벤트 추가
+
 ---
 
 ## FAQ
@@ -698,6 +795,14 @@ A: `D-N` (N일 남음), `Due today` (오늘), `Overdue Nd` (N일 지남) 형식�
 
 A: Gantt Chart의 Trip row 위에 표시되는 progress bar를 클릭하면 해당 Voyage의 문서 목록으로 이동합니다. 키보드로도 접근 가능합니다 (Tab + Enter/Space).
 
+### Q7: AGI 문서를 어떻게 Import하나요?
+
+A: Documents 탭 상단의 "Import AGI Docs" 버튼을 클릭하고 JSON 파일을 선택하면 됩니다. 시스템이 자동으로 문서를 변환하고 기존 템플릿과 매칭하거나 새 템플릿을 생성합니다.
+
+### Q8: Import 시 기존 문서는 어떻게 되나요?
+
+A: 같은 `templateId`를 가진 문서가 있으면 기존 History를 보존하면서 데이터를 업데이트합니다. Import 이벤트가 History에 자동으로 추가됩니다.
+
 ---
 
 ## 관련 문서
@@ -713,11 +818,12 @@ A: Gantt Chart의 Trip row 위에 표시되는 progress bar를 클릭하면 해�
 - `components/documents/document-checklist.tsx`: 메인 컴포넌트
 - `lib/documents/deadline-engine.ts`: 마감일 계산 로직
 - `lib/documents/workflow.ts`: 상태 전이 로직
+- `lib/documents/agi-docs-importer.ts`: AGI 문서 Import 변환 로직
 - `contexts/voyage-context.tsx`: 상태 관리
 - `data/doc-templates.json`: 문서 템플릿 정의
 
 ---
 
-**문서 버전**: 1.0.0
-**최종 업데이트**: 2026-01-19
+**문서 버전**: 1.1.0
+**최종 업데이트**: 2026-01-23
 **유지보수자**: 개발 팀

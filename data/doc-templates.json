@@ -1,6 +1,6 @@
 {
     "version": "0.1.0",
-    "updatedAt": "2026-01-19",
+    "updatedAt": "2026-01-23",
     "defaultCalendar": {
         "timezone": "Asia/Dubai",
         "weekendDays": [
@@ -31,6 +31,21 @@
             "id": "ad_maritime_noc",
             "label": "AD Maritime NOC Documents",
             "sort": 30
+        },
+        {
+            "id": "technical_drawings",
+            "label": "Technical Drawings / Simulations",
+            "sort": 40
+        },
+        {
+            "id": "hot_work",
+            "label": "Hot Work / Welding Documents",
+            "sort": 50
+        },
+        {
+            "id": "port_access",
+            "label": "Personnel / Equipment Port Access",
+            "sort": 60
         }
     ],
     "templates": [
@@ -768,6 +783,474 @@
                 ],
                 "tideRequired": false
             }
+        },
+        {
+            "id": "ptw.ptw_application_land_oversized",
+            "title": "PTW Application — Land Oversized & Heavy Load",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "SPMT land operations permit (approval lead time: 2–3 business days).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "ptw.workforce_medical_insurance_de",
+            "title": "Workforce Medical Insurance Details",
+            "categoryId": "ptw_pack",
+            "priority": "critical",
+            "description": "Provide valid medical insurance details for the entire workforce, as committed in the PTW Applicant/Receiver Consent.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.critical_lifting_plan",
+            "title": "Critical Lifting Plan",
+            "categoryId": "technical_drawings",
+            "priority": "critical",
+            "description": "Critical lifting plan (crane/rigging, lift procedure, load path, exclusion zone, hold points).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.indemnity_letter_lifting_plan",
+            "title": "Indemnity Letter — Lifting Plan",
+            "categoryId": "technical_drawings",
+            "priority": "critical",
+            "description": "Indemnity letter specific to lifting plan / lifting operation.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.indemnity_letter_general",
+            "title": "Indemnity Letter — General",
+            "categoryId": "technical_drawings",
+            "priority": "critical",
+            "description": "General indemnity letter for port cargo operations (load-out/offload).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.roro_simulation_mzp_jetty_mina",
+            "title": "RoRo Simulation — MZP Jetty (Mina Zayed) — 1xTR",
+            "categoryId": "technical_drawings",
+            "priority": "important",
+            "description": "RoRo simulation for MZP/Mina Zayed Jetty updated for 1xTR (supporting document for load-out/offload).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.roro_simulation_agi_jetty_1xtr",
+            "title": "RoRo Simulation — AGI Jetty — 1xTR",
+            "categoryId": "technical_drawings",
+            "priority": "important",
+            "description": "RoRo simulation for AGI Jetty updated for 1xTR (supporting document for load-out/offload).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.linkspan_arrangement_mzp_agi_j",
+            "title": "Linkspan Arrangement — MZP & AGI Jetties (12m)",
+            "categoryId": "technical_drawings",
+            "priority": "important",
+            "description": "Updated linkspan arrangement drawing for MINA (MZP) & AGI jetty interfaces (12m).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.transport_arrangement_drawing_",
+            "title": "Transport Arrangement Drawing — AGI Transformer @ MZP (Additional steel plates to reduce GBP)",
+            "categoryId": "technical_drawings",
+            "priority": "important",
+            "description": "Updated transport arrangement at MZP/MINA jetty area; additional 6 steel plates positioned to reduce ground bearing pressure (GBP).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "technical.steel_bridge_arrangement_agi_j",
+            "title": "Steel Bridge Arrangement — AGI Jetty Gate",
+            "categoryId": "technical_drawings",
+            "priority": "important",
+            "description": "Steel bridge arrangement drawing for AGI jetty gate access/interface.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "hot.firewatcher_certificate",
+            "title": "Firewatcher Certificate",
+            "categoryId": "hot_work",
+            "priority": "critical",
+            "description": "Fire watch personnel certification for Hot Work PTW.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "hot.welder_certificates",
+            "title": "Welder Certificates",
+            "categoryId": "hot_work",
+            "priority": "critical",
+            "description": "Welder qualification certificates (ensure validity).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "hot.welding_machine_calibration_ce",
+            "title": "Welding Machine Calibration Certificates",
+            "categoryId": "hot_work",
+            "priority": "critical",
+            "description": "Welding machine calibration records (validity/traceability).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "hot.ptw_hot_work",
+            "title": "PTW — Hot Work",
+            "categoryId": "hot_work",
+            "priority": "critical",
+            "description": "Hot Work PTW (voyage/operation-specific; submission via Maqta/ATLP as required).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "hot.ptw_working_over_water",
+            "title": "PTW — Working Over Water",
+            "categoryId": "hot_work",
+            "priority": "critical",
+            "description": "Working over water PTW (voyage/operation-specific; submission via Maqta/ATLP as required).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "port.entry_port_pass_monthly_passpo",
+            "title": "Entry/Port Pass (Monthly) — Passport & Visa Copy",
+            "categoryId": "port_access",
+            "priority": "critical",
+            "description": "Passport & visa copy (per person) for monthly entry/port pass.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "port.entry_port_pass_monthly_photo",
+            "title": "Entry/Port Pass (Monthly) — Photo",
+            "categoryId": "port_access",
+            "priority": "critical",
+            "description": "Photo (per person) for monthly entry/port pass.",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": true,
+                    "minCount": 1
+                }
+            ],
+            "links": {}
+        },
+        {
+            "id": "port.port_equipments_entry_exit_per",
+            "title": "Port Equipments Entry / Exit Permit",
+            "categoryId": "port_access",
+            "priority": "important",
+            "description": "Permit form for bringing equipment into / taking equipment out of the port (e.g., SPMT components, welding machines, tools).",
+            "appliesTo": {
+                "scope": "voyage"
+            },
+            "anchor": {
+                "milestoneKey": "mzp_arrival",
+                "offsetDays": -4,
+                "offsetType": "calendar_days"
+            },
+            "dependencies": [],
+            "evidence": [
+                {
+                    "id": "main_evidence",
+                    "type": "file",
+                    "label": "Document File",
+                    "required": false,
+                    "minCount": 0
+                }
+            ],
+            "links": {}
         }
     ]
 }

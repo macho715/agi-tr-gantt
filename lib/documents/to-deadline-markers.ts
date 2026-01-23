@@ -46,11 +46,19 @@ export function computeDeadlineMarkers(
 ): DeadlineMarker[] {
   if (!voyage) return []
 
+  if (process.env.NODE_ENV === "development") {
+    console.log("computeDeadlineMarkers called with voyage:", voyage.id)
+    console.log("Voyage milestones:", JSON.stringify(voyage.milestones, null, 2))
+  }
+
   return templates
     .filter((t) => t.appliesTo.scope === "voyage" || t.appliesTo.scope === "project")
     .map((template) => {
       const doc = docs.find((d) => d.templateId === template.id)
       const { dueAt } = calculateDueDate(template, voyage)
+      if (process.env.NODE_ENV === "development" && dueAt) {
+        console.log(`  Template ${template.id}: dueAt = ${dueAt.toISOString().split("T")[0]}`)
+      }
       const dueState = calculateDueState(
         doc || {
           templateId: template.id,

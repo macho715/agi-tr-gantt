@@ -271,6 +271,10 @@ graph LR
     - PTW, Marine PTW, Land Permit, Pre-arrival Meeting, and AD Maritime NOC guidelines
     - Inline compact version + Dialog for full content
     - Consistent placement in both views
+  - **AGI Document Import**: Bulk import documents from external JSON files
+    - Supports `agi docs check.json` format
+    - Automatic template matching and new template generation
+    - Merges with existing documents (preserves history)
 
 #### 8. **DocsProgressOverlay**
 - **Location**: `components/overlays/docs-progress-overlay.tsx`

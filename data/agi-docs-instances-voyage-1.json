@@ -1,0 +1,907 @@
+{
+  "voyageId": "voyage-1",
+  "voyage": {
+    "id": "voyage-1",
+    "label": "AGI Trip 1",
+    "milestones": {
+      "mzp_arrival": "2026-01-27",
+      "mzp_departure": "2026-01-31",
+      "loadout_start": "2026-01-29",
+      "loadout_end": "2026-01-30",
+      "agi_arrival": "2026-02-01"
+    }
+  },
+  "instances": [
+    {
+      "templateId": "ptw.risk_assessment",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528180_0",
+          "name": "Risk Assessment - AGI - Hot works on LCT.pdf",
+          "type": "file",
+          "url": "#Risk%20Assessment%20-%20AGI%20-%20Hot%20works%20on%20LCT.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528181_1",
+          "name": "Risk Assessment - AGI RoRo Ops.pdf",
+          "type": "file",
+          "url": "#Risk%20Assessment%20-%20AGI%20RoRo%20Ops.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Risk assessment for PTW Land / HM / HSE review (AD Ports template)."
+    },
+    {
+      "templateId": "ptw.consent_form",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Applicant/Receiver consent form (AD Ports template)."
+    },
+    {
+      "templateId": "ptw.ptw_application_land_oversized",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "3 PTW Land Oversize Heavy Load.docx",
+          "type": "file",
+          "url": "#3%20PTW%20Land%20Oversize%20Heavy%20Load.docx",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "SPMT land operations permit (approval lead time: 2–3 business days)."
+    },
+    {
+      "templateId": "ptw.stowage_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "15111578-D-W07-02 Stowage Plan for AGI Transformers_1xTR_sgn.pdf",
+          "type": "file",
+          "url": "#15111578-D-W07-02%20Stowage%20Plan%20for%20AGI%20Transformers_1xTR_sgn.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Cargo stowage arrangement (weights/COG/footprint/sequence)."
+    },
+    {
+      "templateId": "ptw.method_statement",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "15111578-W-M04-00 (MS -AGI)-sgn.pdf",
+          "type": "file",
+          "url": "#15111578-W-M04-00%20(MS%20-AGI)-sgn.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Method Statement for load-out/offload operations incl. weather criteria."
+    },
+    {
+      "templateId": "ptw.countdown_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "prepare & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "Countdown_Plan_SAMSUNG C AND T_20260122.pdf",
+          "type": "file",
+          "url": "#Countdown_Plan_SAMSUNG%20C%20AND%20T_20260122.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Detailed execution schedule / countdown plan."
+    },
+    {
+      "templateId": "ptw.undertaking_letter",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "prepare, sign & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "Undertaking Letter_SAMSUNG C AND T_20260122.pdf",
+          "type": "file",
+          "url": "#Undertaking%20Letter_SAMSUNG%20C%20AND%20T_20260122.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Work guarantee / undertaking letter to Port."
+    },
+    {
+      "templateId": "ptw.stability_calculation",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "KFS / LCT Bushra",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "Lct-Bushra No Ballast on FWB # 2 P&S - 100% Cargo including beam support 2nd TR - stability_calculation.xls",
+          "type": "file",
+          "url": "#Lct-Bushra%20No%20Ballast%20on%20FWB%20%23%202%20P%26S%20-%20100%25%20Cargo%20including%20beam%20support%202nd%20TR%20-%20stability_calculation.xls",
+          "uploadedAt": "2026-01-22T21:59:00.000Z"
+        },
+        {
+          "id": "att_1769150528182_1",
+          "name": "Lct-Bushra No Ballast on FWB # 2 P&S - FINAL POS 2nd TR - stability_calculation.xls",
+          "type": "file",
+          "url": "#Lct-Bushra%20No%20Ballast%20on%20FWB%20%23%202%20P%26S%20-%20FINAL%20POS%202nd%20TR%20-%20stability_calculation.xls",
+          "uploadedAt": "2026-01-22T21:59:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T21:59:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Vessel stability calculation (stage-by-stage as applicable). Draft until actual condition after loading completed."
+    },
+    {
+      "templateId": "ptw.equipment_certificates",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "collect/compile"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "TPC - SPMT Ops.zip",
+          "type": "file",
+          "url": "#TPC%20-%20SPMT%20Ops.zip",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528182_1",
+          "name": "AGI 1 - SPMT and PPUs.zip",
+          "type": "file",
+          "url": "#AGI%201%20-%20SPMT%20and%20PPUs.zip",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528182_2",
+          "name": "Marine Equipment_Certificates.zip",
+          "type": "file",
+          "url": "#Marine%20Equipment_Certificates.zip",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "SPMT certificates, operator competency certificates, load test, etc."
+    },
+    {
+      "templateId": "ptw.mws",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "MWS Surveyor",
+        "org": "issue"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "MWS certificate/report (required before sailing for HM approval)."
+    },
+    {
+      "templateId": "ptw.mooring_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "KFS / LCT Bushra",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "15111578-D-W07-00 Mooring of LCT Bushra @ Mina Zayed - AGI Transformers)-ISO-A1.pdf",
+          "type": "file",
+          "url": "#15111578-D-W07-00%20Mooring%20of%20LCT%20Bushra%20%40%20Mina%20Zayed%20-%20AGI%20Transformers)-ISO-A1.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Vessel mooring arrangement plan (bollards/lines/limits)."
+    },
+    {
+      "templateId": "ptw.lashing_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Cargo securing / lashing plan (points/gear/inspection hold points)."
+    },
+    {
+      "templateId": "ptw.workforce_medical_insurance_de",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "compile"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Provide valid medical insurance details for the entire workforce, as committed in the PTW Applicant/Receiver Consent."
+    },
+    {
+      "templateId": "technical.critical_lifting_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare & submit"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Critical lifting plan (crane/rigging, lift procedure, load path, exclusion zone, hold points)."
+    },
+    {
+      "templateId": "technical.indemnity_letter_lifting_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "prepare, sign & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "Indemnity Letter_Lifting Plan_SAMSUNG C AND T_20260122.pdf",
+          "type": "file",
+          "url": "#Indemnity%20Letter_Lifting%20Plan_SAMSUNG%20C%20AND%20T_20260122.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Indemnity letter specific to lifting plan / lifting operation."
+    },
+    {
+      "templateId": "technical.indemnity_letter_general",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "prepare, sign & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "Indemnity Letter_SAMSUNG C AND T_20260122.pdf",
+          "type": "file",
+          "url": "#Indemnity%20Letter_SAMSUNG%20C%20AND%20T_20260122.pdf",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "General indemnity letter for port cargo operations (load-out/offload)."
+    },
+    {
+      "templateId": "technical.roro_simulation_mzp_jetty_mina",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "15111578-D-W06-01_RORO Simulation for AGI TR@ MZ Jetty_1TR_sng.pdf",
+          "type": "file",
+          "url": "#15111578-D-W06-01_RORO%20Simulation%20for%20AGI%20TR%40%20MZ%20Jetty_1TR_sng.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "RoRo simulation for MZP/Mina Zayed Jetty updated for 1xTR (supporting document for load-out/offload)."
+    },
+    {
+      "templateId": "technical.roro_simulation_agi_jetty_1xtr",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528182_0",
+          "name": "15111578-D-W08-01_RORO Simulation for AGI TR@ AGI Jetty_1TR_sng.pdf",
+          "type": "file",
+          "url": "#15111578-D-W08-01_RORO%20Simulation%20for%20AGI%20TR%40%20AGI%20Jetty_1TR_sng.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "RoRo simulation for AGI Jetty updated for 1xTR (supporting document for load-out/offload)."
+    },
+    {
+      "templateId": "technical.linkspan_arrangement_mzp_agi_j",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "15111578-D-G14-01_12m Linkspan arrangement for MINA & AGI jetty.pdf",
+          "type": "file",
+          "url": "#15111578-D-G14-01_12m%20Linkspan%20arrangement%20for%20MINA%20%26%20AGI%20jetty.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Updated linkspan arrangement drawing for MINA (MZP) & AGI jetty interfaces (12m)."
+    },
+    {
+      "templateId": "technical.transport_arrangement_drawing_",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "15111578-D-T11-00 TR AGI - MINA-ISO-A1.pdf",
+          "type": "file",
+          "url": "#15111578-D-T11-00%20TR%20AGI%20-%20MINA-ISO-A1.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Updated transport arrangement at MZP/MINA jetty area; additional 6 steel plates positioned to reduce ground bearing pressure (GBP)."
+    },
+    {
+      "templateId": "technical.steel_bridge_arrangement_agi_j",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "prepare"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "15111578-D-G10-02_Steel Bridge_AGI.pdf",
+          "type": "file",
+          "url": "#15111578-D-G10-02_Steel%20Bridge_AGI.pdf",
+          "uploadedAt": "2026-01-22T07:28:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T07:28:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Steel bridge arrangement drawing for AGI jetty gate access/interface."
+    },
+    {
+      "templateId": "noc.trading_license",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "submit"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Company business registration / trading license for NOC package."
+    },
+    {
+      "templateId": "noc.ra_erp",
+      "voyageId": "voyage-1",
+      "workflowState": "in_progress",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "compile & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "Risk Assessment PDFs provided",
+          "type": "file",
+          "url": "#Risk%20Assessment%20PDFs%20provided",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528183_1",
+          "name": "ERP not evidenced",
+          "type": "file",
+          "url": "#ERP%20not%20evidenced",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to in_progress"
+        }
+      ],
+      "notes": "Comprehensive RA + Emergency Response Plan (ERP) for transit/operations."
+    },
+    {
+      "templateId": "noc.no_objection",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "OFCO Agency",
+        "org": "coordinate"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "NOC(s) from relevant authorities (coordination item)."
+    },
+    {
+      "templateId": "noc.voyage_plan",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "KFS / LCT Bushra",
+        "org": "prepare & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "PASSAGE PLAN MZP - AG.pdf",
+          "type": "file",
+          "url": "#PASSAGE%20PLAN%20MZP%20-%20AG.pdf",
+          "uploadedAt": "2026-01-22T21:59:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T21:59:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Navigation/voyage plan for AD Maritime NOC (MZP to AGI)."
+    },
+    {
+      "templateId": "noc.route_map",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "KFS"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "MINA ZAYED - AGI ROUTE MAP 2026.rar",
+          "type": "file",
+          "url": "#MINA%20ZAYED%20-%20AGI%20ROUTE%20MAP%202026.rar",
+          "uploadedAt": "2026-01-22T21:59:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T21:59:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Route chart/map (waypoints, constraints, contingency)."
+    },
+    {
+      "templateId": "noc.contract_award",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Samsung",
+        "org": "submit"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Copy of contract award letter for NOC package."
+    },
+    {
+      "templateId": "hot.firewatcher_certificate",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "provide"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "Email statement on crew competency",
+          "type": "file",
+          "url": "#Email%20statement%20on%20crew%20competency",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528183_1",
+          "name": "certificate not attached",
+          "type": "file",
+          "url": "#certificate%20not%20attached",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Fire watch personnel certification for Hot Work PTW."
+    },
+    {
+      "templateId": "hot.welder_certificates",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "provide & submit"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "Welders' Certificates folder",
+          "type": "file",
+          "url": "#Welders'%20Certificates%20folder",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528183_1",
+          "name": "Welder performance qualification reports",
+          "type": "file",
+          "url": "#Welder%20performance%20qualification%20reports",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Welder qualification certificates (ensure validity)."
+    },
+    {
+      "templateId": "hot.welding_machine_calibration_ce",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "provide"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "Welding Machines Calibration Certificates folder",
+          "type": "file",
+          "url": "#Welding%20Machines%20Calibration%20Certificates%20folder",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Welding machine calibration records (validity/traceability)."
+    },
+    {
+      "templateId": "hot.ptw_hot_work",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "OFCO Agency",
+        "org": "submit/follow-up"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "PTW Hot Work - AGI Trip 1 - 06.01 - 05.02.docx",
+          "type": "file",
+          "url": "#PTW%20Hot%20Work%20-%20AGI%20Trip%201%20-%2006.01%20-%2005.02.docx",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Hot Work PTW (voyage/operation-specific; submission via Maqta/ATLP as required)."
+    },
+    {
+      "templateId": "hot.ptw_working_over_water",
+      "voyageId": "voyage-1",
+      "workflowState": "submitted",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "OFCO Agency",
+        "org": "submit/follow-up"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "PTW Working Over Water - AGI Trip 1 - 06.01 - 05.02.DOCX",
+          "type": "file",
+          "url": "#PTW%20Working%20Over%20Water%20-%20AGI%20Trip%201%20-%2006.01%20-%2005.02.DOCX",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Document submitted"
+        }
+      ],
+      "notes": "Working over water PTW (voyage/operation-specific; submission via Maqta/ATLP as required)."
+    },
+    {
+      "templateId": "port.entry_port_pass_monthly_passpo",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "MMT",
+        "org": "provide per person"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Passport & visa copy (per person) for monthly entry/port pass."
+    },
+    {
+      "templateId": "port.entry_port_pass_monthly_photo",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "MMT",
+        "org": "provide per person"
+      },
+      "attachments": [],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Photo (per person) for monthly entry/port pass."
+    },
+    {
+      "templateId": "port.port_equipments_entry_exit_per",
+      "voyageId": "voyage-1",
+      "workflowState": "not_started",
+      "dueAt": "2026-01-23T00:00:00.000Z",
+      "assignee": {
+        "name": "Mammoet",
+        "org": "equipment details"
+      },
+      "attachments": [
+        {
+          "id": "att_1769150528183_0",
+          "name": "If equipment enters/exits port",
+          "type": "file",
+          "url": "#If%20equipment%20enters%2Fexits%20port",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        },
+        {
+          "id": "att_1769150528183_1",
+          "name": "form available on AD Ports website",
+          "type": "file",
+          "url": "#form%20available%20on%20AD%20Ports%20website",
+          "uploadedAt": "2026-01-22T06:51:00.000Z"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-01-22T06:51:00.000Z",
+          "event": "Status updated to not_started"
+        }
+      ],
+      "notes": "Permit form for bringing equipment into / taking equipment out of the port (e.g., SPMT components, welding machines, tools)."
+    }
+  ],
+  "importedAt": "2026-01-23T06:42:08.185Z",
+  "summary": {
+    "total": 35,
+    "matchedTemplates": 17,
+    "newTemplates": 18
+  }
+}

@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HVDC TR Transport Dashboard - AGI Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary Palette - Deep Ocean */
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1f2937;
+            --bg-card: rgba(17, 24, 39, 0.85);
+            --bg-glass: rgba(30, 41, 59, 0.6);
+            
+            /* Accent Colors - Teal & Amber */
+            --accent-primary: #06b6d4;
+            --accent-secondary: #14b8a6;
+            --accent-tertiary: #0891b2;
+            --accent-gold: #f59e0b;
+            --accent-amber: #fbbf24;
+            --accent-warm: #fb923c;
+            
+            /* Status Colors */
+            --status-success: #10b981;
+            --status-warning: #eab308;
+            --status-danger: #ef4444;
+            --status-info: #3b82f6;
+            
+            /* Activity Colors */
+            --color-mob: #8b5cf6;
+            --color-loadout: #06b6d4;
+            --color-transport: #f59e0b;
+            --color-loadin: #10b981;
+            --color-turning: #ec4899;
+            --color-jackdown: #3b82f6;
+            
+            /* Text Colors */
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-accent: #22d3ee;
+            
+            /* Borders & Shadows */
+            --border-subtle: rgba(6, 182, 212, 0.15);
+            --border-accent: rgba(6, 182, 212, 0.4);
+            --shadow-glow: 0 0 40px rgba(6, 182, 212, 0.15);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(145deg, var(--bg-primary) 0%, #0c1929 40%, #0f172a 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Subtle grid pattern overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .dashboard {
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-glass), rgba(6, 182, 212, 0.08));
+            backdrop-filter: blur(20px);
+            padding: 28px 36px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .header-left h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-left .subtitle {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        
+        .header-right {
+            text-align: right;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            color: var(--bg-primary);
+            border-radius: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
+        }
+        
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+        
+        .completion-info {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .completion-info strong {
+            color: var(--accent-gold);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .kpi-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 22px 18px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-accent);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+        
+        .kpi-card .icon {
+            font-size: 26px;
+            margin-bottom: 10px;
+            filter: grayscale(20%);
+        }
+        
+        .kpi-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 6px;
+            letter-spacing: -1px;
+        }
+        
+        .kpi-card .label {
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+        
+        /* Summary Panel */
+        .summary-panel {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(20, 184, 166, 0.04));
+            border: 1px solid var(--border-accent);
+            border-radius: 16px;
+            padding: 26px;
+            margin-bottom: 24px;
+        }
+        
+        .summary-panel h2 {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.3px;
+        }
+        
+        .summary-panel h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-accent), transparent);
+            margin-left: 12px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+        
+        .summary-item {
+            background: var(--bg-card);
+            padding: 18px 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent-primary);
+            transition: all 0.2s ease;
+        }
+        
+        .summary-item:hover {
+            border-left-color: var(--accent-gold);
+            background: rgba(17, 24, 39, 0.95);
+        }
+        
+        .summary-item .title {
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .summary-item .value {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .summary-item .value strong {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+        
+        /* Panel */
+        .panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 26px;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 24px;
+        }
+        
+        .panel h2 {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.3px;
+        }
+        
+        /* Voyage Cards */
+        .voyage-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .voyage-card {
+            background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
+            border-radius: 14px;
+            padding: 20px 16px;
+            border: 1px solid var(--border-subtle);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .voyage-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.2);
+        }
+        
+        .voyage-card .voyage-num {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-gold);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .voyage-card .tr-unit {
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+        }
+        
+        .voyage-card .dates {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        
+        .voyage-card .dates strong {
+            color: var(--text-secondary);
+        }
+        
+        .voyage-card .sail-date {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            color: var(--bg-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 14px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Gantt Chart */
+        .gantt-container {
+            overflow-x: auto;
+        }
+        
+        .gantt-chart {
+            min-width: 1400px;
+        }
+        
+        .date-header {
+            display: flex;
+            margin-left: 220px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 12px;
+        }
+        
+        .date-mark {
+            flex: 1;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-primary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .gantt-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .gantt-label {
+            width: 220px;
+            font-size: 12px;
+            font-weight: 500;
+            padding-right: 16px;
+            flex-shrink: 0;
+            color: var(--text-secondary);
+        }
+        
+        .gantt-label.voyage-header {
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-size: 12px;
+            padding-top: 16px;
+            letter-spacing: 0.3px;
+        }
+        
+        .gantt-track {
+            flex: 1;
+            height: 32px;
+            position: relative;
+            background: rgba(6, 182, 212, 0.03);
+            border-radius: 6px;
+            border: 1px solid rgba(6, 182, 212, 0.08);
+        }
+        
+        .gantt-bar {
+            position: absolute;
+            height: 26px;
+            top: 3px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gantt-bar:hover {
+            transform: scaleY(1.15) scaleX(1.02);
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Activity Type Colors */
+        .gantt-bar.mobilization { 
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6); 
+            box-shadow: 0 2px 12px rgba(139, 92, 246, 0.4);
+        }
+        .gantt-bar.loadout { 
+            background: linear-gradient(135deg, #22d3ee, #06b6d4); 
+            box-shadow: 0 2px 12px rgba(6, 182, 212, 0.4);
+        }
+        .gantt-bar.transport { 
+            background: linear-gradient(135deg, #fbbf24, #f59e0b); 
+            box-shadow: 0 2px 12px rgba(245, 158, 11, 0.4);
+        }
+        .gantt-bar.loadin { 
+            background: linear-gradient(135deg, #34d399, #10b981); 
+            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
+        }
+        .gantt-bar.turning { 
+            background: linear-gradient(135deg, #f472b6, #ec4899); 
+            box-shadow: 0 2px 12px rgba(236, 72, 153, 0.4);
+        }
+        .gantt-bar.jackdown { 
+            background: linear-gradient(135deg, #60a5fa, #3b82f6); 
+            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.4);
+        }
+        .gantt-bar.demob { 
+            background: linear-gradient(135deg, #c084fc, #a855f7); 
+            box-shadow: 0 2px 12px rgba(168, 85, 247, 0.4);
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 18px 24px;
+            background: var(--bg-glass);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .legend-color {
+            width: 28px;
+            height: 14px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Milestone Timeline */
+        .milestone-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 28px 24px;
+            background: var(--bg-glass);
+            border-radius: 14px;
+            margin-top: 24px;
+            position: relative;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .milestone-timeline::before {
+            content: '';
+            position: absolute;
+            top: 48px;
+            left: 70px;
+            right: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                var(--accent-primary), 
+                var(--accent-gold), 
+                var(--status-success), 
+                var(--status-info));
+            border-radius: 2px;
+        }
+        
+        .milestone {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .milestone .dot {
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            margin: 0 auto 14px;
+            border: 3px solid var(--bg-secondary);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+        }
+        
+        .milestone .date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 4px;
+        }
+        
+        .milestone .label {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-muted);
+            max-width: 80px;
+        }
+        
+        /* Weather Alert */
+        .weather-alert {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(251, 191, 36, 0.06));
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 14px;
+            padding: 22px 26px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+        }
+        
+        .weather-alert .icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .weather-alert .content h4 {
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.2px;
+        }
+        
+        .weather-alert .content p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .weather-alert .content strong {
+            color: var(--accent-amber);
+            font-weight: 600;
+        }
+        
+        /* Schedule Table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 16px;
+        }
+        
+        .schedule-table th,
+        .schedule-table td {
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 12px;
+        }
+        
+        .schedule-table th {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(6, 182, 212, 0.06));
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .schedule-table th:first-child {
+            border-radius: 10px 0 0 10px;
+            text-align: left;
+        }
+        
+        .schedule-table th:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .schedule-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+        
+        .schedule-table td {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+        }
+        
+        .schedule-table tr:hover td {
+            background: rgba(6, 182, 212, 0.04);
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(10, 15, 26, 0.98);
+            border: 1px solid var(--border-accent);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 12px;
+            z-index: 1000;
+            pointer-events: none;
+            display: none;
+            max-width: 320px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tooltip .title {
+            color: var(--accent-primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 14px;
+            letter-spacing: -0.3px;
+        }
+        
+        .tooltip .detail {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .tooltip .detail strong {
+            color: var(--text-primary);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .footer strong {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .voyage-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                padding: 16px;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+                gap: 16px;
+            }
+
+            .header-left,
+            .header-right {
+                text-align: center;
+            }
+
+            .header-left h1 {
+                font-size: 22px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .voyage-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .legend {
+                gap: 12px;
+                padding: 14px 18px;
+            }
+
+            .milestone-timeline {
+                overflow-x: auto;
+                padding: 20px 16px;
+            }
+
+            .milestone-timeline::before {
+                left: 50px;
+                right: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header-left h1 {
+                font-size: 18px;
+            }
+
+            .header-left .subtitle {
+                font-size: 11px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .kpi-card {
+                padding: 16px 12px;
+            }
+
+            .kpi-card .value {
+                font-size: 22px;
+            }
+
+            .kpi-card .icon {
+                font-size: 22px;
+            }
+
+            .voyage-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .voyage-card {
+                padding: 16px 12px;
+            }
+
+            .panel {
+                padding: 18px;
+                border-radius: 12px;
+            }
+
+            .panel h2 {
+                font-size: 14px;
+            }
+
+            .weather-alert {
+                padding: 16px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .weather-alert .icon {
+                font-size: 24px;
+            }
+
+            .weather-alert .content p {
+                font-size: 11px;
+            }
+
+            .schedule-table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .schedule-table {
+                min-width: 700px;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 10px 8px;
+                font-size: 10px;
+            }
+
+            .gantt-chart {
+                min-width: 900px;
+            }
+
+            .gantt-label {
+                width: 150px;
+                font-size: 10px;
+            }
+
+            .date-header {
+                margin-left: 150px;
+            }
+
+            .gantt-bar {
+                font-size: 8px;
+            }
+
+            .legend {
+                gap: 10px;
+                padding: 12px 14px;
+            }
+
+            .legend-item {
+                font-size: 10px;
+            }
+
+            .legend-color {
+                width: 20px;
+                height: 12px;
+            }
+
+            .milestone-timeline {
+                min-width: 500px;
+            }
+
+            .milestone .date {
+                font-size: 11px;
+            }
+
+            .milestone .label {
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            .header-left h1 {
+                font-size: 16px;
+            }
+
+            .status-badge {
+                padding: 8px 16px;
+                font-size: 10px;
+            }
+
+            .completion-info {
+                font-size: 11px;
+            }
+
+            .completion-info strong {
+                font-size: 14px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .kpi-card {
+                padding: 14px 10px;
+                border-radius: 10px;
+            }
+
+            .kpi-card .value {
+                font-size: 18px;
+            }
+
+            .kpi-card .icon {
+                font-size: 18px;
+                margin-bottom: 6px;
+            }
+
+            .kpi-card .label {
+                font-size: 8px;
+            }
+
+            .voyage-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .voyage-card {
+                padding: 14px 10px;
+                border-radius: 10px;
+            }
+
+            .voyage-card .voyage-num {
+                font-size: 9px;
+            }
+
+            .voyage-card .tr-unit {
+                font-size: 12px;
+            }
+
+            .voyage-card .dates {
+                font-size: 9px;
+            }
+
+            .voyage-card .sail-date {
+                font-size: 9px;
+                padding: 5px 10px;
+            }
+
+            .footer {
+                font-size: 10px;
+                padding: 16px;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-tertiary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>🚢 HVDC TR Transport</h1>
+                <div class="subtitle">AGI Site (Al Ghallan Island) | 7 Transformer Units | LCT BUSHRA</div>
+            </div>
+            <div class="header-right">
+                <div class="status-badge">CONFIRMED</div>
+                <div class="completion-info">
+                    Project Completion: <strong>March 22, 2026</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Operational Notice -->
+        <div class="weather-alert" style="border-color: rgba(6, 182, 212, 0.4); background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(20, 184, 166, 0.06)); padding: 16px 24px;">
+            <span class="icon">📢</span>
+            <div class="content">
+                <p style="margin: 0; font-size: 13px;">
+    <strong>AGI TR Units 1-7</strong> ? Beam change | LO/LI | Sea fastening | Transportation | Turning | Jacking-down<br>
+    <span style="font-size: 12px; color: var(--text-secondary);">
+        ? 1st Trip: Load 1 TR Unit (without LCT ballasting)<br>
+        ? SPMT: 2 Sets maintained | MOB: 26 Jan (No change)<br>
+        ? <em>Remaining schedule to be confirmed</em>
+    </span>
+</p>
+            </div>
+        </div>
+        
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="icon">📅</div>
+                <div class="value">56</div>
+                <div class="label">Total Days</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">🚢</div>
+                <div class="value">7</div>
+                <div class="label">Voyages</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">🛠️</div>
+                <div class="value">2</div>
+                <div class="label">SPMT Set</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">📦</div>
+                <div class="value">7</div>
+                <div class="label">TR Units</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">🏁</div>
+                <div class="value">Jan 26</div>
+                <div class="label">Start Date</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">🎯</div>
+                <div class="value">Mar 22</div>
+                <div class="label">End Date</div>
+            </div>
+        </div>
+        
+        <!-- Weather Alert -->
+        <div class="weather-alert">
+            <span class="icon">⚠️</span>
+            <div class="content">
+                <h4>Weather & Marine Risk Update (Mina Zayed Port)</h4>
+                <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">Last Updated: 21 Jan 2026 | Update Frequency: Weekly</p>
+                <p>
+                    <strong>21–22 Jan:</strong> High operational risk due to NW winds and potential dust (reduced visibility); sea state may reach rough to very rough.<br><br>
+                    <strong>23–30 Jan:</strong> Conditions generally ease, improving the working window—MZP Arrival (26 Jan) may peak around 20.00 kt, while Deck Prep (27–28 Jan) and Load-out (29–30 Jan) are mostly ≤12.00 kt.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Voyage Cards -->
+        <div class="panel">
+            <h2>🚢 7 Voyages Overview</h2>
+            <div class="voyage-grid">
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 1</div>
+                    <div class="tr-unit">TR Unit 1</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Jan 29<br>
+                        <strong>Load-in:</strong> Feb 02<br>
+                        <strong>Jack-down:</strong> Feb 07
+                    </div>
+                    <div class="sail-date">⛵ Jan 31</div>
+                </div>
+                
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 2</div>
+                    <div class="tr-unit">TR Unit 2</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Feb 05<br>
+                        <strong>Load-in:</strong> Feb 09<br>
+                        <strong>Jack-down:</strong> Feb 14
+                    </div>
+                    <div class="sail-date">⛵ Feb 07</div>
+                </div>
+                
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 3</div>
+                    <div class="tr-unit">TR Unit 3</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Feb 12<br>
+                        <strong>Load-in:</strong> Feb 16<br>
+                        <strong>Jack-down:</strong> Feb 21
+                    </div>
+                    <div class="sail-date">⛵ Feb 14</div>
+                </div>
+                
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 4</div>
+                    <div class="tr-unit">TR Unit 4</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Feb 19<br>
+                        <strong>Load-in:</strong> Feb 23<br>
+                        <strong>Jack-down:</strong> Feb 28
+                    </div>
+                    <div class="sail-date">⛵ Feb 21</div>
+                </div>
+                
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 5</div>
+                    <div class="tr-unit">TR Unit 5</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Feb 26<br>
+                        <strong>Load-in:</strong> Mar 02<br>
+                        <strong>Jack-down:</strong> Mar 07
+                    </div>
+                    <div class="sail-date">⛵ Feb 28</div>
+                </div>
+                
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 6</div>
+                    <div class="tr-unit">TR Unit 6</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Mar 05<br>
+                        <strong>Load-in:</strong> Mar 09<br>
+                        <strong>Jack-down:</strong> Mar 14
+                    </div>
+                    <div class="sail-date">⛵ Mar 07</div>
+                </div>
+                
+                <div class="voyage-card">
+                    <div class="voyage-num">VOYAGE 7</div>
+                    <div class="tr-unit">TR Unit 7</div>
+                    <div class="dates">
+                        <strong>Load-out:</strong> Mar 12<br>
+                        <strong>Load-in:</strong> Mar 16<br>
+                        <strong>Jack-down:</strong> Mar 21
+                    </div>
+                    <div class="sail-date">⛵ Mar 14</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Schedule Table -->
+        <div class="panel">
+            <h2>📊 Detailed Voyage Schedule</h2>
+            <div class="schedule-table-wrapper">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Voyage / TR Unit</th>
+                            <th>LCT Arrival MZP</th>
+                            <th>Load-out</th>
+                            <th>Sail-away</th>
+                            <th>AGI Arrival</th>
+                            <th>Load-in</th>
+                            <th>Turning</th>
+                            <th>Jack-down</th>
+                            <th>TR Bay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>V1 — TR Unit 1</td>
+                            <td>Jan 27</td>
+                            <td>Jan 29</td>
+                            <td>Jan 31</td>
+                            <td>Feb 01</td>
+                            <td>Feb 02</td>
+                            <td>Feb 04-06</td>
+                            <td>Feb 07</td>
+                            <td>Bay 4</td>
+                        </tr>
+                        <tr>
+                            <td>V2 — TR Unit 2</td>
+                            <td>Feb 04</td>
+                            <td>Feb 05</td>
+                            <td>Feb 07</td>
+                            <td>Feb 08</td>
+                            <td>Feb 09</td>
+                            <td>Feb 11-13</td>
+                            <td>Feb 14</td>
+                            <td>Bay 3</td>
+                        </tr>
+                        <tr>
+                            <td>V3 — TR Unit 3</td>
+                            <td>Feb 11</td>
+                            <td>Feb 12</td>
+                            <td>Feb 14</td>
+                            <td>Feb 15</td>
+                            <td>Feb 16</td>
+                            <td>Feb 18-20</td>
+                            <td>Feb 21</td>
+                            <td>Bay 2</td>
+                        </tr>
+                        <tr>
+                            <td>V4 — TR Unit 4</td>
+                            <td>Feb 18</td>
+                            <td>Feb 19</td>
+                            <td>Feb 21</td>
+                            <td>Feb 22</td>
+                            <td>Feb 23</td>
+                            <td>Feb 25-27</td>
+                            <td>Feb 28</td>
+                            <td>Bay 1</td>
+                        </tr>
+                        <tr>
+                            <td>V5 — TR Unit 5</td>
+                            <td>Feb 25</td>
+                            <td>Feb 26</td>
+                            <td>Feb 28</td>
+                            <td>Mar 01</td>
+                            <td>Mar 02</td>
+                            <td>Mar 04-06</td>
+                            <td>Mar 07</td>
+                            <td>Bay 5</td>
+                        </tr>
+                        <tr>
+                            <td>V6 — TR Unit 6</td>
+                            <td>Mar 04</td>
+                            <td>Mar 05</td>
+                            <td>Mar 07</td>
+                            <td>Mar 08</td>
+                            <td>Mar 09</td>
+                            <td>Mar 11-13</td>
+                            <td>Mar 14</td>
+                            <td>Bay 6</td>
+                        </tr>
+                        <tr>
+                            <td>V7 — TR Unit 7</td>
+                            <td>Mar 11</td>
+                            <td>Mar 12</td>
+                            <td>Mar 14</td>
+                            <td>Mar 15</td>
+                            <td>Mar 16</td>
+                            <td>Mar 18-20</td>
+                            <td>Mar 21 ✓</td>
+                            <td>Bay 7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Gantt Chart -->
+        <div class="panel">
+            <h2>📅 Gantt Chart (Jan 26 - Mar 22, 2026)</h2>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);"></div>Mobilization/Demob</div>
+                <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #22d3ee, #06b6d4);"></div>Load-out (MZP)</div>
+                <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);"></div>Sea Transport (LCT)</div>
+                <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #34d399, #10b981);"></div>Load-in (AGI)</div>
+                <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #f472b6, #ec4899);"></div>Turning (180°)</div>
+                <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);"></div>Jack-down</div>
+            </div>
+            
+            <div class="gantt-container">
+                <div class="gantt-chart">
+                    <div class="date-header" id="date-header"></div>
+                    <div id="gantt-rows"></div>
+                </div>
+            </div>
+            
+            <!-- Milestone Timeline -->
+            <div class="milestone-timeline">
+                <div class="milestone">
+                    <div class="dot"></div>
+                    <div class="date">Jan 26</div>
+                    <div class="label">Project Start</div>
+                </div>
+                <div class="milestone">
+                    <div class="dot"></div>
+                    <div class="date">Jan 31</div>
+                    <div class="label">V1 Sail TR1</div>
+                </div>
+                <div class="milestone">
+                    <div class="dot"></div>
+                    <div class="date">Feb 14</div>
+                    <div class="label">V3 Sail TR3</div>
+                </div>
+                <div class="milestone">
+                    <div class="dot"></div>
+                    <div class="date">Feb 28</div>
+                    <div class="label">V5 Sail TR5</div>
+                </div>
+                <div class="milestone">
+                    <div class="dot"></div>
+                    <div class="date">Mar 14</div>
+                    <div class="label">V7 Sail TR7</div>
+                </div>
+                <div class="milestone">
+                    <div class="dot"></div>
+                    <div class="date">Mar 22</div>
+                    <div class="label">✓ Complete</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <strong>HVDC TR Transport Project</strong> | Samsung C&T × Mammoet | LCT BUSHRA<br>
+            Option C Confirmed | Generated: January 21, 2026 | AGI Site Destination
+        </div>
+    </div>
+    
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip">
+        <div class="title"></div>
+        <div class="detail"></div>
+    </div>
+    
+    <script>
+        // Project dates
+        const projectStart = new Date('2026-01-26');
+        const projectEnd = new Date('2026-03-22');
+        const totalDays = Math.ceil((projectEnd - projectStart) / (1000 * 60 * 60 * 24));
+        
+        // Gantt data for Option C
+        const ganttData = [
+            { name: 'Mobilization', isHeader: true },
+            { name: 'SPMT Mobilization', activities: [{ start: '2026-01-26', end: '2026-01-26', type: 'mobilization', label: 'MOB' }] },
+            
+            { name: 'Voyage 1: TR Unit 1 → Bay 4', isHeader: true },
+            { name: 'TR Unit 1', activities: [
+                { start: '2026-01-29', end: '2026-01-29', type: 'loadout', label: 'Load-out' },
+                { start: '2026-01-31', end: '2026-01-31', type: 'transport', label: 'Sail' },
+                { start: '2026-02-02', end: '2026-02-02', type: 'loadin', label: 'Load-in' },
+                { start: '2026-02-04', end: '2026-02-06', type: 'turning', label: 'Turning' },
+                { start: '2026-02-07', end: '2026-02-07', type: 'jackdown', label: 'JD' }
+            ] },
+            
+            { name: 'Voyage 2: TR Unit 2 → Bay 3', isHeader: true },
+            { name: 'TR Unit 2', activities: [
+                { start: '2026-02-05', end: '2026-02-05', type: 'loadout', label: 'Load-out' },
+                { start: '2026-02-07', end: '2026-02-07', type: 'transport', label: 'Sail' },
+                { start: '2026-02-09', end: '2026-02-09', type: 'loadin', label: 'Load-in' },
+                { start: '2026-02-11', end: '2026-02-13', type: 'turning', label: 'Turning' },
+                { start: '2026-02-14', end: '2026-02-14', type: 'jackdown', label: 'JD' }
+            ] },
+            
+            { name: 'Voyage 3: TR Unit 3 → Bay 2', isHeader: true },
+            { name: 'TR Unit 3', activities: [
+                { start: '2026-02-12', end: '2026-02-12', type: 'loadout', label: 'Load-out' },
+                { start: '2026-02-14', end: '2026-02-14', type: 'transport', label: 'Sail' },
+                { start: '2026-02-16', end: '2026-02-16', type: 'loadin', label: 'Load-in' },
+                { start: '2026-02-18', end: '2026-02-20', type: 'turning', label: 'Turning' },
+                { start: '2026-02-21', end: '2026-02-21', type: 'jackdown', label: 'JD' }
+            ] },
+            
+            { name: 'Voyage 4: TR Unit 4 → Bay 1', isHeader: true },
+            { name: 'TR Unit 4', activities: [
+                { start: '2026-02-19', end: '2026-02-19', type: 'loadout', label: 'Load-out' },
+                { start: '2026-02-21', end: '2026-02-21', type: 'transport', label: 'Sail' },
+                { start: '2026-02-23', end: '2026-02-23', type: 'loadin', label: 'Load-in' },
+                { start: '2026-02-25', end: '2026-02-27', type: 'turning', label: 'Turning' },
+                { start: '2026-02-28', end: '2026-02-28', type: 'jackdown', label: 'JD' }
+            ] },
+            
+            { name: 'Voyage 5: TR Unit 5 → Bay 5', isHeader: true },
+            { name: 'TR Unit 5', activities: [
+                { start: '2026-02-26', end: '2026-02-26', type: 'loadout', label: 'Load-out' },
+                { start: '2026-02-28', end: '2026-02-28', type: 'transport', label: 'Sail' },
+                { start: '2026-03-02', end: '2026-03-02', type: 'loadin', label: 'Load-in' },
+                { start: '2026-03-04', end: '2026-03-06', type: 'turning', label: 'Turning' },
+                { start: '2026-03-07', end: '2026-03-07', type: 'jackdown', label: 'JD' }
+            ] },
+            
+            { name: 'Voyage 6: TR Unit 6 → Bay 6', isHeader: true },
+            { name: 'TR Unit 6', activities: [
+                { start: '2026-03-05', end: '2026-03-05', type: 'loadout', label: 'Load-out' },
+                { start: '2026-03-07', end: '2026-03-07', type: 'transport', label: 'Sail' },
+                { start: '2026-03-09', end: '2026-03-09', type: 'loadin', label: 'Load-in' },
+                { start: '2026-03-11', end: '2026-03-13', type: 'turning', label: 'Turning' },
+                { start: '2026-03-14', end: '2026-03-14', type: 'jackdown', label: 'JD' }
+            ] },
+            
+            { name: 'Voyage 7: TR Unit 7 → Bay 7 (Final)', isHeader: true },
+            { name: 'TR Unit 7', activities: [
+                { start: '2026-03-12', end: '2026-03-12', type: 'loadout', label: 'Load-out' },
+                { start: '2026-03-14', end: '2026-03-14', type: 'transport', label: 'Sail' },
+                { start: '2026-03-16', end: '2026-03-16', type: 'loadin', label: 'Load-in' },
+                { start: '2026-03-18', end: '2026-03-20', type: 'turning', label: 'Turning' },
+                { start: '2026-03-21', end: '2026-03-21', type: 'jackdown', label: 'JD ✓' }
+            ] },
+            
+            { name: 'Demobilization', isHeader: true },
+            { name: 'SPMT Demobilization', activities: [{ start: '2026-03-19', end: '2026-03-22', type: 'mobilization', label: 'DEMOB' }] }
+        ];
+        
+        // Generate date header
+        function generateDateHeader() {
+            const header = document.getElementById('date-header');
+            const dates = ['01-26', '02-01', '02-08', '02-15', '02-22', '03-01', '03-08', '03-15', '03-22'];
+            dates.forEach(d => {
+                const mark = document.createElement('div');
+                mark.className = 'date-mark';
+                mark.textContent = d;
+                header.appendChild(mark);
+            });
+        }
+        
+        // Calculate position
+        function calcPosition(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const startDays = Math.ceil((start - projectStart) / (1000 * 60 * 60 * 24));
+            const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            
+            return {
+                left: (startDays / totalDays) * 100,
+                width: Math.max((duration / totalDays) * 100, 1.8)
+            };
+        }
+        
+        // Generate Gantt
+        function generateGantt() {
+            const container = document.getElementById('gantt-rows');
+            
+            ganttData.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'gantt-row';
+                
+                const label = document.createElement('div');
+                label.className = 'gantt-label' + (item.isHeader ? ' voyage-header' : '');
+                label.textContent = item.name;
+                row.appendChild(label);
+                
+                const track = document.createElement('div');
+                track.className = 'gantt-track';
+                
+                if (item.activities) {
+                    item.activities.forEach(act => {
+                        const pos = calcPosition(act.start, act.end);
+                        const bar = document.createElement('div');
+                        bar.className = `gantt-bar ${act.type}`;
+                        bar.style.left = pos.left + '%';
+                        bar.style.width = pos.width + '%';
+                        bar.textContent = act.label;
+                        bar.setAttribute('data-info', JSON.stringify({
+                            name: act.label,
+                            start: act.start,
+                            end: act.end,
+                            type: act.type
+                        }));
+                        
+                        bar.addEventListener('mouseenter', showTooltip);
+                        bar.addEventListener('mouseleave', hideTooltip);
+                        bar.addEventListener('mousemove', moveTooltip);
+                        
+                        track.appendChild(bar);
+                    });
+                }
+                
+                row.appendChild(track);
+                container.appendChild(row);
+            });
+        }
+        
+        // Tooltip functions
+        const tooltip = document.getElementById('tooltip');
+        
+        function showTooltip(e) {
+            const info = JSON.parse(e.target.getAttribute('data-info'));
+            const typeNames = {
+                'mobilization': 'Mobilization / Demobilization',
+                'loadout': 'Load-out (Mina Zayed Port)',
+                'transport': 'Sea Transport (LCT BUSHRA)',
+                'loadin': 'Load-in (AGI Site Jetty)',
+                'turning': 'Turning Operation (180°)',
+                'jackdown': 'Jack-down to Foundation'
+            };
+            
+            tooltip.querySelector('.title').textContent = info.name;
+            tooltip.querySelector('.detail').innerHTML = `
+                <strong>Period:</strong> ${info.start} ~ ${info.end}<br>
+                <strong>Type:</strong> ${typeNames[info.type] || info.type}
+            `;
+            tooltip.style.display = 'block';
+        }
+        
+        function hideTooltip() {
+            tooltip.style.display = 'none';
+        }
+        
+        function moveTooltip(e) {
+            tooltip.style.left = (e.pageX + 15) + 'px';
+            tooltip.style.top = (e.pageY + 15) + 'px';
+        }
+        
+        // Initialize
+        generateDateHeader();
+        generateGantt();
+    </script>
+</body>
+</html>

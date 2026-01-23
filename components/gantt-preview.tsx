@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useMemo, useState, useRef, useCallback, useLayoutEffect } from "react"
+import { useMemo, useState, useRef, useCallback, useLayoutEffect, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -256,7 +256,19 @@ export function GanttPreview({
   }, [scheduleData, useFixedData])
 
   const voyages = useMemo(() => {
-    const derived = deriveVoyagesFromScheduleData(effectiveScheduleData)
+    let dateOffsetMs = 0
+    if (effectiveScheduleData && effectiveScheduleData.tasks.length > 0) {
+      const originalTasks = effectiveScheduleData.tasks.map((t) => ({
+        ...t,
+        startDate: new Date(t.startDate),
+        endDate: new Date(t.endDate),
+      }))
+      const originalProjectStart = new Date(Math.min(...originalTasks.map((t) => t.startDate.getTime())))
+      const configuredProjectStart = new Date(config.projectStart)
+      dateOffsetMs = configuredProjectStart.getTime() - originalProjectStart.getTime()
+    }
+
+    const derived = deriveVoyagesFromScheduleData(effectiveScheduleData, dateOffsetMs)
 
     // 개발 환경에서 디버깅 로그 추가
     if (process.env.NODE_ENV === "development") {
@@ -276,7 +288,7 @@ export function GanttPreview({
     }
 
     return derived
-  }, [effectiveScheduleData])
+  }, [effectiveScheduleData, config.projectStart])
   const templates = useMemo(() => docTemplatesData.templates as DocTemplate[], [])
 
   const chartData = useMemo(() => {
@@ -1059,18 +1071,49 @@ function useResolvedDeadlineMarkers({
   templates: DocTemplate[]
 }) {
   const { selectedVoyageId, docsByVoyage } = useVoyageContext()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const voyagesMilestonesKey = useMemo(
+    () => voyages.map((v) => `${v.id}:${JSON.stringify(v.milestones)}`).join("|"),
+    [voyages],
+  )
 
   return useMemo(() => {
     if (deadlineMarkers !== undefined) {
       return deadlineMarkers
     }
 
+    // SSR에서는 빈 배열 반환 (hydration mismatch 방지)
+    if (!mounted) {
+      return []
+    }
+
     const selectedVoyage = voyages.find((v) => v.id === selectedVoyageId) || voyages[0]
     if (!selectedVoyage) return []
 
+    if (process.env.NODE_ENV === "development") {
+      console.log("=== computeDeadlineMarkers ===")
+      console.log("Selected Voyage:", selectedVoyage.id)
+      console.log("Milestones:", JSON.stringify(selectedVoyage.milestones, null, 2))
+    }
+
     const docs = docsByVoyage[selectedVoyage.id] || []
-    return computeDeadlineMarkers(selectedVoyage, templates, docs)
-  }, [deadlineMarkers, voyages, selectedVoyageId, docsByVoyage, templates])
+    const markers = computeDeadlineMarkers(selectedVoyage, templates, docs)
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("Computed markers count:", markers.length)
+      markers.forEach((m) => {
+        console.log(`  ${m.label}: ${m.date.toISOString().split("T")[0]}`)
+      })
+      console.log("=== End computeDeadlineMarkers ===\n")
+    }
+
+    return markers
+  }, [deadlineMarkers, voyages, voyagesMilestonesKey, selectedVoyageId, docsByVoyage, templates, mounted])
 }
 
 function DeadlineToggleButton({

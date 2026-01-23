@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns"
 import type { DocTemplate, DocInstance, Voyage, DocDueState } from "@/lib/types"
 
 const WEEKEND_DAYS = [0, 6]
@@ -38,7 +39,7 @@ export function calculateDueDate(
     return { dueAt: null, anchorDate: null }
   }
 
-  const anchorDate = new Date(milestoneDateStr)
+  const anchorDate = parseISO(milestoneDateStr)
   const offsetDays = template.anchor.offsetDays
 
   const dueAt =
@@ -59,12 +60,11 @@ export function calculateDueState(doc: DocInstance, template: DocTemplate, voyag
     return "on_track"
   }
 
-  const now = new Date()
-  now.setHours(0, 0, 0, 0)
-  const dueDate = new Date(dueAt)
-  dueDate.setHours(0, 0, 0, 0)
-
-  const daysUntilDue = Math.floor((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const todayKey = new Date().toISOString().slice(0, 10)
+  const dueKey = new Date(dueAt).toISOString().slice(0, 10)
+  const todayUtc = new Date(todayKey)
+  const dueDateUtc = new Date(dueKey)
+  const daysUntilDue = Math.floor((dueDateUtc.getTime() - todayUtc.getTime()) / (1000 * 60 * 60 * 24))
 
   if (daysUntilDue < 0) return "overdue"
   if (daysUntilDue <= 2) return "at_risk"

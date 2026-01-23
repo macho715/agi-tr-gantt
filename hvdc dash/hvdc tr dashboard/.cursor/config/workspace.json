@@ -1,0 +1,21 @@
+{
+  "openOnStart": [
+    "agent.md",
+    "app/globals.css",
+    "app/layout.tsx",
+    "app/page.tsx",
+    "docs/Cursor_FullSetup_Install_Guide.md"
+  ],
+  "terminals": {
+    "shortcuts": [
+      {
+        "name": "diagnose-env",
+        "cmd": "node tools/detect_pm_and_scripts.mjs"
+      },
+      {
+        "name": "validate",
+        "cmd": "node tools/run_validate.mjs"
+      }
+    ]
+  }
+}

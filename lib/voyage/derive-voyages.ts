@@ -1,4 +1,5 @@
 import type { ScheduleData, ScheduleTask, Voyage, MilestoneKey } from "@/lib/types"
+import { parseISO } from "date-fns"
 import milestoneMap from "@/data/milestone-map.json"
 import { VALID_TRIP_ACTIVITY_ID2 } from "@/lib/voyage/trip-groups"
 
@@ -22,7 +23,10 @@ function buildMilestonePatterns(items: MilestonePattern[]): Array<[MilestoneKey,
   return items.map((item) => [item.key, new RegExp(item.pattern, item.flags)])
 }
 
-export function deriveVoyagesFromScheduleData(scheduleData: ScheduleData | null): Voyage[] {
+export function deriveVoyagesFromScheduleData(
+  scheduleData: ScheduleData | null,
+  dateOffsetMs: number = 0,
+): Voyage[] {
   if (!scheduleData) return []
 
   const byTrip = new Map<string, ScheduleTask[]>()
@@ -51,7 +55,8 @@ export function deriveVoyagesFromScheduleData(scheduleData: ScheduleData | null)
     milestonePatterns.forEach(([key, pattern]) => {
       const date = pickMilestone(tasks, pattern)
       if (date) {
-        milestones[key] = date.toISOString().split("T")[0]
+        const adjustedDate = dateOffsetMs !== 0 ? new Date(date.getTime() + dateOffsetMs) : date
+        milestones[key] = adjustedDate.toISOString().split("T")[0]
       }
     })
 
@@ -69,7 +74,7 @@ export function deriveVoyagesFromScheduleData(scheduleData: ScheduleData | null)
     }
 
     if (!milestones.doc_deadline && milestones.mzp_arrival && milestoneMap.docDeadlineOffsetDays !== undefined) {
-      const arrivalDate = new Date(milestones.mzp_arrival)
+      const arrivalDate = parseISO(milestones.mzp_arrival)
       arrivalDate.setDate(arrivalDate.getDate() + milestoneMap.docDeadlineOffsetDays)
       milestones.doc_deadline = arrivalDate.toISOString().split("T")[0]
     }

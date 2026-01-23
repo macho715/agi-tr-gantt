@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from "react"
-import type { Voyage, VoyageId, DocInstance } from "@/lib/types"
+import type { Voyage, VoyageId, DocInstance, DocTemplate } from "@/lib/types"
 
 interface VoyageContextValue {
   voyages: Voyage[]
@@ -10,6 +10,7 @@ interface VoyageContextValue {
   getVoyageTasks: (id: VoyageId) => { taskIds: string[]; dateRange?: { start: string; end: string } }
   docsByVoyage: Record<VoyageId, DocInstance[]>
   updateDoc: (voyageId: VoyageId, templateId: string, patch: Partial<DocInstance>) => void
+  importAgiDocs: (voyageId: VoyageId, instances: DocInstance[]) => void
 }
 
 const VoyageContext = createContext<VoyageContextValue | null>(null)
@@ -130,6 +131,47 @@ export function VoyageProvider({
     })
   }, [])
 
+  const importAgiDocs = useCallback((voyageId: VoyageId, instances: DocInstance[]) => {
+    setDocsByVoyage((prev) => {
+      const voyageDocs = prev[voyageId] || []
+      const updated = { ...prev }
+      const existingMap = new Map(voyageDocs.map((d) => [d.templateId, d]))
+
+      // Merge imported instances with existing ones
+      const merged = instances.map((instance) => {
+        const existing = existingMap.get(instance.templateId)
+        if (existing) {
+          // Merge: keep existing history, update with imported data
+          return {
+            ...existing,
+            ...instance,
+            history: [
+              ...existing.history,
+              {
+                at: new Date().toISOString(),
+                event: "IMPORTED_FROM_AGI",
+              },
+              ...(instance.history || []),
+            ],
+          }
+        }
+        return instance
+      })
+
+      // Add any existing docs that weren't in the import
+      const importedTemplateIds = new Set(instances.map((i) => i.templateId))
+      const remaining = voyageDocs.filter((d) => !importedTemplateIds.has(d.templateId))
+
+      updated[voyageId] = [...merged, ...remaining]
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("voyage-docs", JSON.stringify(updated))
+      }
+
+      return updated
+    })
+  }, [])
+
   const value = useMemo(
     () => ({
       voyages,
@@ -138,8 +180,9 @@ export function VoyageProvider({
       getVoyageTasks,
       docsByVoyage,
       updateDoc,
+      importAgiDocs,
     }),
-    [voyages, selectedVoyageId, getVoyageTasks, docsByVoyage, updateDoc],
+    [voyages, selectedVoyageId, getVoyageTasks, docsByVoyage, updateDoc, importAgiDocs],
   )
 
   return <VoyageContext.Provider value={value}>{children}</VoyageContext.Provider>

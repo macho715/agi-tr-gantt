@@ -1,0 +1,61 @@
+---
+description: "GANTT-DEADLINE — Gantt ↔ Documents 연동 규약 (DeadlineLadder)"
+globs: ["lib/**", "src/**", "components/**"]
+alwaysApply: false
+---
+
+## 6.2 Gantt ↔ 문서 마감(DeadlineLadder) 연동 SSOT 규약
+
+### 공통 키(Join Keys)
+- `voyage_id`: 항차 식별자 (예: "V71", "AGI-TR-01")
+- `tr_unit_id`: 대상 유닛 (예: "TR-1" … "TR-7")
+- `milestone_id`: 일정 이벤트 키 (예: "MZP_LOADOUT_START")
+
+> 규칙: 문서 마감은 반드시 `milestone_id`에 "상대 오프셋"으로 매핑된다.
+
+### SSOT 타입 (권장 위치: `src/lib/ssot/deadline.ts`)
+
+**(A) ScheduleTask**
+- `id`, `voyage_id`, `tr_unit_id?`, `milestone_id?`, `name`
+- `start: string (ISO)`, `end: string (ISO)`
+- `status: "planned" | "in_progress" | "blocked" | "done"`
+- `depends_on?: string[]`
+
+**(B) DocType / DocItem**
+- `DocType`: `"PTW" | "NOC" | "RA" | "MS" | "STOWAGE" | "LASHING" | "CERTS" | "STABILITY" | "MOORING" | "VOYAGE_PLAN"`
+- `DocItem`: id, doc_type, title, owner, status, ref?, links?, `applies_to: { voyage_id, tr_unit_id?, milestone_id }`, deadline_rule_id
+
+**(C) DeadlineRule**
+- `id`, `anchor_milestone_id`, `offset_hours` (예: -96 = D-4), `offset_label`, `severity: "info" | "warn" | "critical"`, `evidence?`
+
+### 계산 유틸 규약 (위치: `src/lib/utils/deadlines.ts`)
+- `calcDeadlineLadder(tasks, docs, rules, nowIso?, tz)` → `{ ladder: DeadlineMarker[], stats, issues }`
+- 규칙: 계산 함수는 렌더링/DOM/상태관리를 **절대 포함하지 않는다**.
+
+### 검증 게이트
+- `DocItem.applies_to.milestone_id`가 tasks에 없으면 → `critical issue`
+- `DeadlineRule.anchor_milestone_id`가 tasks에 없으면 → `critical issue`
+- 동일 (voyage_id, doc_id) 중복은 → `warn issue`
+
+---
+
+## 6.3 Option C Gantt UI/UX 규약 (Lane + Layers + Triage + Drilldown)
+
+### Gantt Lane(스윔레인) 규칙
+- **3층 구조 + GLOBAL lane**: Level1(대분류) → Level2(공정) → TR Unit(1~7)
+- 공통 작업(MOB/DE-MOB/Deck Prep)은 **GLOBAL lane**에 배치
+- 금지: 동일 공통 작업을 TR Unit별 중복 생성, lane join을 표시명으로 수행
+
+### 레이어 합성(토글) 규칙
+1. Operational (기본 막대/의존성)
+2. ResourceTag Layer (크레인/포크리프트/SPMT)
+3. Risk Layer (Docs Progress / DeadlineLadder / Weather-Tide)
+
+### 상단 고정 Triage Bar
+- 범위 프리셋: 오늘 / 48h / 7d
+- 표시: 임박 작업 Top N, 필요 자원 요약, 미완 문서 요약
+
+### 우측 Drilldown 패널
+- 클릭 대상: TR Unit 카드 또는 Activity
+- 자동 생성: Load-out → Sail-away → Berthing → Load-in → Turning → Jacking down 체크리스트
+- 상태 저장: localStorage (로컬-퍼스트), DB 연동은 Ask-first
